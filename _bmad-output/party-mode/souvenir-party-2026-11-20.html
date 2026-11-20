@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Revue du brief</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f6f3ee; --surface:#ffffff; --ink:#1d1b19; --muted:#6b645c; --line:#e3ddd4;
+  --track:#d9573b; --track-soft:#f3d6cc; --lane:#ffffff; --grass:#5c8a4a;
+  --ok:#2f7d4f; --ok-soft:#dcefe3; --bib:#fffdf8; --shadow:0 1px 2px rgba(0,0,0,.06),0 6px 20px rgba(0,0,0,.05);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#151412; --surface:#1f1d1a; --ink:#f1ece4; --muted:#a39b90; --line:#34302b;
+    --track:#e2694d; --track-soft:#3b241d; --lane:#2a2723; --grass:#4f7a3f;
+    --ok:#6cc08b; --ok-soft:#1d3326; --bib:#24211d; --shadow:0 1px 2px rgba(0,0,0,.4);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#151412; --surface:#1f1d1a; --ink:#f1ece4; --muted:#a39b90; --line:#34302b;
+  --track:#e2694d; --track-soft:#3b241d; --lane:#2a2723; --grass:#4f7a3f;
+  --ok:#6cc08b; --ok-soft:#1d3326; --bib:#24211d; --shadow:0 1px 2px rgba(0,0,0,.4);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Inter,system-ui,sans-serif}
+.wrap{max-width:980px;margin:0 auto;padding:40px 16px 80px}
+h1,h2,.num{font-family:"Barlow Condensed",Inter,sans-serif;letter-spacing:.01em}
+h1{font-size:clamp(2.4rem,7vw,4.2rem);line-height:.95;margin:.2em 0 .15em;font-weight:800;text-transform:uppercase}
+h2{font-size:1.7rem;text-transform:uppercase;margin:56px 0 16px;display:flex;align-items:center;gap:12px}
+h2::after{content:"";flex:1;height:2px;background:repeating-linear-gradient(90deg,var(--line) 0 10px,transparent 10px 18px)}
+.kicker{color:var(--track);font-weight:600;text-transform:uppercase;letter-spacing:.12em;font-size:.8rem}
+.lede{color:var(--muted);max-width:60ch;font-size:1.05rem}
+.hero svg{width:100%;height:auto;display:block;margin-top:24px}
+.runner{offset-path:path("M140,40 H560 A100,100 0 0 1 560,240 H140 A100,100 0 0 1 140,40 Z");animation:lap 9s linear infinite}
+@keyframes lap{from{offset-distance:0%}to{offset-distance:100%}}
+@media (prefers-reduced-motion: reduce){.runner{animation:none}.strike::after{transition:none}}
+
+.bibs{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px}
+.bib{background:var(--bib);border:1px solid var(--line);border-radius:14px;padding:16px 18px 18px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.bib::before,.bib::after{content:"";position:absolute;top:10px;width:9px;height:9px;border-radius:50%;background:var(--bg);border:1px solid var(--line)}
+.bib::before{left:10px}.bib::after{right:10px}
+.bib .top{display:flex;align-items:center;gap:10px;border-bottom:3px solid var(--track);padding-bottom:8px;margin:6px 0 10px}
+.bib .icon{font-size:1.6rem}
+.bib .name{font-family:"Barlow Condensed";font-weight:800;font-size:1.5rem;text-transform:uppercase;line-height:1}
+.bib .role{color:var(--muted);font-size:.8rem}
+.bib .n{margin-left:auto;font-family:"Barlow Condensed";font-weight:800;font-size:1.9rem;color:var(--track)}
+.bib q{display:block;font-style:italic}
+.bib q::before{content:"« "}.bib q::after{content:" »"}
+
+.splits{list-style:none;padding:0;margin:0;border-left:3px solid var(--track);margin-left:10px}
+.splits li{position:relative;padding:0 0 22px 26px}
+.splits li::before{content:"";position:absolute;left:-9px;top:4px;width:15px;height:15px;border-radius:50%;background:var(--surface);border:3px solid var(--track)}
+.splits .km{font-family:"Barlow Condensed";font-weight:700;color:var(--track);text-transform:uppercase;font-size:.95rem;letter-spacing:.06em}
+.splits h3{margin:2px 0 4px;font-size:1.1rem}
+.splits p{margin:0;color:var(--muted)}
+
+.board{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);overflow:hidden}
+.row{display:flex;gap:14px;align-items:center;padding:14px 18px;border-top:1px solid var(--line)}
+.row:first-child{border-top:0}
+.tag{font-size:.75rem;font-weight:600;padding:3px 9px;border-radius:999px;white-space:nowrap}
+.tag.ok{background:var(--ok-soft);color:var(--ok)}
+.tag.open{background:var(--track-soft);color:var(--track)}
+.strike{position:relative}
+.strike::after{content:"";position:absolute;left:0;top:52%;height:2px;width:0;background:var(--ok);transition:width 1.2s ease}
+.board.seen .strike::after{width:100%}
+
+.quotes{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.quote{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;box-shadow:var(--shadow)}
+.quote p{margin:0 0 8px;font-size:1.05rem}
+.quote small{color:var(--muted)}
+
+.route{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.stop{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 14px;box-shadow:var(--shadow)}
+.stop b{font-family:"Barlow Condensed";font-size:1.15rem;text-transform:uppercase}
+.stop code{display:block;color:var(--muted);font-size:.8rem}
+.arrow{color:var(--track);font-weight:800}
+
+.finish{margin-top:64px;text-align:center;padding:36px 16px;border-radius:18px;background:repeating-conic-gradient(var(--ink) 0 25%,var(--bg) 0 50%) 0 0/28px 28px}
+.finish div{display:inline-block;background:var(--bg);padding:18px 26px;border-radius:12px}
+.finish .num{font-size:2.2rem;font-weight:800;text-transform:uppercase}
+footer{color:var(--muted);font-size:.85rem;text-align:center;margin-top:28px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <div class="kicker">Party mode · 18–20 novembre 2026</div>
+  <h1>Revue du brief<br>de l'app de course</h1>
+  <p class="lede">Douze personnes autour d'une table, un brief « final » et un coureur qui vise 3 h 30 en avril. Voici la séance, tour par tour.</p>
+  <svg viewBox="0 0 700 280" role="img" aria-label="Une piste d'athlétisme avec un coureur qui tourne">
+    <rect x="0" y="0" width="700" height="280" rx="24" fill="var(--grass)" opacity=".18"/>
+    <path d="M140,20 H560 A120,120 0 0 1 560,260 H140 A120,120 0 0 1 140,20 Z" fill="var(--track)"/>
+    <path d="M140,40 H560 A100,100 0 0 1 560,240 H140 A100,100 0 0 1 140,40 Z" fill="none" stroke="var(--lane)" stroke-width="1.5" stroke-dasharray="6 6" opacity=".8"/>
+    <path d="M140,60 H560 A80,80 0 0 1 560,220 H140 A80,80 0 0 1 140,60 Z" fill="var(--grass)" opacity=".55"/>
+    <line x1="350" y1="20" x2="350" y2="60" stroke="var(--lane)" stroke-width="4"/>
+    <text x="350" y="150" text-anchor="middle" font-family="Barlow Condensed" font-weight="800" font-size="44" fill="var(--ink)">42,195</text>
+    <text x="350" y="178" text-anchor="middle" font-family="Inter" font-size="13" fill="var(--ink)" opacity=".7">générer · publier · courir · analyser</text>
+    <circle class="runner" r="9" fill="var(--lane)" stroke="var(--ink)" stroke-width="2"/>
+  </svg>
+</header>
+
+<h2>Les dossards</h2>
+<div class="bibs">
+  <div class="bib"><div class="top"><span class="icon">📋</span><div><div class="name">John</div><div class="role">Product Manager</div></div><span class="n">01</span></div><q>Tu as esquivé ma question.</q></div>
+  <div class="bib"><div class="top"><span class="icon">🧪</span><div><div class="name">Murat</div><div class="role">Test et qualité</div></div><span class="n">02</span></div><q>La stabilité ne se décrète pas, elle se vérifie.</q></div>
+  <div class="bib"><div class="top"><span class="icon">🏗️</span><div><div class="name">Winston</div><div class="role">Architecte</div></div><span class="n">03</span></div><q>Le LLM raconte, le code compte.</q></div>
+  <div class="bib"><div class="top"><span class="icon">⚡</span><div><div class="name">Victor</div><div class="role">Stratégie</div></div><span class="n">04</span></div><q>Alors pourquoi construire ?</q></div>
+  <div class="bib"><div class="top"><span class="icon">💻</span><div><div class="name">Amelia</div><div class="role">Dev senior</div></div><span class="n">05</span></div><q>Un squelette vertical, puis on épaissit.</q></div>
+  <div class="bib"><div class="top"><span class="icon">🎨</span><div><div class="name">Sally</div><div class="role">UX</div></div><span class="n">06</span></div><q>Tu ouvres l'app, tout content… et rien.</q></div>
+  <div class="bib"><div class="top"><span class="icon">🔬</span><div><div class="name">Dr. Quinn</div><div class="role">Résolution de problèmes</div></div><span class="n">07</span></div><q>« Empêchement », c'est un arbre de décision !</q></div>
+  <div class="bib"><div class="top"><span class="icon">📊</span><div><div class="name">Mary</div><div class="role">Analyste</div></div><span class="n">08</span></div><q>Et si l'auto-détection découpe mal ta course ?</q></div>
+  <div class="bib"><div class="top"><span class="icon">📖</span><div><div class="name">Sophia</div><div class="role">Conteuse</div></div><span class="n">09</span></div><q>La v1 écrit un seul chapitre.</q></div>
+  <div class="bib"><div class="top"><span class="icon">🧠</span><div><div class="name">Carson</div><div class="role">Brainstorming</div></div><span class="n">10</span></div><q>POUR UNE FOIS ?!</q></div>
+  <div class="bib"><div class="top"><span class="icon">🎬</span><div><div class="name">Caravaggio</div><div class="role">Visuel</div></div><span class="n">11</span></div><q>Cinq, c'est un tableau de bord ; trois, c'est un verdict.</q></div>
+  <div class="bib"><div class="top"><span class="icon">🎨</span><div><div class="name">Maya</div><div class="role">Design thinking</div></div><span class="n">12</span></div><q>Un modèle qui juge des plans, sans jambes pour courir…</q></div>
+</div>
+
+<h2>Les temps de passage</h2>
+<ol class="splits">
+  <li><div class="km">Km 5 · La montre</div><h3>Murat exige un spike de deux jours</h3><p>Le transport vers la montre est le maillon que personne ne contrôle. Winston garde Watchletic en plan B.</p></li>
+  <li><div class="km">Km 10 · Les chiffres</div><h3>« Le LLM raconte, le code compte »</h3><p>Amelia ajoute un validateur : chaque nombre écrit par l'IA doit exister dans les données. Dr. Quinn veut que le plan soit traduit en syntaxe intervals.icu par du code, jamais par le modèle.</p></li>
+  <li><div class="km">Km 15 · Le feedback</div><h3>L'écran vide après la course</h3><p>Sally imagine l'attente pendant que HealthFit synchronise. Carson propose de poser l'emoji tout de suite, et Sally reconnaît que c'est une bonne idée.</p></li>
+  <li><div class="km">Km 21 · Le mur</div><h3>Victor : « Pourquoi construire ? »</h3><p>Un chat avec MCP couvrirait 80 %. John et Amelia résistent. Badr tranche : le MCP servira de prototype, et il construit son propre outil.</p></li>
+  <li><div class="km">Km 30 · Le second souffle</div><h3>Les deux risques tombent</h3><p>Badr a déjà couru des séances poussées sur sa montre, et les courses reviennent avec un lap par bloc.</p></li>
+  <li><div class="km">Km 42 · L'arrivée</div><h3>L'ordre de passage est fixé</h3><p>Sally obtient de passer avant Winston. John repart avec deux questions en suspens pour le PRD.</p></li>
+</ol>
+
+<h2>Le tableau des risques</h2>
+<div class="board" id="board">
+  <div class="row"><span class="tag ok">Éliminé</span><span class="strike">HealthFit → Apple Watch : les séances structurées arrivent-elles ?</span></div>
+  <div class="row"><span class="tag ok">Éliminé</span><span class="strike">Retour des courses : un lap par bloc prévu ?</span></div>
+  <div class="row"><span class="tag open">PRD</span><span>Seuil de la matrice respect × ressenti (aucune donnée derrière)</span></div>
+  <div class="row"><span class="tag open">PRD</span><span>Combien de types d'objectifs en v1 ?</span></div>
+  <div class="row"><span class="tag open">PRD</span><span>Critère de continuité : le plan 2 part-il vraiment du plan 1 ?</span></div>
+  <div class="row"><span class="tag open">PRD</span><span>Test de qualité du plan, à faire à l'aveugle</span></div>
+</div>
+
+<h2>Ce qu'on retiendra</h2>
+<div class="quotes">
+  <div class="quote"><p>« Le LLM raconte, le code compte. »</p><small>🏗️ Winston, devenu la règle de la salle</small></div>
+  <div class="quote"><p>« Une date, non. Mais un jalon, oui. »</p><small>⚡ Victor, battu mais pas convaincu</small></div>
+  <div class="quote"><p>« La lenteur choisie n'est pas un défaut de ce récit, c'en est le thème. »</p><small>📖 Sophia</small></div>
+  <div class="quote"><p>« Il te les demandera trois fois. »</p><small>⚡ Victor, à propos de John</small></div>
+</div>
+
+<h2>La suite du parcours</h2>
+<div class="route">
+  <div class="stop"><b>📋 PRD</b><code>/bmad-prd</code></div><span class="arrow">→</span>
+  <div class="stop"><b>🎨 UX</b><code>/bmad-ux</code></div><span class="arrow">→</span>
+  <div class="stop"><b>🏗️ Architecture</b><code>/bmad-architecture</code></div><span class="arrow">→</span>
+  <div class="stop"><b>📋 Epics</b><code>/bmad-create-epics-and-stories</code></div><span class="arrow">→</span>
+  <div class="stop"><b>🧪 Tests</b><code>/bmad-testarch-test-design</code></div><span class="arrow">→</span>
+  <div class="stop"><b>🗓️ Sprint</b><code>/bmad-sprint-planning</code></div><span class="arrow">→</span>
+  <div class="stop"><b>💻 Build</b><code>/bmad-build</code></div>
+</div>
+
+<div class="finish"><div><div class="num">Objectif : moins de 3 h 30</div><div>Début avril 2027. L'app suivra, à son rythme.</div></div></div>
+
+<footer>Souvenir de la table ronde · projet « running » · 20 novembre 2026</footer>
+</div>
+<script>
+(function(){
+  var b=document.getElementById('board');
+  if(!('IntersectionObserver' in window)){b.classList.add('seen');return;}
+  new IntersectionObserver(function(e,o){e.forEach(function(x){if(x.isIntersecting){b.classList.add('seen');o.disconnect();}});},{threshold:.4}).observe(b);
+})();
+</script>
+</body>
+</html>

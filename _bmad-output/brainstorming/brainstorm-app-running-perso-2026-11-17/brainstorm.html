@@ -1,0 +1,930 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dossard de session</title>
+<style>
+:root{
+  --bg:#f3efe6;
+  --paper:#fffdf8;
+  --ink:#1c1d21;
+  --muted:#6b675f;
+  --line:#d9d2c3;
+  --track:#c4472f;
+  --track-deep:#9c3522;
+  --lane:#fffaf0;
+  --badr:#e2540b;
+  --badr-soft:#fde6d6;
+  --coach:#33598f;
+  --coach-soft:#e1e9f5;
+  --ok:#2f8a4f;
+  --ok-soft:#dcefe2;
+  --warn:#c98a06;
+  --warn-soft:#fbefcf;
+  --bad:#b8322a;
+  --bad-soft:#f6dcd9;
+  --must:#c4472f;
+  --should:#d4880f;
+  --could:#3a7f6a;
+  --wont:#7d7a74;
+  --shadow:0 1px 0 rgba(0,0,0,.04),0 8px 24px -12px rgba(40,30,10,.25);
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#121317;
+    --paper:#1c1e24;
+    --ink:#ecebe6;
+    --muted:#a19d94;
+    --line:#34363d;
+    --track:#a8432f;
+    --track-deep:#7c2f20;
+    --lane:#e9e2d2;
+    --badr:#ff8a4a;
+    --badr-soft:#3b2518;
+    --coach:#8db2e6;
+    --coach-soft:#1e2a3c;
+    --ok:#5fc283;
+    --ok-soft:#173022;
+    --warn:#e9b23f;
+    --warn-soft:#352a12;
+    --bad:#ef7a70;
+    --bad-soft:#3a1d1b;
+    --must:#e0644b;
+    --should:#e9a33b;
+    --could:#5fb39a;
+    --wont:#8f8b84;
+    --shadow:0 1px 0 rgba(0,0,0,.3),0 10px 28px -14px rgba(0,0,0,.7);
+  }
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--bg);color:var(--ink);
+  font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  overflow-x:hidden;overflow-wrap:break-word;
+}
+.wrap{max-width:1040px;margin:0 auto;padding:0 16px}
+.num{font-family:Impact,"Haettenschweiler","Arial Narrow Bold","Franklin Gothic Bold",sans-serif;letter-spacing:.01em}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+h1,h2,h3{line-height:1.15;margin:0}
+p{margin:.4em 0}
+
+/* ---------- author tags ---------- */
+.by{display:inline-block;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;
+  padding:.1em .5em;border-radius:99px;vertical-align:.12em;white-space:nowrap}
+.by.u{background:var(--badr);color:#fff}
+.by.c{background:transparent;color:var(--coach);border:1px solid var(--coach)}
+@media (prefers-color-scheme: dark){.by.u{color:#1a0d05}}
+.it{position:relative;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:.65em .8em;box-shadow:var(--shadow)}
+.it.u{border-color:var(--badr);border-left:5px solid var(--badr);background:linear-gradient(90deg,var(--badr-soft),var(--paper) 70%)}
+.it.c{border-left:5px solid var(--coach)}
+.it .by{margin-right:.35em}
+.legend{display:flex;flex-wrap:wrap;gap:.6em 1.2em;font-size:.85rem;color:var(--muted);align-items:center}
+
+/* ---------- bib header ---------- */
+.hero{padding:40px 0 10px}
+.bib{position:relative;max-width:640px;margin:0 auto;background:var(--paper);border-radius:14px;
+  border:2px solid var(--ink);box-shadow:var(--shadow);overflow:hidden;transform:rotate(-1.2deg)}
+.bib .band{background:var(--track);color:#fff;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;
+  padding:10px 22px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;font-size:.78rem}
+.bib .core{padding:18px 22px 10px;text-align:center}
+.bib .bignum{font-size:clamp(4.2rem,20vw,8.5rem);line-height:.9;color:var(--ink)}
+.bib .name{font-size:clamp(1.3rem,5vw,1.9rem);font-weight:900;letter-spacing:.3em;text-transform:uppercase;color:var(--badr);margin-top:.15em}
+.bib .event{color:var(--muted);font-size:.92rem;margin-top:.5em}
+.bib .tear{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;border-top:2px dashed var(--line);padding:10px 22px 16px;font-size:.78rem;color:var(--muted)}
+.bib .tear b{color:var(--ink)}
+.pin{position:absolute;top:44px;width:18px;height:18px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fff,#9a9a9a 60%,#555);box-shadow:0 1px 2px rgba(0,0,0,.4)}
+.pin.l{left:10px}.pin.r{right:10px}
+.pin.bl{top:auto;bottom:12px;left:10px}.pin.br{top:auto;bottom:12px;right:10px}
+.goal{max-width:720px;margin:34px auto 0;text-align:center;font-size:1.05rem}
+.goal em{font-style:normal;color:var(--track);font-weight:700}
+
+/* ---------- HR profile ---------- */
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:18px;box-shadow:var(--shadow)}
+.sect-title{display:flex;align-items:baseline;gap:.6em;flex-wrap:wrap;margin:0 0 .5em}
+.sect-title .k{font-size:.75rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--track)}
+.hr svg{width:100%;height:auto;display:block}
+.hr .base{stroke:var(--line)}
+.hr .pulse{fill:none;stroke:var(--ink);stroke-width:1.6;stroke-linejoin:round}
+.hr .sep{stroke:var(--muted);stroke-dasharray:3 4}
+.hr text{fill:var(--muted);font-size:13px;font-weight:700}
+.hr .dot-u{fill:var(--badr)}.hr .dot-c{fill:var(--coach)}
+.splits{width:100%;border-collapse:collapse;margin-top:14px;font-size:.92rem}
+.splits th,.splits td{padding:.45em .4em;border-bottom:1px solid var(--line);text-align:left}
+.splits th{font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)}
+.splits td.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.bar{display:flex;height:10px;border-radius:5px;overflow:hidden;min-width:60px;background:var(--line)}
+.bar i{display:block}.bar .bu{background:var(--badr)}.bar .bc{background:var(--coach)}
+@media (max-width:560px){.splits .hide-s{display:none}}
+
+/* ---------- course / road ---------- */
+.course{position:relative;margin-top:40px}
+.leg{position:relative;padding:28px 0 28px 46px}
+.leg::before{content:"";position:absolute;left:14px;top:0;bottom:0;width:18px;background:var(--track);
+  background-image:linear-gradient(var(--lane),var(--lane));background-size:2px 100%;background-repeat:no-repeat;background-position:center}
+.km{position:absolute;left:0;top:30px;width:46px;height:46px;border-radius:50%;background:var(--ink);color:var(--bg);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1;z-index:2;border:3px solid var(--bg)}
+.km small{font-size:.55rem;font-weight:800;letter-spacing:.1em}
+.km b{font-size:1.15rem}
+.leg-head{margin-bottom:18px;padding-left:14px}
+.leg-head .tech{font-size:clamp(1.7rem,6vw,2.6rem);font-weight:900;letter-spacing:-.01em}
+.leg-head .sub{color:var(--muted);max-width:640px}
+.leg-head .chip{display:inline-block;margin-top:6px;font-size:.75rem;font-weight:700;padding:.2em .7em;border-radius:99px;background:var(--ink);color:var(--bg)}
+.block{margin:0 0 26px 14px}
+.block h3{font-size:1.05rem;margin-bottom:.6em;display:flex;gap:.5em;align-items:baseline;flex-wrap:wrap}
+.block h3 .tag{font-size:.7rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.grid{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(min(100%,230px),1fr))}
+.grid.two{grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr))}
+.insight{border-radius:12px;padding:.8em 1em;background:var(--ink);color:var(--bg);font-weight:600}
+.insight .by.c{color:var(--bg);border-color:var(--bg)}
+.insight.u{background:var(--badr);color:#fff}
+@media (prefers-color-scheme: dark){.insight.u{color:#1a0d05}}
+.insight.u .by.u{background:#fff;color:var(--badr)}
+.insight .lbl{display:block;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;opacity:.75;margin-bottom:.2em}
+.strike{text-decoration:line-through;opacity:.6}
+.stamp{display:inline-block;font-size:.66rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase;padding:.1em .5em;border:2px solid currentColor;border-radius:4px;transform:rotate(-3deg);margin-left:.3em}
+.stamp.ok{color:var(--ok)}.stamp.no{color:var(--bad)}.stamp.later{color:var(--muted)}
+
+/* First principles: socle */
+.socle{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;align-items:end}
+.pillar{border-radius:10px 10px 0 0;padding:14px 12px;color:#fff;display:flex;flex-direction:column;justify-content:flex-end;gap:6px;min-height:150px}
+.pillar.c{background:var(--coach)}.pillar.u{background:var(--badr)}
+@media (prefers-color-scheme: dark){.pillar{color:#111}}
+.pillar .by{background:rgba(255,255,255,.25);color:inherit;border:0}
+.pillar b{font-size:1.02rem;line-height:1.25}
+.pillar.h2{min-height:190px}.pillar.h3{min-height:170px}
+.slab{background:var(--ink);color:var(--bg);text-align:center;padding:8px;border-radius:0 0 10px 10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;font-size:.75rem}
+@media (max-width:560px){.socle{grid-template-columns:1fr}.pillar,.pillar.h2,.pillar.h3{min-height:0;border-radius:10px}.slab{border-radius:10px}}
+
+.lights{display:grid;gap:8px;grid-template-columns:repeat(auto-fill,minmax(min(100%,180px),1fr))}
+.light{display:flex;gap:10px;align-items:center;padding:.55em .7em;border-radius:10px;background:var(--paper);border:1px solid var(--badr)}
+.light .bulb{flex:0 0 14px;height:14px;border-radius:50%;background:var(--warn);box-shadow:0 0 0 4px var(--warn-soft)}
+.light.c{border-color:var(--coach)}.light.c .bulb{background:var(--bad);box-shadow:0 0 0 4px var(--bad-soft)}
+
+/* phone mock */
+.phone-row{display:grid;gap:16px;grid-template-columns:minmax(0,260px) minmax(0,1fr);align-items:start}
+@media (max-width:640px){.phone-row{grid-template-columns:1fr}}
+.phone{width:100%;max-width:260px;margin:0 auto;border:3px solid var(--ink);border-radius:30px;padding:14px 12px 18px;background:var(--paper);box-shadow:var(--shadow)}
+.phone .notch{width:70px;height:6px;border-radius:3px;background:var(--ink);margin:0 auto 14px}
+.phone .q{text-align:center;font-weight:800;font-size:1.05rem}
+.emojis{display:flex;justify-content:space-between;gap:6px;margin:14px 0 6px}
+.emojis button{flex:1;font-size:2rem;line-height:1;padding:10px 0;border-radius:14px;border:2px solid var(--line);background:var(--bg);cursor:pointer;transition:transform .15s}
+.emojis button:hover,.emojis button[aria-pressed="true"]{transform:translateY(-3px);border-color:var(--badr)}
+.emojis + .lab{display:flex;justify-content:space-between;font-size:.72rem;color:var(--muted);padding:0 4px}
+.loading{margin-top:16px;font-size:.75rem;color:var(--muted)}
+.loading .t{height:6px;border-radius:3px;background:var(--line);overflow:hidden;margin-top:4px}
+.loading .t i{display:block;height:100%;width:35%;background:var(--track);animation:load 2.4s ease-in-out infinite}
+@keyframes load{0%{transform:translateX(-100%)}100%{transform:translateX(300%)}}
+.unlock{margin-top:12px;padding:8px;border-radius:10px;background:var(--bg);font-size:.78rem;color:var(--muted);text-align:center}
+@media (prefers-reduced-motion:reduce){.loading .t i{animation:none;width:60%}}
+
+/* matrix */
+.matrix{display:grid;grid-template-columns:auto minmax(0,1fr) minmax(0,1fr);gap:6px;align-items:stretch}
+.matrix .ax{font-size:.72rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;justify-content:center;text-align:center;padding:4px}
+.matrix .ax.v{writing-mode:vertical-rl;transform:rotate(180deg)}
+.matrix .ax.top{font-size:1.7rem;letter-spacing:0}
+.cell{border-radius:12px;padding:12px;min-height:110px;display:flex;flex-direction:column;gap:4px;border:1px solid var(--line)}
+.cell b{font-size:.95rem}
+.cell span{font-size:.82rem;color:var(--muted)}
+.cell.g{background:var(--ok-soft)}.cell.y{background:var(--warn-soft)}.cell.b{background:var(--coach-soft)}.cell.r{background:var(--bad-soft)}
+.cell.hl{outline:3px solid var(--badr);outline-offset:-3px}
+.matrix-note{margin-top:10px;font-size:.85rem;color:var(--muted)}
+
+/* goal types as race distances */
+.races{display:grid;gap:8px;grid-template-columns:repeat(auto-fill,minmax(min(100%,190px),1fr))}
+.race{border-radius:8px;padding:10px 12px;background:var(--paper);border:1px solid var(--line);position:relative}
+.race.u{border-top:5px solid var(--badr)}.race.c{border-top:5px solid var(--coach)}
+.race .t{font-weight:700;font-size:.92rem;margin-top:4px}
+.gauge{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.gauge svg{width:150px;height:auto;flex:0 0 auto}
+.gauge .arc-bg{fill:none;stroke:var(--line);stroke-width:14;stroke-linecap:round}
+.gauge .arc{fill:none;stroke:var(--track);stroke-width:14;stroke-linecap:round}
+.gauge text{fill:var(--ink);font-weight:900;font-size:26px}
+
+.checklist{list-style:none;padding:0;margin:0;display:grid;gap:6px;grid-template-columns:repeat(auto-fill,minmax(min(100%,230px),1fr))}
+.checklist li{display:flex;gap:8px;align-items:flex-start;padding:.5em .7em;border-radius:8px;background:var(--badr-soft);border:1px solid var(--badr);font-size:.92rem}
+.checklist li::before{content:"✓";font-weight:900;color:var(--badr)}
+
+.btn-emp{display:inline-flex;align-items:center;gap:.5em;font-weight:800;background:var(--track);color:#fff;border-radius:99px;padding:.55em 1.1em;margin-bottom:12px;border:0;font-size:1rem}
+.cases{display:grid;gap:8px;grid-template-columns:repeat(auto-fill,minmax(min(100%,240px),1fr))}
+
+/* Reverse: flips */
+.flips{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr))}
+.flip{display:grid;grid-template-columns:minmax(0,1fr) 28px minmax(0,1fr);align-items:stretch;border-radius:12px;overflow:hidden;border:1px solid var(--line);background:var(--paper)}
+.flip.u{border-color:var(--badr);box-shadow:0 0 0 1px var(--badr)}
+.flip .s{background:var(--bad-soft);padding:10px;font-size:.88rem}
+.flip .s::before{content:"SABOTAGE";display:block;font-size:.6rem;font-weight:900;letter-spacing:.14em;color:var(--bad)}
+.flip .i{background:var(--ok-soft);padding:10px;font-size:.88rem;font-weight:600}
+.flip .i::before{content:"INVERSE";display:block;font-size:.6rem;font-weight:900;letter-spacing:.14em;color:var(--ok)}
+.flip .arr{display:flex;align-items:center;justify-content:center;font-weight:900;color:var(--muted);background:var(--paper)}
+.flip .who{grid-column:1/-1;padding:4px 10px;font-size:.75rem;border-top:1px solid var(--line);background:var(--paper)}
+.sync{display:grid;gap:6px;max-width:420px}
+.sync .row{display:flex;justify-content:space-between;gap:10px;padding:.55em .8em;border-radius:10px;background:var(--bg);border:1px solid var(--line);font-size:.9rem}
+.sync .resync{justify-self:start;margin-top:4px;font-weight:700;font-size:.85rem;padding:.4em .9em;border-radius:99px;border:2px solid var(--ink);background:transparent;color:var(--ink)}
+.fb{border-radius:12px;border:1px solid var(--line);overflow:hidden;background:var(--paper)}
+.fb .l{padding:.55em .8em;border-bottom:1px solid var(--line);font-size:.9rem;display:flex;gap:.6em}
+.fb .l:last-child{border-bottom:0}
+.fb .l i{font-style:normal;font-weight:900;color:var(--track);flex:0 0 1.2em}
+.layers{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:8px}
+.layer{border-radius:12px;padding:12px;border:2px solid var(--line)}
+.layer.ai{border-style:dashed}
+.layer h4{margin:0 0 .3em;font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.kpis{display:flex;flex-wrap:wrap;gap:6px}
+.kpis span{font-size:.78rem;padding:.2em .6em;border-radius:6px;background:var(--bg);border:1px solid var(--line)}
+.stairs svg{width:100%;max-width:420px;height:auto;display:block}
+.stairs .s1{fill:var(--coach)}.stairs .s2{fill:var(--track)}
+.stairs text{fill:var(--muted);font-size:11px}
+.range{font-size:1.5rem;font-weight:900}
+.range small{display:block;font-size:.8rem;color:var(--ok);font-weight:700}
+
+/* SCAMPER */
+.hurdles{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;margin:6px 0 22px}
+.hurdles a{display:flex;flex-direction:column;align-items:center;text-decoration:none;color:var(--ink);gap:2px}
+.hurdles .bar-h{width:100%;height:10px;border-radius:3px;background:repeating-linear-gradient(90deg,var(--track) 0 10px,var(--lane) 10px 20px);border:1px solid var(--track-deep)}
+.hurdles .legs{width:70%;height:22px;border-left:3px solid var(--muted);border-right:3px solid var(--muted)}
+.hurdles .L{font-size:clamp(1.4rem,6vw,2.4rem);line-height:1}
+.hurdles .w{font-size:clamp(.5rem,1.9vw,.72rem);color:var(--muted);text-align:center;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+.letter{display:grid;grid-template-columns:64px minmax(0,1fr);gap:14px;margin-bottom:22px}
+.letter .big{font-size:3.6rem;line-height:.9;color:var(--track);text-align:center}
+.letter .big small{display:block;font-size:.62rem;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:800;margin-top:6px}
+@media (max-width:520px){.letter{grid-template-columns:44px minmax(0,1fr);gap:10px}.letter .big{font-size:2.6rem}}
+.pipe{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:.85rem}
+.pipe span{padding:.35em .7em;border-radius:8px;background:var(--bg);border:1px solid var(--line)}
+.pipe span.hand{border-style:dashed;border-color:var(--bad);color:var(--bad)}
+.pipe .a{border:0;background:none;padding:0;color:var(--muted)}
+.road3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.road3 .st{border-radius:10px;padding:10px;background:var(--badr-soft);border:1px solid var(--badr);font-size:.88rem}
+.road3 .st b{display:block;font-size:1.5rem;line-height:1;color:var(--badr)}
+@media (max-width:520px){.road3{grid-template-columns:1fr}}
+.vs{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:10px}
+.vs ul{margin:0;padding:0;list-style:none;display:grid;gap:6px}
+.vs h4{margin:0 0 .4em;font-size:.8rem;letter-spacing:.1em;text-transform:uppercase}
+.vs .plus h4{color:var(--ok)}.vs .minus h4{color:var(--bad)}
+
+/* loop */
+.loop-wrap{margin:10px 0 0 14px}
+.loop svg{width:100%;height:auto;display:block;max-width:760px;margin:0 auto}
+.loop .oval{fill:var(--track)}
+.loop .infield{fill:var(--ok-soft)}
+.loop .lane{fill:none;stroke:var(--lane);stroke-width:1.5;opacity:.85}
+.loop .st circle{fill:var(--paper);stroke:var(--ink);stroke-width:3}
+.loop .st text{fill:var(--ink);font-weight:800;font-size:15px;text-anchor:middle}
+.loop .st .n{font-size:13px;fill:var(--track)}
+.loop .gate rect{fill:var(--badr)}
+.loop .gate text{fill:#fff;font-weight:800;font-size:12px;text-anchor:middle}
+.loop .center text{fill:var(--ink);text-anchor:middle}
+.loop .runner{fill:var(--badr)}
+.loop .arrow{fill:var(--lane)}
+
+/* MoSCoW */
+.board{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+@media (max-width:900px){.board{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:540px){.board{grid-template-columns:1fr}}
+.col{border-radius:12px;background:var(--paper);border:1px solid var(--line);overflow:hidden;display:flex;flex-direction:column}
+.col header{padding:10px 12px;color:#fff}
+@media (prefers-color-scheme: dark){.col header{color:#111}}
+.col header .num{font-size:2rem;line-height:1;display:block}
+.col header small{font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:.7rem;opacity:.9}
+.col.m header{background:var(--must)}.col.s header{background:var(--should)}.col.c header{background:var(--could)}.col.w header{background:var(--wont)}
+.col ul{list-style:none;margin:0;padding:10px;display:grid;gap:6px}
+.col li{font-size:.86rem;padding:.45em .6em;border-radius:8px;background:var(--bg);border:1px solid var(--line)}
+.col.w li{color:var(--muted)}
+.col li.rej{text-decoration:line-through}
+.col li.up{border-color:var(--should);border-style:dashed}
+.col footer{margin-top:auto;padding:8px 12px;font-size:.75rem;color:var(--muted);border-top:1px solid var(--line)}
+
+/* finish */
+.finish{margin:50px 0 0;position:relative}
+.checker{height:38px;background:repeating-conic-gradient(var(--ink) 0 25%,var(--paper) 0 50%) 0 0/38px 38px;border-radius:6px}
+.tape{text-align:center;margin:-22px auto 0;position:relative;width:max-content;max-width:92%;background:var(--track);color:#fff;
+  padding:8px 22px;font-weight:900;letter-spacing:.3em;text-transform:uppercase;border-radius:4px;box-shadow:var(--shadow);font-size:clamp(.85rem,3.5vw,1.1rem)}
+.finish-head{text-align:center;padding:34px 0 10px}
+.finish-head h2{font-size:clamp(1.8rem,7vw,3.2rem);font-weight:900}
+.finish-head p{color:var(--muted);max-width:620px;margin:.5em auto 0}
+.podium{display:grid;gap:12px;margin-top:20px}
+.ins{display:grid;grid-template-columns:72px minmax(0,1fr);gap:16px;align-items:start;background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:var(--shadow)}
+.ins .medal{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.5rem;color:#fff;
+  background:radial-gradient(circle at 35% 30%,#ffe9a6,#d9a520 55%,#a07610);box-shadow:inset 0 -3px 0 rgba(0,0,0,.2)}
+.ins h3{font-size:1.2rem;margin-bottom:.25em}
+.ins p{color:var(--ink);margin:0}
+.ins .src{margin-top:.5em;font-size:.8rem;color:var(--muted)}
+.ins.hero-ins{background:var(--ink);color:var(--bg);border:0}
+.ins.hero-ins p{color:var(--bg)}
+.ins.hero-ins h3{font-size:clamp(1.4rem,5vw,2rem)}
+.ins.hero-ins .src{color:var(--bg);opacity:.7}
+@media (max-width:520px){.ins{grid-template-columns:1fr}.ins .medal{width:48px;height:48px;font-size:1.1rem}}
+.results{margin:30px 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,140px),1fr));gap:8px}
+.res{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:12px;text-align:center}
+.res .num{font-size:2.2rem;line-height:1;display:block}
+.res small{color:var(--muted);font-size:.78rem}
+.res.u .num{color:var(--badr)}.res.c .num{color:var(--coach)}
+
+/* logs */
+details.log{margin:6px 0 0 14px;border:1px dashed var(--line);border-radius:12px;background:var(--paper)}
+details.log summary{cursor:pointer;padding:.7em 1em;font-weight:700;font-size:.9rem;color:var(--muted)}
+details.log ol{list-style:none;margin:0;padding:0 12px 12px;display:grid;gap:6px;counter-reset:e}
+details.log li{font-size:.86rem}
+details.log .k{font-size:.62rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-right:.4em}
+.filter{display:flex;gap:6px;flex-wrap:wrap;margin:0 12px 10px}
+.filter button{font:inherit;font-size:.8rem;padding:.3em .8em;border-radius:99px;border:1px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+.filter button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+footer.end{padding:30px 0 50px;text-align:center;color:var(--muted);font-size:.82rem}
+</style>
+</head>
+<body>
+
+<header class="hero wrap">
+  <div class="bib" role="img" aria-label="Dossard de la session de brainstorming">
+    <span class="pin l"></span><span class="pin r"></span><span class="pin bl"></span><span class="pin br"></span>
+    <div class="band"><span>Brainstorming · Course unique</span><span>17.11.2026</span></div>
+    <div class="core">
+      <div class="bignum num">001</div>
+      <div class="name">Badr</div>
+      <div class="event">Appli de course à pied personnelle — un seul coureur, un seul profil</div>
+    </div>
+    <div class="tear">
+      <span>Épreuve : <b>4 techniques</b></span>
+      <span>Montre : <b>Apple Watch S10</b></span>
+      <span>Ravito : <b>intervals.icu · HealthFit</b></span>
+    </div>
+  </div>
+  <p class="goal">Un plan d'entraînement généré <em>à partir d'un objectif</em>, envoyé sur la montre, analysé après chaque sortie avec un ressenti 😌 😐 🥵, puis réajusté — <em>uniquement quand Badr confirme</em>.</p>
+</header>
+
+<main class="wrap">
+
+  <section class="panel hr" aria-labelledby="hr-t" style="margin-top:34px">
+    <div class="sect-title"><span class="k">Profil cardiaque de la séance</span><h2 id="hr-t" style="font-size:1.25rem">Chaque battement est une entrée du carnet</h2></div>
+    <div class="legend"><span><span class="by u">Badr</span> pic orange</span><span><span class="by c">coach</span> pic bleu</span><span>Les décisions de Badr montent le plus haut.</span></div>
+    <svg id="hrsvg" viewBox="0 0 1000 190" preserveAspectRatio="none" role="img" aria-label="Tracé de type fréquence cardiaque montrant la densité d'idées par technique"></svg>
+    <table class="splits" aria-label="Temps intermédiaires par technique">
+      <thead><tr><th>Split</th><th>Technique</th><th class="n">Badr</th><th class="n">Coach</th><th class="hide-s" style="width:32%">Répartition</th></tr></thead>
+      <tbody id="splits"></tbody>
+    </table>
+  </section>
+
+  <div class="course">
+
+  <!-- ================= KM 1 FIRST PRINCIPLES ================= -->
+  <section class="leg" id="fp" aria-labelledby="fp-t">
+    <div class="km num"><small>KM</small><b>0</b></div>
+    <div class="leg-head">
+      <div class="k" style="font-size:.75rem;font-weight:800;letter-spacing:.14em;color:var(--track)">KM 0 → 4 · Départ</div>
+      <h2 id="fp-t" class="tech">First Principles</h2>
+      <p class="sub">Revenir aux vérités du corps avant de penser aux écrans. Ce qu'il faut pour progresser, ce qui signale qu'on en fait trop, ce que l'appli doit capter.</p>
+      <span class="chip">Le plus long tronçon : 64 entrées</span>
+    </div>
+
+    <div class="block">
+      <h3><span class="tag">Le socle</span>Trois vérités de base</h3>
+      <div class="socle">
+        <div class="pillar c h3"><span class="by c">coach</span><b>Progression = stress + récupération</b><span style="font-size:.82rem">L'appli gère le rapport stress / récup ; le plan en découle.</span></div>
+        <div class="pillar u h2"><span class="by u">Badr</span><b>Bien s'alimenter fait partie du socle</b><span style="font-size:.82rem">La nutrition n'est pas un simple ajout.</span></div>
+        <div class="pillar u"><span class="by u">Badr</span><b>Ne pas forcer jusqu'à la blessure</b><span style="font-size:.82rem">La prévention est une contrainte de base.</span></div>
+      </div>
+      <div class="slab">Fondations de l'architecture</div>
+      <div class="insight" style="margin-top:10px"><span class="lbl">Constat <span class="by c">coach</span></span>Les vérités de Badr placent nutrition et blessure dans le socle alors qu'elles étaient prévues « pour plus tard » : l'architecture doit les prévoir dès le départ.</div>
+    </div>
+
+    <div class="block">
+      <h3><span class="tag">Tableau de bord</span>Les voyants du surmenage</h3>
+      <div class="lights">
+        <div class="light"><span class="bulb"></span><span>Douleurs <span class="by u">Badr</span></span></div>
+        <div class="light"><span class="bulb"></span><span>Récupération plus longue que d'habitude <span class="by u">Badr</span></span></div>
+        <div class="light"><span class="bulb"></span><span>Séances ressenties plus dures à charge égale <span class="by u">Badr</span></span></div>
+        <div class="light"><span class="bulb"></span><span>Jambes lourdes <span class="by u">Badr</span></span></div>
+        <div class="light"><span class="bulb"></span><span>Baisse de motivation mentale <span class="by u">Badr</span></span></div>
+        <div class="light c"><span class="bulb"></span><span>« Plus dur que ce que disent les chiffres » : écart RPE / FC-allure = drapeau rouge <span class="by c">coach</span></span></div>
+      </div>
+      <div class="insight" style="margin-top:10px"><span class="lbl">Constat <span class="by c">coach</span></span>4 des 5 signaux de Badr sont subjectifs : l'appli doit capter le ressenti, pas seulement les données de la montre.</div>
+    </div>
+
+    <div class="block">
+      <h3><span class="tag">Le geste</span>Une seule question, trois emojis</h3>
+      <div class="phone-row">
+        <div class="phone" aria-label="Maquette de l'écran de ressenti">
+          <div class="notch"></div>
+          <div class="q">Comment c'était ?</div>
+          <div class="emojis" id="emo">
+            <button type="button" aria-pressed="false" data-l="facile">😌</button>
+            <button type="button" aria-pressed="false" data-l="normal">😐</button>
+            <button type="button" aria-pressed="false" data-l="dur">🥵</button>
+          </div>
+          <div class="lab"><span>facile</span><span>normal</span><span>dur</span></div>
+          <div class="loading">Feedback en cours de génération…<div class="t"><i></i></div></div>
+          <div class="unlock" id="unlock">🔒 Les chiffres se débloquent après ton emoji</div>
+        </div>
+        <div class="grid" style="grid-template-columns:1fr">
+          <div class="it u"><span class="by u">Badr</span>Popup simple à l'ouverture du feedback, choix par emojis, le moins possible.</div>
+          <div class="it c"><span class="by c">coach</span>Ressenti donné <b>avant</b> l'analyse : les chiffres ne doivent pas influencer le ressenti.</div>
+          <div class="it c"><span class="by c">coach</span>Trois emojis maximum : 😌 facile / 😐 normal / 🥵 dur.</div>
+          <div class="it u"><span class="by u">Badr</span>La question s'affiche pendant le chargement du feedback : l'attente sert à quelque chose.</div>
+          <div class="it u"><span class="by u">Badr</span><span class="stamp ok">Validé</span> Avant les chiffres, 3 emojis, UNE seule question.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="block">
+      <h3><span class="tag">Prévu vs réalisé</span>La matrice respect × ressenti</h3>
+      <div class="grid two" style="margin-bottom:12px">
+        <div class="it u"><span class="by u">Badr</span>Le feedback inclut une analyse du respect de la séance prévue.</div>
+        <div class="it c"><span class="by c">coach</span>Respect bloc par bloc (échauffement, chaque fractionné, récup), verdict d'une ligne + note de conformité globale.</div>
+      </div>
+      <div class="matrix" role="table" aria-label="Matrice respect par ressenti">
+        <div></div><div class="ax top">😌</div><div class="ax top">🥵</div>
+        <div class="ax v">Respectée</div>
+        <div class="cell g"><b>Respectée + 😌</b><span>La séance passe bien : la forme suit le plan.</span></div>
+        <div class="cell y hl"><b>Respectée + 🥵</b><span>Le plan est tenu, mais il a coûté cher. Une lecture de la forme du jour.</span></div>
+        <div class="ax v">Pas respectée</div>
+        <div class="cell b hl"><b>Pas respectée + 😌</b><span>L'écart ne vient pas de la fatigue. Une tout autre lecture.</span></div>
+        <div class="cell r"><b>Pas respectée + 🥵</b><span>Séance manquée et dure : à rapprocher des voyants de surmenage.</span></div>
+      </div>
+      <p class="matrix-note">Cases surlignées : les deux cas opposés cités par le coach. <span class="by u">Badr</span> <span class="stamp ok">Validé</span> la matrice déclenche des réactions du plan — et toute modification passe par sa confirmation. Le réajustement doit rester cohérent avec les séances précédentes <b>et</b> l'objectif final.</p>
+    </div>
+
+    <div class="block">
+      <h3><span class="tag">Les épreuves</span>Types d'objectif</h3>
+      <div class="races">
+        <div class="race u"><span class="by u">Badr</span><div class="t">Courir une distance</div></div>
+        <div class="race u"><span class="by u">Badr</span><div class="t">Courir plus longtemps (durée)</div></div>
+        <div class="race u"><span class="by u">Badr</span><div class="t">Un chrono sur une distance</div></div>
+        <div class="race u"><span class="by u">Badr</span><div class="t">Récupérer après une course</div></div>
+        <div class="race u"><span class="by u">Badr</span><div class="t">Condition physique générale</div></div>
+        <div class="race u"><span class="by u">Badr</span><div class="t">Reprendre après une blessure</div></div>
+        <div class="race c"><span class="by c">coach</span><span class="stamp ok">v1</span><div class="t">Composite : principal + secondaires</div></div>
+        <div class="race c"><span class="by c">coach</span><span class="stamp ok">v1</span><div class="t">Saison : préparation → course → récup → suivante</div></div>
+        <div class="race c"><span class="by c">coach</span><span class="stamp later">plus tard</span><div class="t">Maintien / plateau volontaire</div></div>
+        <div class="race c"><span class="by c">coach</span><span class="stamp later">plus tard</span><div class="t">Trail / dénivelé</div></div>
+        <div class="race c"><span class="by c">coach</span><span class="stamp later">plus tard</span><div class="t">Régularité (3x/semaine, 3 mois)</div></div>
+      </div>
+      <div class="grid two" style="margin-top:12px">
+        <div class="it u"><span class="by u">Badr</span>Feedback sur l'objectif lui-même : alerte s'il devient trop difficile, ou pas assez challengeant.</div>
+        <div class="it c gauge"><svg viewBox="0 0 160 96" aria-hidden="true"><path class="arc-bg" d="M15 85 A65 65 0 0 1 145 85"/><path class="arc" d="M15 85 A65 65 0 0 1 145 85" pathLength="100" stroke-dasharray="72 100"/><text x="80" y="80" text-anchor="middle">72 %</text></svg><div><span class="by c">coach</span>Jauge de faisabilité mise à jour à chaque séance : « sub-45 sur 10 km : 72 % → en hausse ».</div></div>
+      </div>
+    </div>
+
+    <div class="block">
+      <h3><span class="tag">Retrait du dossard</span>Ce que Badr donne à la création d'un objectif</h3>
+      <ul class="checklist">
+        <li>Historique d'entraînement (si disponible)</li>
+        <li>Meilleurs temps / records personnels</li>
+        <li>État de forme actuel</li>
+        <li>Blessures actuelles et passées</li>
+        <li>Jours de disponibilité dans la semaine</li>
+        <li>Jour de la sortie longue</li>
+        <li>Vacances / périodes d'indisponibilité</li>
+      </ul>
+      <p style="font-size:.82rem;color:var(--muted)">Les sept entrées : <span class="by u">Badr</span></p>
+      <div class="grid two" style="margin-top:8px">
+        <div class="it c"><span class="by c">coach</span>Pré-remplissage depuis intervals.icu (historique, records, charge, CTL) : Badr ne fait que valider ou corriger. <span class="stamp ok">Validé par Badr</span></div>
+        <div class="it c"><span class="by c">coach</span>Carnet de blessures vivant : zone, date, déclencheur connu ; le plan évite ces déclencheurs (pas de côtes si tendinite d'Achille).</div>
+      </div>
+    </div>
+
+    <div class="block">
+      <h3><span class="tag">Imprévus</span>Le bouton Empêchement</h3>
+      <button class="btn-emp" type="button" tabindex="-1">⚠️ Empêchement</button> <span class="by u">Badr</span>
+      <div class="cases">
+        <div class="it u"><span class="by u">Badr</span><b>Un jour</b> : annuler ou déplacer la séance.</div>
+        <div class="it u"><span class="by u">Badr</span><b>Blessure</b> : annuler le plan ou le suspendre jusqu'au rétablissement.</div>
+        <div class="it u"><span class="by u">Badr</span><b>Dernière minute</b> : l'une des vraies causes des séances ratées.</div>
+        <div class="it u"><span class="by u">Badr</span><b>Manque de motivation</b> : l'autre vraie cause.</div>
+        <div class="it c"><span class="by c">coach</span><b>Malade ≠ blessé</b> : règle au-dessus / en-dessous du cou (rhume léger = footing, fièvre = repos).</div>
+        <div class="it c"><span class="by c">coach</span><b>Moins de temps</b> : 2 fractionnés au lieu de 6 plutôt qu'annuler.</div>
+        <div class="it c"><span class="by c">coach</span><b>Voyage</b> : tapis, côtes à l'hôtel, renfo sans matériel.</div>
+        <div class="it u"><span class="by u">Badr</span>L'appli évalue s'il faut refaire le plan ou seulement annuler une ou plusieurs séances.</div>
+        <div class="it c"><span class="by c">coach</span>Retour de blessure progressif + recalcul de la faisabilité (décaler la date ou ajuster le chrono). <span class="stamp ok">Validé par Badr</span></div>
+        <div class="it c"><span class="strike">« Pas motivé » → version minimum vital (20 min facile)</span> <span class="by c">coach</span> <span class="stamp no">Rejeté par Badr</span></div>
+      </div>
+      <div class="grid two" style="margin-top:10px">
+        <div class="insight u"><span class="lbl">Constat <span class="by u">Badr</span></span>Je veux m'obliger à faire la vraie séance. La motivation revient d'elle-même ou grâce au « vrai objectif » : c'est un levier mental, pas une question de dosage.</div>
+        <div class="it c"><span class="by c">coach</span>À la création de l'objectif, écrire son <b>vrai pourquoi</b> en une phrase ; l'appli le réaffiche quand Badr hésite.</div>
+      </div>
+    </div>
+    <details class="log" data-sec="1"><summary>Carnet complet du tronçon</summary></details>
+  </section>
+
+  <!-- ================= REVERSE ================= -->
+  <section class="leg" id="rb" aria-labelledby="rb-t">
+    <div class="km num"><small>KM</small><b>4</b></div>
+    <div class="leg-head">
+      <div class="k" style="font-size:.75rem;font-weight:800;letter-spacing:.14em;color:var(--track)">KM 4 → 6 · Le mur</div>
+      <h2 id="rb-t" class="tech">Reverse Brainstorming</h2>
+      <p class="sub">Comment saboter cette appli à coup sûr ? Chaque sabotage est retourné pour devenir une exigence.</p>
+      <span class="chip">34 entrées</span>
+    </div>
+
+    <div class="block">
+      <h3><span class="tag">Sabotage → inverse</span>Le mur, puis le second souffle</h3>
+      <div class="flips" id="flips"></div>
+      <div class="insight" style="margin-top:12px"><span class="lbl">Constat <span class="by c">coach</span></span>Les 4 premiers sabotages de Badr portent sur la CONFIANCE (fiabilité, cohérence, synchronisation), aucun sur les fonctionnalités : la confiance est le vrai produit.</div>
+    </div>
+
+    <div class="block">
+      <h3><span class="tag">Réponses du coach</span>Rendre la confiance visible</h3>
+      <div class="grid two">
+        <div class="it c"><span class="by c">coach</span><b>Écran « état de la synchro »</b>
+          <div class="sync" style="margin-top:8px">
+            <div class="row"><span>Dernière séance envoyée</span><span>✅</span></div>
+            <div class="row"><span>Dernière course reçue</span><span>⚠️</span></div>
+            <button class="resync" type="button" tabindex="-1">↻ Resynchroniser</button>
+          </div>
+        </div>
+        <div class="it c"><span class="by c">coach</span><b>Le « pourquoi » en une ligne</b> sur chaque recommandation :
+          <p class="mono" style="margin-top:8px;padding:8px;border-radius:8px;background:var(--bg);font-size:.82rem">allégé car 🥵 hier + FC au repos +6</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="block">
+      <h3><span class="tag">Le feedback</span>Clair, appuyé, motivant et réaliste</h3>
+      <div class="grid two">
+        <div>
+          <div class="fb">
+            <div class="l"><i>1</i><span>Un point fort factuel</span></div>
+            <div class="l"><i>2</i><span>Un point à améliorer factuel</span></div>
+            <div class="l"><i>3</i><span>Une conséquence pour la suite du plan</span></div>
+          </div>
+          <p style="font-size:.8rem;color:var(--muted)">Structure en 3 lignes <span class="by c">coach</span> · anti-flatterie : pas de « super séance ! » sans chiffre <span class="by c">coach</span> · chaque affirmation cite un élément mesuré ou ressenti (« 3 derniers fractionnés à 4'12 au lieu de 4'20 ») <span class="by c">coach</span></p>
+        </div>
+        <div class="grid" style="grid-template-columns:1fr">
+          <div class="it u"><span class="by u">Badr</span>Trois niveaux : la séance, l'objectif de la séance, l'objectif global.</div>
+          <div class="it u"><span class="by u">Badr</span>Expliquer à quoi a servi la séance, son rôle dans le plan.</div>
+          <div class="it u"><span class="by u">Badr</span>Séance non respectée : ce qui a été mal fait + comment faire mieux la prochaine fois.</div>
+        </div>
+      </div>
+      <div class="layers" style="margin-top:12px">
+        <div class="layer ai"><h4>Mon avis (IA)</h4><p style="font-size:.88rem">Une lecture, un conseil.</p></div>
+        <div class="layer"><h4>Tes données</h4><div class="kpis"><span>indicateur 1</span><span>2</span><span>3</span><span>4</span><span>5 max</span></div><p style="font-size:.78rem;color:var(--muted)">Le détail complet reste dans intervals.icu.</p></div>
+      </div>
+      <p style="font-size:.8rem;color:var(--muted)">Deux couches séparées visuellement <span class="by c">coach</span></p>
+      <div class="insight u" style="margin-top:8px"><span class="lbl">Constat <span class="by u">Badr</span></span>Je veux garder mon propre jugement : l'IA donne un avis, mais les données doivent rester lisibles pour que je me forge le mien.</div>
+    </div>
+
+    <div class="block">
+      <h3><span class="tag">Projection</span>Prédire sans mentir</h3>
+      <div class="grid two">
+        <div class="it c"><span class="by c">coach</span>Prédiction en fourchette avec tendance :
+          <div class="range num" style="margin-top:6px">44:30 – 46:10<small>↗ en amélioration</small></div></div>
+        <div class="it c stairs"><span class="by c">coach</span>Vue « escalier » : volume et intensité semaine par semaine.
+          <svg viewBox="0 0 300 110" aria-hidden="true" style="margin-top:8px">
+            <rect class="s1" x="10" y="70" width="40" height="30"/><rect class="s2" x="10" y="90" width="40" height="10"/>
+            <rect class="s1" x="58" y="58" width="40" height="42"/><rect class="s2" x="58" y="86" width="40" height="14"/>
+            <rect class="s1" x="106" y="46" width="40" height="54"/><rect class="s2" x="106" y="82" width="40" height="18"/>
+            <rect class="s1" x="154" y="64" width="40" height="36" opacity=".6"/><rect class="s2" x="154" y="90" width="40" height="10"/>
+            <rect class="s1" x="202" y="34" width="40" height="66"/><rect class="s2" x="202" y="76" width="40" height="24"/>
+            <rect class="s1" x="250" y="22" width="40" height="78"/><rect class="s2" x="250" y="70" width="40" height="30"/>
+            <text x="10" y="12">volume · intensité</text>
+          </svg></div>
+      </div>
+    </div>
+
+    <div class="block">
+      <h3><span class="tag">Usage</span>Configurer une fois, puis courir</h3>
+      <div class="grid">
+        <div class="it u"><span class="by u">Badr</span>Effort accepté au lancement du plan, quasiment aucune manipulation au quotidien.</div>
+        <div class="it u"><span class="by u">Badr</span>Le plan s'affiche dès l'ouverture.</div>
+        <div class="it u"><span class="by u">Badr</span>Quelques clics pour le feedback de chaque course.</div>
+        <div class="it u"><span class="by u">Badr</span>Seulement les graphiques essentiels, d'autres ajoutables avec le temps.</div>
+        <div class="it u"><span class="by u">Badr</span>Pas de notifications, sauf importantes.</div>
+      </div>
+      <div class="grid" style="margin-top:8px">
+        <div class="it c"><span class="by c">coach</span>🔔 Séance pas envoyée sur la montre.</div>
+        <div class="it c"><span class="by c">coach</span>🔔 Une modification du plan attend ta confirmation.</div>
+        <div class="it c"><span class="by c">coach</span>🔔 Surmenage détecté (3 séances 🥵 d'affilée + FC au repos en hausse).</div>
+      </div>
+      <div class="insight u" style="margin-top:10px"><span class="lbl">Principe de conception <span class="by u">Badr</span></span>Configuration riche une seule fois, usage quotidien quasi nul.</div>
+    </div>
+    <details class="log" data-sec="2"><summary>Carnet complet du tronçon</summary></details>
+  </section>
+
+  <!-- ================= SCAMPER ================= -->
+  <section class="leg" id="sc" aria-labelledby="sc-t">
+    <div class="km num"><small>KM</small><b>6</b></div>
+    <div class="leg-head">
+      <div class="k" style="font-size:.75rem;font-weight:800;letter-spacing:.14em;color:var(--track)">KM 6 → 9 · Les sept haies</div>
+      <h2 id="sc-t" class="tech">SCAMPER</h2>
+      <p class="sub">Sept haies à franchir. L'appli n'existant pas encore, <span class="by u">Badr</span> recentre l'exercice sur sa routine actuelle.</p>
+      <span class="chip">50 entrées</span>
+    </div>
+
+    <div class="block">
+      <nav class="hurdles" aria-label="Les sept lettres de SCAMPER">
+        <a href="#L-S"><span class="L num">S</span><span class="bar-h"></span><span class="legs"></span><span class="w">Substituer</span></a>
+        <a href="#L-C"><span class="L num">C</span><span class="bar-h"></span><span class="legs"></span><span class="w">Combiner</span></a>
+        <a href="#L-A"><span class="L num">A</span><span class="bar-h"></span><span class="legs"></span><span class="w">Adapter</span></a>
+        <a href="#L-M"><span class="L num">M</span><span class="bar-h"></span><span class="legs"></span><span class="w">Modifier</span></a>
+        <a href="#L-P"><span class="L num">P</span><span class="bar-h"></span><span class="legs"></span><span class="w">Détourner</span></a>
+        <a href="#L-E"><span class="L num">E</span><span class="bar-h"></span><span class="legs"></span><span class="w">Éliminer</span></a>
+        <a href="#L-R"><span class="L num">R</span><span class="bar-h"></span><span class="legs"></span><span class="w">Inverser</span></a>
+      </nav>
+      <div class="it u"><span class="by u">Badr</span><b>La routine actuelle</b>
+        <div class="pipe" style="margin-top:8px">
+          <span>Conversation avec une IA</span><span class="a">→</span><span>plan + prompt</span><span class="a">→</span><span class="hand">collé à la main dans intervals.icu</span><span class="a">→</span><span>synchro montre</span><span class="a">→</span><span>résultats sur Strava</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="block letter" id="L-S">
+      <div class="big num">S<small>Substituer</small></div>
+      <div class="grid">
+        <div class="it u"><span class="by u">Badr</span>Plan issu d'une conversation → plan généré à partir de données réelles.</div>
+        <div class="it u"><span class="by u">Badr</span>Saisie manuelle dans intervals.icu → synchronisation automatique dès que le plan est généré.</div>
+        <div class="it u"><span class="by u">Badr</span>Strava et les autres applis → tout dans l'appli (données + feedback).</div>
+        <div class="it c"><span class="by c">coach</span>L'API d'intervals.icu écrit le plan dans le calendrier : un tuyau invisible vers la montre.</div>
+        <div class="it c"><span class="by c">coach</span>Garder la conversation, nourrie par les données : un mode « parler à mon coach ».</div>
+        <div class="it c"><span class="by c">coach</span>Accueil : une seule carte « séance du jour » (but, durée, statut sur la montre).</div>
+      </div>
+    </div>
+
+    <div class="block letter" id="L-C">
+      <div class="big num">C<small>Combiner</small></div>
+      <div>
+        <div class="road3">
+          <div class="st"><b class="num">1</b>Échauffements et étirements adaptés à chaque séance</div>
+          <div class="st"><b class="num">2</b>Renforcement musculaire spécifique course</div>
+          <div class="st"><b class="num">3</b>Nutrition, sommeil, calendrier, peut-être météo</div>
+        </div>
+        <p style="font-size:.8rem;color:var(--muted)">Feuille de route <span class="by u">Badr</span> <span class="stamp ok">Décidé</span></p>
+        <div class="grid" style="margin-top:8px">
+          <div class="it c"><span class="by c">coach</span>👟 Chaussures : kilométrage par paire, rotation, alerte d'usure.</div>
+          <div class="it c"><span class="by c">coach</span>🗺️ Parcours connu adapté à la séance (plat / vallonné).</div>
+          <div class="it c"><span class="by c">coach</span>📓 Journal de bord vocal ou texte, relu par l'IA.</div>
+          <div class="it c"><span class="by c">coach</span>🏁 Simulation de course : allure km par km + ravitaillement.</div>
+        </div>
+        <p style="font-size:.8rem;color:var(--muted)">Les quatre gardées pour une mise en place progressive <span class="by u">Badr</span></p>
+      </div>
+    </div>
+
+    <div class="block letter" id="L-A">
+      <div class="big num">A<small>Adapter</small></div>
+      <div>
+        <div class="insight u" style="margin-bottom:10px"><span class="lbl">Référence <span class="by u">Badr</span></span>Runna (formule payante) est appréciée, mais l'abonnement coûte cher. Je veux quelque chose de plus complet et plus personnel.</div>
+        <div class="vs">
+          <div class="plus"><h4>À reprendre</h4><ul>
+            <li class="it u"><span class="by u">Badr</span>La clarté de l'écran d'accueil</li>
+            <li class="it u"><span class="by u">Badr</span>Le parcours de génération du plan</li>
+            <li class="it u"><span class="by u">Badr</span>La présentation des séances</li>
+            <li class="it u"><span class="by u">Badr</span>Les commentaires générés</li></ul></div>
+          <div class="minus"><h4>Frustrations</h4><ul>
+            <li class="it u"><span class="by u">Badr</span>Pas assez de graphiques par course</li>
+            <li class="it u"><span class="by u">Badr</span>Pas de suivi de la nutrition</li>
+            <li class="it u"><span class="by u">Badr</span>Impossible d'enchaîner plusieurs plans</li>
+            <li class="it u"><span class="by u">Badr</span>Un nouveau plan ignore les données précédentes</li></ul></div>
+        </div>
+        <div class="insight" style="margin-top:10px"><span class="lbl">Différenciateur <span class="by c">coach</span></span>La continuité : un seul profil vivant alimente chaque plan. Les plans sont les chapitres d'une même histoire, pas des silos.</div>
+        <div class="it c" style="margin-top:8px"><span class="by c">coach</span>Le plan suivant démarre depuis la forme réelle de fin de plan, avec le bilan du précédent.</div>
+      </div>
+    </div>
+
+    <div class="block letter" id="L-M">
+      <div class="big num">M<small>Modifier</small></div>
+      <div class="grid">
+        <div class="it u"><span class="by u">Badr</span>Chaque feedback peut ouvrir une conversation IA pour creuser.</div>
+        <div class="it u"><span class="by u">Badr</span>À l'issue, l'IA peut proposer une mise à jour du plan, avec confirmation.</div>
+        <div class="it c"><span class="by c">coach</span>Conversation ouverte avec le contexte de la séance : pas besoin de réexpliquer. <span class="stamp ok">Gardé</span></div>
+        <div class="it c"><span class="by c">coach</span>Mémoire dans le profil (« le mollet gauche tire après 15 km »). <span class="stamp ok">Gardé</span></div>
+        <div class="it c"><span class="by c">coach</span>Résumé avant / après des séances concernées avant confirmation. <span class="stamp ok">Gardé</span></div>
+      </div>
+    </div>
+
+    <div class="block letter" id="L-P">
+      <div class="big num">P<small>Détourner</small></div>
+      <div>
+        <p style="font-size:.85rem;color:var(--muted);margin-top:0"><span class="by u">Badr</span> Les données ne servent qu'à la course. Suggestions santé uniquement en cas de besoin, jamais systématiques.</p>
+        <div class="grid">
+          <div class="it u"><span class="by u">Badr</span>🩺 Suggérer une visite médicale si nécessaire.</div>
+          <div class="it u"><span class="by u">Badr</span>💆 Suggérer un kiné si nécessaire.</div>
+          <div class="it u"><span class="by u">Badr</span>💊 Suggérer des compléments si nécessaire.</div>
+          <div class="it c"><span class="by c">coach</span>Rapport kiné exportable en un clic : douleur, charge, séances déclenchantes.</div>
+          <div class="it c"><span class="by c">coach</span>Déclencheurs : douleur répétée au même endroit, retour qui stagne, fatigue persistante.</div>
+        </div>
+        <p style="font-size:.8rem;color:var(--muted)">Gardés pour plus tard <span class="by u">Badr</span></p>
+      </div>
+    </div>
+
+    <div class="block letter" id="L-E">
+      <div class="big num">E<small>Éliminer</small></div>
+      <div>
+        <div class="road3">
+          <div class="st"><b class="num">1</b>Génération du plan</div>
+          <div class="st"><b class="num">2</b>Synchronisation avec la montre</div>
+          <div class="st"><b class="num">3</b>Feedback après chaque course</div>
+        </div>
+        <p style="font-size:.85rem"><span class="by u">Badr</span> Les trois indispensables. Critère : tout ce qui ne sert pas à générer le plan ni à suivre la progression est secondaire.</p>
+        <div class="insight" style="margin-top:8px"><span class="lbl">Constat <span class="by c">coach</span></span>Le noyau du MVP est une boucle fermée ; le reste vient se greffer dessus. ↓</div>
+      </div>
+    </div>
+
+    <div class="block loop-wrap loop" aria-labelledby="loop-t">
+      <h3 id="loop-t"><span class="tag">Le tour de piste</span>La boucle fermée de la v1</h3>
+      <svg id="loopsvg" viewBox="0 0 760 400" role="img" aria-label="Boucle : générer, synchroniser, courir, remonter, feedback, réajuster, avec confirmation avant réajustement"></svg>
+      <p style="font-size:.82rem;color:var(--muted);text-align:center">Le point orange fait le tour. La barrière orange : aucun réajustement sans le « oui » de Badr.</p>
+    </div>
+
+    <div class="block letter" id="L-R">
+      <div class="big num">R<small>Inverser</small></div>
+      <div class="grid">
+        <div class="it c"><span class="by c">coach</span>Badr propose sa semaine (jours, volume horaire), l'appli remplit les séances.</div>
+        <div class="it u"><span class="by u">Badr</span><span class="strike">Choisir une méthode connue que l'appli adapte.</span></div>
+        <div class="insight u"><span class="lbl">Cap <span class="by u">Badr</span></span>Je ne veux pas intervenir dans le choix de la méthode, pour rester cohérent avec les données : l'appli décide.</div>
+        <div class="it c"><span class="by c">coach</span>L'appli choisit la méthode (80/20, Daniels, polarisé…) et l'indique en une ligne avec sa raison.</div>
+      </div>
+    </div>
+    <details class="log" data-sec="3"><summary>Carnet complet du tronçon</summary></details>
+  </section>
+
+  <!-- ================= MOSCOW ================= -->
+  <section class="leg" id="mo" aria-labelledby="mo-t">
+    <div class="km num"><small>KM</small><b>9</b></div>
+    <div class="leg-head">
+      <div class="k" style="font-size:.75rem;font-weight:800;letter-spacing:.14em;color:var(--track)">KM 9 → 10 · Le sprint final</div>
+      <h2 id="mo-t" class="tech">MoSCoW</h2>
+      <p class="sub">La convergence. Quatre sas de départ, comme les vagues d'une course : qui part en premier, qui attend. <span class="by u">Badr</span> <span class="stamp ok">Validé tel que proposé</span></p>
+      <span class="chip">11 entrées · 6 décisions de Badr</span>
+    </div>
+    <div class="block">
+      <div class="board">
+        <div class="col m"><header><span class="num">MUST</span><small>Sas 1 · la v1</small></header><ul>
+          <li>Profil vivant + import intervals.icu / HealthFit</li>
+          <li>Création d'objectif (6 types, principal + secondaires)</li>
+          <li>Plan généré à partir des données : progressif, réaliste, méthode choisie par l'appli + pourquoi</li>
+          <li>Synchro auto aller / retour + écran état de la synchro</li>
+          <li>Feedback complet : emoji pendant le chargement, respect bloc par bloc, 3 niveaux, concret, motivant et réaliste, IA vs données</li>
+          <li>Réajustement respect × ressenti avec confirmation</li>
+          <li>Bouton Empêchement (dernière minute, malade, blessé)</li>
+          <li>Accueil minimaliste, zéro notification</li>
+        </ul><footer><span class="by u">Badr</span> décision</footer></div>
+        <div class="col s"><header><span class="num">SHOULD</span><small>Sas 2</small></header><ul>
+          <li>Retour de blessure progressif</li>
+          <li>Jauge de faisabilité + alerte objectif + prédiction en fourchette</li>
+          <li>Conversation IA rattachée au feedback</li>
+          <li class="up">Saison de plans enchaînés ↓ arbitrage</li>
+          <li>3 notifications importantes</li>
+          <li>Vue escalier</li>
+          <li class="up">Échauffements / étirements ↓ arbitrage</li>
+          <li>Rappel du vrai pourquoi</li>
+        </ul><footer><span class="by u">Badr</span> arbitrage accepté : deux éléments descendent en SHOULD pour garder une v1 légère</footer></div>
+        <div class="col c"><header><span class="num">COULD</span><small>Sas 3</small></header><ul>
+          <li>Renforcement</li><li>Chaussures</li><li>Parcours</li><li>Journal de bord</li><li>Simulation de course</li><li>Carnet de blessures</li><li>Rapport kiné / suggestions santé</li><li>Empêchements « moins de temps » / « voyage »</li><li>Tableau de bord personnalisable</li>
+        </ul><footer><span class="by u">Badr</span> décision</footer></div>
+        <div class="col w"><header><span class="num">WON'T</span><small>Pas cette fois</small></header><ul>
+          <li>Nutrition, sommeil, calendrier, météo</li>
+          <li>Objectifs maintien / trail / régularité</li>
+          <li class="rej">Version minimum (rejetée)</li>
+          <li class="rej">Choix manuel de la méthode (rejeté)</li>
+        </ul><footer><span class="by u">Badr</span> décision</footer></div>
+      </div>
+    </div>
+    <details class="log" data-sec="4"><summary>Carnet complet du tronçon</summary></details>
+  </section>
+  </div>
+
+  <!-- ================= FINISH ================= -->
+  <section class="finish" aria-labelledby="fin-t">
+    <div class="checker" aria-hidden="true"></div>
+    <div class="tape">Arrivée · KM 10</div>
+    <div class="finish-head">
+      <h2 id="fin-t">Ce qu'on rapporte de la course</h2>
+      <p>Cinq médailles, frappées par le coach à partir de tout ce que Badr a posé sur la piste.</p>
+    </div>
+    <div class="podium">
+      <article class="ins hero-ins"><div class="medal num">1</div><div>
+        <h3>Le pilote automatique transparent</h3>
+        <p>L'appli décide (méthode, plan, ajustements), explique toujours pourquoi, et Badr garde un droit de veto par la confirmation. Un seul principe concilie « ne pas intervenir », « zéro manip » et « garder mon propre jugement ».</p>
+        <div class="src">Synthèse <span class="by c" style="color:var(--bg);border-color:var(--bg)">coach</span></div></div></article>
+      <article class="ins"><div class="medal num">2</div><div>
+        <h3>La confiance est le produit</h3>
+        <p>Synchro fiable, feedback appuyé sur des données, « pourquoi » en une ligne, prédictions en fourchette : une seule exigence d'explicabilité sous quatre formes.</p>
+        <div class="src">Synthèse <span class="by c">coach</span></div></div></article>
+      <article class="ins"><div class="medal">😌</div><div>
+        <h3>L'emoji est la donnée la plus rentable</h3>
+        <p>Un seul geste alimente la matrice respect × ressenti, la détection du surmenage, les notifications et les suggestions santé. Petit détail d'interface, mais critique pour la v1.</p>
+        <div class="src">Synthèse <span class="by c">coach</span></div></div></article>
+      <article class="ins"><div class="medal num">4</div><div>
+        <h3>Le profil vivant est la colonne vertébrale</h3>
+        <p>Il rend possibles la continuité entre plans, la saison, la mémoire des conversations et le carnet de blessures. À construire en premier, avec dès le départ une place pour la nutrition et le sommeil, pour les brancher plus tard sans refonte.</p>
+        <div class="src">Synthèse <span class="by c">coach</span></div></div></article>
+      <article class="ins"><div class="medal num">5</div><div>
+        <h3>La jauge de faisabilité est l'outil de motivation</h3>
+        <p>Puisque la motivation revient par le « vrai objectif », la jauge (SHOULD) est en réalité le levier de motivation : candidate à remonter tôt.</p>
+        <div class="src">Synthèse <span class="by c">coach</span></div></div></article>
+    </div>
+
+    <div class="results" aria-label="Résultats officiels">
+      <div class="res"><span class="num" id="r-tot">0</span><small>entrées au carnet</small></div>
+      <div class="res u"><span class="num" id="r-u">0</span><small>par Badr</small></div>
+      <div class="res c"><span class="num" id="r-c">0</span><small>par le coach</small></div>
+      <div class="res"><span class="num">4</span><small>techniques</small></div>
+      <div class="res"><span class="num">8</span><small>items MUST</small></div>
+    </div>
+  </section>
+</main>
+<footer class="end">Session du 17 novembre 2026 · Application de course à pied personnelle · Prochaine étape : le profil vivant.</footer>
+
+<script>
+const DATA = [[1, "direction", "user", "Batch de techniques : First Principles Thinking, Reverse Brainstorming, SCAMPER"], [1, "idea", "coach", "Vérité de base : progression = stress + récupération ; l'appli comme gestionnaire du rapport stress/récup, le plan en découle"], [1, "idea", "user", "Vérité de base : pour progresser il faut aussi bien s'alimenter — la nutrition fait partie du socle, pas un simple ajout"], [1, "idea", "user", "Vérité de base : ne pas forcer jusqu'à la blessure — la prévention des blessures est une contrainte de base"], [1, "insight", "coach", "Les vérités de l'utilisateur placent la nutrition et la blessure dans le socle, alors qu'elles étaient prévues 'pour plus tard' → l'architecture doit les prévoir dès le départ"], [1, "idea", "user", "Signal de surmenage : douleurs"], [1, "idea", "user", "Signal de surmenage : récupération plus longue que d'habitude"], [1, "idea", "user", "Signal de surmenage : séances ressenties plus dures (effort perçu en hausse à charge égale)"], [1, "idea", "user", "Signal de surmenage : jambes lourdes"], [1, "idea", "user", "Signal de surmenage : baisse de motivation mentale"], [1, "idea", "coach", "Écart entre l'effort perçu (RPE) et l'effort mesuré (FC/allure) comme signal clé de fatigue : 'plus dur que ce que disent les chiffres' = drapeau rouge"], [1, "insight", "coach", "4 des 5 signaux de l'utilisateur sont subjectifs → l'appli doit capter le ressenti, pas seulement les données de la montre"], [1, "idea", "user", "Recueil du ressenti : popup simple à l'ouverture du feedback de la séance, choix par emojis (le moins possible), sur deux axes : ressenti personnel + perception de la séance"], [1, "idea", "coach", "Ressenti donné AVANT d'afficher l'analyse (les chiffres débloqués après l'emoji) pour éviter que les données influencent le ressenti"], [1, "idea", "coach", "Popup ressenti à 3 emojis maximum : 😌 facile / 😐 normal / 🥵 dur"], [1, "decision", "user", "Validé : ressenti donné avant les chiffres, 3 emojis (😌/😐/🥵), UNE seule question"], [1, "idea", "user", "La question du ressenti s'affiche pendant le chargement/génération du feedback (le temps d'attente sert à quelque chose)"], [1, "idea", "user", "Le feedback n'est pas que des chiffres : il inclut une analyse du respect de la séance prévue (prévu vs réalisé)"], [1, "idea", "coach", "Analyse du respect bloc par bloc (échauffement, chaque fractionné, récup) avec un verdict d'une ligne + note de conformité globale"], [1, "idea", "coach", "Croiser le respect et le ressenti : 'séance respectée + 🥵' vs 'pas respectée + 😌' → deux lectures différentes de la forme du jour"], [1, "decision", "user", "Validé : la matrice respect x ressenti déclenche des réactions du plan"], [1, "idea", "user", "Toute modification du plan passe par une confirmation de l'utilisateur (pas de changement silencieux)"], [1, "idea", "user", "Le réajustement doit rester cohérent avec les séances précédentes ET l'objectif final"], [1, "idea", "user", "Feedback sur l'objectif lui-même : alerte s'il devient trop difficile à atteindre ou au contraire pas assez challengeant"], [1, "idea", "user", "Type d'objectif : courir une distance particulière"], [1, "idea", "user", "Type d'objectif : courir plus longtemps (durée)"], [1, "idea", "user", "Type d'objectif : faire un chrono sur une distance"], [1, "idea", "user", "Type d'objectif : récupérer après une course"], [1, "idea", "user", "Type d'objectif : améliorer la condition physique générale"], [1, "idea", "user", "Type d'objectif : reprendre après une blessure"], [1, "idea", "coach", "Type d'objectif : maintien / plateau volontaire (garder le niveau pendant une période chargée)"], [1, "idea", "coach", "Type d'objectif : objectif terrain : trail / dénivelé"], [1, "idea", "coach", "Type d'objectif : objectif régularité (ex. courir 3x/semaine pendant 3 mois)"], [1, "idea", "coach", "Type d'objectif : objectif composite : objectif principal + objectifs secondaires (ex. 10 km en 45 min + ne pas se blesser)"], [1, "idea", "coach", "Type d'objectif : séquence d'objectifs enchaînés (saison) : préparation → course → récupération → préparation suivante"], [1, "idea", "coach", "Jauge de faisabilité de l'objectif mise à jour à chaque séance (ex. 'sub-45 sur 10 km : 72 % → en hausse')"], [1, "decision", "user", "Retenus pour la v1 : objectif principal + objectifs secondaires, et saison d'objectifs enchaînés. Maintien, trail et régularité gardés pour plus tard"], [1, "idea", "user", "Donnée d'entrée à la création d'un objectif : historique d'entraînement (si disponible)"], [1, "idea", "user", "Donnée d'entrée à la création d'un objectif : meilleurs temps / records personnels"], [1, "idea", "user", "Donnée d'entrée à la création d'un objectif : état de forme actuel"], [1, "idea", "user", "Donnée d'entrée à la création d'un objectif : blessures (actuelles et passées)"], [1, "idea", "user", "Donnée d'entrée à la création d'un objectif : jours de disponibilité dans la semaine"], [1, "idea", "user", "Donnée d'entrée à la création d'un objectif : jour de la sortie longue"], [1, "idea", "user", "Donnée d'entrée à la création d'un objectif : vacances / périodes d'indisponibilité"], [1, "idea", "coach", "Pré-remplir la création de l'objectif à partir d'intervals.icu (historique, records, charge actuelle, CTL/forme) → l'utilisateur ne fait que valider/corriger"], [1, "idea", "coach", "Carnet de blessures vivant : chaque blessure a une zone, une date, un déclencheur connu, et le plan évite ces déclencheurs (ex. pas de côtes si historique de tendinite d'Achille)"], [1, "decision", "user", "Validé : import et pré-remplissage des données depuis HealthFit et intervals.icu"], [1, "idea", "user", "Bouton 'Empêchement' qui liste les cas possibles ; chaque cas déclenche des propositions d'ajustement adaptées"], [1, "idea", "user", "Empêchement d'un jour → proposer d'annuler ou de déplacer la séance"], [1, "idea", "user", "Blessure → proposer d'annuler le plan ou de le suspendre jusqu'au rétablissement"], [1, "idea", "user", "L'appli évalue si l'empêchement impose de refaire le plan ou seulement d'annuler une ou plusieurs séances"], [1, "idea", "coach", "Après une suspension pour blessure, reprendre avec un plan de 'retour progressif' et recalculer la faisabilité de l'objectif (proposer de décaler la date ou d'ajuster le chrono)"], [1, "idea", "coach", "Cas d'empêchement 'malade' distinct de 'blessé' : règle au-dessus/en-dessous du cou (rhume léger = footing possible, fièvre = repos)"], [1, "idea", "coach", "Cas 'moins de temps' : séance raccourcie qui garde l'essentiel (ex. 2 fractionnés au lieu de 6) plutôt que d'annuler"], [1, "idea", "coach", "Cas 'voyage / pas d'accès au parcours habituel' : séance adaptée (tapis, côtes à l'hôtel, renfo sans matériel)"], [1, "decision", "user", "Validé : gestion du retour de blessure (plan de reprise progressive + recalcul de la faisabilité de l'objectif)"], [1, "insight", "user", "Causes réelles des séances ratées : surtout le manque de motivation et les empêchements de dernière minute"], [1, "idea", "user", "Cas d'empêchement : manque de motivation"], [1, "idea", "user", "Cas d'empêchement : empêchement de dernière minute"], [1, "idea", "coach", "Bouton 'pas motivé' → propose une version 'minimum vital' de la séance (ex. 20 min facile) : 'juste sortir', l'objectif est de ne pas casser la chaîne"], [1, "decision", "user", "Garder les cas d'empêchement maladie et blessure (déjà vécus)"], [1, "decision", "user", "Rejeté : la 'version minimum' pour manque de motivation. L'utilisateur veut s'obliger à faire la vraie séance"], [1, "insight", "user", "La motivation revient d'elle-même ou grâce au 'vrai objectif' : c'est un levier mental, pas une question de dosage de la séance"], [1, "idea", "coach", "À la création d'un objectif, écrire son 'vrai pourquoi' en une phrase ; l'appli le réaffiche quand l'utilisateur hésite ou signale un manque de motivation"], [2, "idea", "coach", "Sabotage : plan qui ignore la séance ratée de la veille → inverse : chaque séance s'appuie toujours sur l'état réel du jour"], [2, "idea", "user", "Sabotage : l'appli bugge → inverse : fiabilité avant fonctionnalités"], [2, "idea", "user", "Sabotage : plan ou feedback incohérents → inverse : chaque recommandation doit paraître logique et crédible"], [2, "idea", "user", "Sabotage : les séances n'arrivent pas correctement sur la montre → inverse : synchronisation appli → montre fiable"], [2, "idea", "user", "Sabotage : les courses ne remontent pas correctement de la montre vers l'appli → inverse : synchronisation montre → appli fiable"], [2, "insight", "coach", "Les 4 sabotages de l'utilisateur portent sur la CONFIANCE (fiabilité, cohérence, synchronisation), aucun sur les fonctionnalités : la confiance est le vrai produit"], [2, "idea", "coach", "Écran 'état de la synchro' : dernière séance envoyée, dernière course reçue, avec un statut ✅/⚠️ et un bouton 'resynchroniser'"], [2, "idea", "coach", "Chaque recommandation ou modification du plan affiche son 'pourquoi' en une ligne (ex. 'allégé car 🥵 hier + FC au repos +6')"], [2, "idea", "user", "Sabotage : feedback incompréhensible → inverse : feedback clair, compréhensible immédiatement"], [2, "idea", "user", "Sabotage : feedback qui ne repose sur rien → inverse : chaque feedback est appuyé sur des données concrètes"], [2, "idea", "user", "Sabotage : ton démotivant OU trop enthousiaste → inverse : ton motivant ET réaliste"], [2, "idea", "coach", "Structure du feedback en 3 lignes : 1 point fort factuel, 1 point à améliorer factuel, 1 conséquence pour la suite du plan"], [2, "idea", "coach", "Anti-flatterie : interdiction des compliments génériques ('super séance !') sans chiffre qui les justifie"], [2, "idea", "coach", "Le feedback cite au moins un élément mesuré ou ressenti à chaque affirmation (ex. 'les 3 derniers fractionnés à 4'12 au lieu de 4'20 prévu')"], [2, "idea", "user", "Feedback sur trois niveaux : la séance, l'objectif de la séance, l'objectif global"], [2, "idea", "user", "Le feedback explique à quoi a servi la séance (son rôle dans le plan)"], [2, "idea", "user", "Séance non respectée → feedback concret : ce qui a été mal fait + comment s'améliorer à la prochaine séance"], [2, "idea", "user", "Sabotage : planning pas progressif → inverse : progression visible et logique d'une semaine à l'autre"], [2, "idea", "user", "Sabotage : planning qui vise un chrono déraisonnable → inverse : cible de chrono réaliste"], [2, "idea", "user", "Sabotage : prédictions absurdes → inverse : prédictions crédibles et justifiées"], [2, "idea", "user", "Sabotage : trop d'informations pour se faire son propre avis → inverse : données digestes qui permettent à l'utilisateur d'analyser lui-même, en plus de l'avis de l'IA"], [2, "insight", "user", "L'utilisateur veut garder son propre jugement : l'IA donne un avis, mais les données doivent rester lisibles pour qu'il se forge le sien"], [2, "idea", "coach", "Feedback en deux couches : 'Mon avis (IA)' et 'Tes données' (3 à 5 indicateurs clés seulement), séparés visuellement ; le détail complet reste dans intervals.icu"], [2, "idea", "coach", "Prédiction de chrono en fourchette avec tendance (ex. '44:30 – 46:10, en amélioration') plutôt qu'un chiffre unique trompeur"], [2, "idea", "coach", "Vue 'escalier' du plan : volume et intensité semaine par semaine, pour voir la progression en un coup d'œil"], [2, "idea", "user", "Afficher seulement les données et graphiques les plus importants ; possibilité d'en ajouter d'autres avec le temps (tableau de bord personnalisable)"], [2, "idea", "user", "Effort accepté au lancement du plan, mais quasiment aucune manipulation au quotidien"], [2, "idea", "user", "Usage minimaliste : le plan s'affiche dès l'ouverture de l'appli"], [2, "idea", "user", "Quelques clics seulement pour accéder aux informations et au feedback de chaque course"], [2, "idea", "user", "Pas de notifications, sauf éventuellement des notifications importantes (à définir)"], [2, "insight", "user", "Principe de conception : configuration riche une seule fois, usage quotidien quasi nul"], [2, "idea", "coach", "Notification importante possible : la séance n'a pas été envoyée sur la montre (échec de synchro avant la séance du jour)"], [2, "idea", "coach", "Notification importante possible : une proposition de modification du plan attend ta confirmation"], [2, "idea", "coach", "Notification importante possible : signal de surmenage détecté (ex. 3 séances 🥵 d'affilée + FC au repos en hausse)"], [3, "idea", "coach", "Substituer : l'écran d'accueil 'plan de la semaine' remplacé par une seule carte 'séance du jour' (but, durée, statut sur la montre)"], [3, "direction", "user", "Rien à substituer dans l'appli puisqu'elle n'existe pas encore → recentrer SCAMPER sur la routine actuelle de l'utilisateur"], [3, "insight", "user", "Routine actuelle : conversation avec une IA → plan + prompt généré → collé manuellement dans intervals.icu → synchro vers la montre → résultats consultés sur Strava"], [3, "idea", "user", "Substituer : un plan basé sur une conversation → un plan généré à partir de données réelles"], [3, "idea", "user", "Substituer : la saisie manuelle dans intervals.icu → une synchronisation automatique dès que le plan est généré"], [3, "idea", "user", "Substituer : Strava et les autres applis pour consulter les courses → tout dans l'appli (données + feedback)"], [3, "idea", "coach", "Utiliser l'API d'intervals.icu (événements/séances structurées) pour écrire le plan directement dans le calendrier : intervals.icu devient un tuyau invisible vers la montre"], [3, "idea", "coach", "Garder la conversation avec l'IA, mais nourrie par les données réelles : un mode 'parler à mon coach' qui voit l'historique, la charge et le ressenti"], [3, "idea", "user", "Combiner (v1) : échauffements et étirements adaptés à chaque séance"], [3, "idea", "user", "Combiner (ensuite) : renforcement musculaire spécifique à la course"], [3, "idea", "user", "Combiner (plus tard) : nutrition, sommeil, calendrier, peut-être météo"], [3, "decision", "user", "Feuille de route : 1) échauffements/étirements 2) renfo 3) nutrition, sommeil, calendrier, météo"], [3, "idea", "coach", "Combiner : chaussures — suivi du kilométrage par paire, rotation conseillée selon le type de séance, alerte d'usure (lien avec le budget blessure)"], [3, "idea", "coach", "Combiner : parcours — l'appli suggère un parcours connu adapté à la séance (plat pour le fractionné, vallonné pour la sortie longue)"], [3, "idea", "coach", "Combiner : journal de bord — une note libre optionnelle par séance (vocal ou texte) que l'IA relit pour repérer des tendances"], [3, "idea", "coach", "Combiner : simulation de course — avant l'objectif, l'appli génère une stratégie d'allure km par km + un plan de ravitaillement"], [3, "decision", "user", "Garder les 4 idées de combinaison (chaussures, parcours, journal de bord, simulation de course) pour une mise en place progressive"], [3, "insight", "user", "Référence : Runna (formule payante) appréciée, mais abonnement coûteux ; l'utilisateur veut quelque chose de plus complet et plus personnel"], [3, "idea", "user", "Adapter de Runna : la clarté de l'écran d'accueil"], [3, "idea", "user", "Adapter de Runna : le parcours de génération du plan"], [3, "idea", "user", "Adapter de Runna : la présentation des séances"], [3, "idea", "user", "Adapter de Runna : les commentaires générés"], [3, "idea", "user", "Frustration Runna : pas assez de graphiques pour le suivi par course"], [3, "idea", "user", "Frustration Runna : pas de suivi de la nutrition"], [3, "idea", "user", "Frustration Runna : impossible d'enchaîner plusieurs plans, il faut attendre la fin de chacun"], [3, "idea", "user", "Frustration Runna : un nouveau plan ne tient pas compte des entraînements et données précédents"], [3, "insight", "coach", "Différenciateur clé : continuité. Un seul profil vivant (historique, forme, blessures, records) qui alimente chaque plan ; les plans sont des chapitres d'une même histoire, pas des silos"], [3, "idea", "coach", "Transition entre plans : quand un plan se termine, le suivant démarre depuis la forme réelle de fin de plan (pas depuis zéro), avec un bilan du plan précédent qui sert de base"], [3, "idea", "user", "Modifier : chaque feedback peut ouvrir une conversation IA pour poser des questions et creuser"], [3, "idea", "user", "Modifier : à l'issue de la conversation, l'IA peut proposer une mise à jour du plan (avec confirmation)"], [3, "idea", "coach", "La conversation s'ouvre déjà avec le contexte de la séance (données, ressenti, rôle de la séance) : pas besoin de réexpliquer"], [3, "idea", "coach", "Les points importants des conversations sont mémorisés dans le profil (ex. 'le mollet gauche tire après 15 km') et réutilisés pour les plans suivants"], [3, "idea", "coach", "Chaque modification du plan issue d'une conversation affiche un résumé avant/après des séances concernées avant confirmation"], [3, "decision", "user", "Garder : conversation avec contexte préchargé, mémoire des échanges dans le profil, avant/après avant confirmation"], [3, "direction", "user", "Les données ne servent qu'à la course à pied (pas d'usage en dehors)"], [3, "idea", "user", "Détourner : suggérer une visite médicale si nécessaire"], [3, "idea", "user", "Détourner : suggérer de consulter un kiné si nécessaire"], [3, "idea", "user", "Détourner : suggérer des compléments alimentaires si nécessaire"], [3, "direction", "user", "Ces suggestions santé uniquement en cas de besoin, pas de façon systématique"], [3, "idea", "coach", "Rapport 'kiné' exportable en un clic : historique de la douleur, charge des semaines précédentes, séances déclenchantes"], [3, "idea", "coach", "Déclencheurs des suggestions santé : douleur signalée plusieurs fois au même endroit, retour de blessure qui stagne, fatigue persistante malgré l'allègement"], [3, "decision", "user", "Garder : rapport kiné exportable et déclencheurs des suggestions santé (pour plus tard)"], [3, "decision", "user", "Éliminer — les 3 indispensables : 1) génération du plan 2) synchronisation avec la montre 3) feedback après chaque course"], [3, "direction", "user", "Critère d'élimination : tout ce qui ne sert pas à générer le plan ni à suivre la progression est secondaire"], [3, "insight", "coach", "Noyau du MVP = boucle fermée : générer → synchroniser → courir → remonter → analyser → réajuster ; le reste vient se greffer dessus"], [3, "idea", "coach", "Inverser : l'utilisateur propose sa semaine (jours, volume horaire) et l'appli remplit le contenu des séances"], [3, "idea", "user", "Inverser : choisir une méthode d'entraînement connue que l'appli adapte à l'objectif"], [3, "direction", "user", "Préférence : ne pas intervenir dans le choix de la méthode, pour rester cohérent avec les données ; l'appli décide"], [3, "idea", "coach", "L'appli choisit elle-même la méthode (ex. 80/20, Daniels, polarisé) selon l'objectif et les données, et l'indique en une ligne avec sa raison — l'utilisateur n'a pas à la choisir, mais sait sur quoi repose le plan"], [3, "direction", "user", "Passage à la phase de convergence"], [4, "decision", "user", "MoSCoW validé tel que proposé"], [4, "decision", "user", "MUST v1 : profil vivant + import intervals.icu/HealthFit ; création d'objectif (6 types, principal + secondaires) ; génération du plan à partir des données (progressif, réaliste, méthode choisie par l'appli + pourquoi) ; synchro auto aller/retour + écran état de la synchro ; feedback complet (emoji pendant le chargement, respect bloc par bloc, 3 niveaux, concret, ton motivant et réaliste, IA vs données) ; réajustement respect x ressenti avec confirmation ; bouton Empêchement (dernière minute, malade, blessé) ; accueil minimaliste, zéro notification"], [4, "decision", "user", "SHOULD : retour de blessure progressif ; jauge de faisabilité + alerte objectif + prédiction en fourchette ; conversation IA rattachée au feedback ; saison de plans enchaînés ; 3 notifications importantes ; vue escalier ; échauffements/étirements ; rappel du vrai pourquoi"], [4, "decision", "user", "COULD : renfo, chaussures, parcours, journal de bord, simulation de course, carnet de blessures, rapport kiné/suggestions santé, empêchements 'moins de temps'/'voyage', tableau de bord personnalisable"], [4, "decision", "user", "WON'T (cette fois) : nutrition, sommeil, calendrier, météo ; objectifs maintien/trail/régularité ; version minimum (rejetée) ; choix manuel de la méthode (rejeté)"], [4, "decision", "user", "Arbitrages acceptés : échauffements/étirements et saison enchaînée passent en SHOULD pour garder une v1 légère"], [4, "insight", "coach", "Principe directeur : 'pilote automatique transparent' — l'appli décide (méthode, plan, ajustements), explique toujours pourquoi, et l'utilisateur garde un droit de veto (confirmation). Concilie 'ne pas intervenir', 'zéro manip' et 'garder mon propre jugement'"], [4, "insight", "coach", "La confiance est le produit : synchro fiable, feedback appuyé sur des données, 'pourquoi' en une ligne, prédictions en fourchette = une seule exigence d'explicabilité sous quatre formes"], [4, "insight", "coach", "L'emoji quotidien est la donnée la plus rentable : un seul geste alimente la matrice respect x ressenti, la détection du surmenage, les notifications et les suggestions santé → petit détail d'interface, mais critique pour la v1"], [4, "insight", "coach", "Le profil vivant est la colonne vertébrale : il rend possibles la continuité entre plans, la saison, la mémoire des conversations et le carnet de blessures. À construire en premier, avec dès le départ une place réservée à la nutrition et au sommeil (vérité de base) pour les brancher plus tard sans refonte"], [4, "insight", "coach", "Motivation : puisque la motivation revient par le 'vrai objectif', la jauge de faisabilité (SHOULD) est en réalité l'outil de motivation → candidate à remonter tôt"]];
+const SECN = {1:"First Principles",2:"Reverse Brainstorming",3:"SCAMPER",4:"MoSCoW"};
+const KIND = {idea:"idée",insight:"constat",decision:"décision",direction:"cap",technique:"technique"};
+const esc = s => s.replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const tag = a => a==="user" ? '<span class="by u">Badr</span>' : '<span class="by c">coach</span>';
+const entries = DATA.filter(d => d[2]);
+
+/* totals */
+const nu = entries.filter(d=>d[2]==="user").length, nc = entries.length - nu;
+document.getElementById("r-tot").textContent = entries.length;
+document.getElementById("r-u").textContent = nu;
+document.getElementById("r-c").textContent = nc;
+
+/* splits */
+let km = 0, rows = "";
+for (const s of [1,2,3,4]) {
+  const e = entries.filter(d=>d[0]===s), u = e.filter(d=>d[2]==="user").length, c = e.length-u;
+  rows += `<tr><td class="n mono">KM ${[0,4,6,9][s-1]}</td><td><b>${SECN[s]}</b></td><td class="n" style="color:var(--badr);font-weight:800">${u}</td><td class="n" style="color:var(--coach);font-weight:800">${c}</td><td class="hide-s"><div class="bar"><i class="bu" style="width:${u/e.length*100}%"></i><i class="bc" style="width:${c/e.length*100}%"></i></div></td></tr>`;
+}
+document.getElementById("splits").innerHTML = rows;
+
+/* heart-rate line */
+(function(){
+  const svg = document.getElementById("hrsvg"), W = 1000, base = 150, n = entries.length, step = (W-20)/n;
+  let pts = [`0,${base}`], dots = "", seps = "", labels = "", prev = entries[0][0], x0 = 10;
+  const bounds = {};
+  entries.forEach((d,i) => {
+    const x = 10 + i*step;
+    if (d[0] !== prev) { seps += `<line class="sep" x1="${x}" y1="20" x2="${x}" y2="175"/>`; bounds[prev]=[x0,x]; x0 = x; prev = d[0]; }
+    const h = d[1]==="decision" ? 120 : d[1]==="insight" ? 100 : d[2]==="user" ? 82 : 52;
+    const y = base - h;
+    pts.push(`${x+step*.15},${base}`,`${x+step*.3},${base-8}`,`${x+step*.42},${base}`,`${x+step*.5},${y}`,`${x+step*.6},${base+16}`,`${x+step*.7},${base}`);
+    dots += `<circle class="${d[2]==="user"?"dot-u":"dot-c"}" cx="${x+step*.5}" cy="${y}" r="2.6"/>`;
+  });
+  bounds[prev] = [x0, W-10];
+  pts.push(`${W},${base}`);
+  for (const s in bounds) { const [a,b] = bounds[s]; labels += `<text x="${a+4}" y="186">${["KM 0","KM 4","KM 6","KM 9"][s-1]}</text>`; }
+  svg.innerHTML = `<line class="base" x1="0" y1="${base}" x2="${W}" y2="${base}"/>${seps}<polyline class="pulse" points="${pts.join(" ")}"/>${dots}${labels}`;
+})();
+
+/* reverse flips */
+(function(){
+  const box = document.getElementById("flips");
+  entries.filter(d => d[0]===2 && /^Sabotage/.test(d[3])).forEach(d => {
+    const m = d[3].replace(/^Sabotage\s*:\s*/,"").split(/\s*(?:->|→)\s*inverse\s*:\s*/);
+    box.insertAdjacentHTML("beforeend", `<div class="flip ${d[2]==="user"?"u":""}"><div class="s">${esc(m[0])}</div><div class="arr">→</div><div class="i">${esc(m[1]||"")}</div><div class="who">${tag(d[2])}</div></div>`);
+  });
+})();
+
+/* full logs */
+document.querySelectorAll("details.log").forEach(det => {
+  const s = +det.dataset.sec, e = entries.filter(d=>d[0]===s);
+  det.querySelector("summary").textContent = `Carnet complet du tronçon · ${e.length} entrées`;
+  const f = document.createElement("div"); f.className = "filter";
+  f.innerHTML = '<button type="button" aria-pressed="true" data-f="all">Tout</button><button type="button" aria-pressed="false" data-f="user">Badr</button><button type="button" aria-pressed="false" data-f="coach">Coach</button>';
+  const ol = document.createElement("ol");
+  ol.innerHTML = e.map(d => `<li class="it ${d[2]==="user"?"u":"c"}" data-a="${d[2]}">${tag(d[2])}<span class="k">${KIND[d[1]]||d[1]}</span>${esc(d[3])}</li>`).join("");
+  det.append(f, ol);
+  f.addEventListener("click", ev => {
+    const b = ev.target.closest("button"); if (!b) return;
+    f.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", x===b));
+    ol.querySelectorAll("li").forEach(li => li.hidden = !(b.dataset.f==="all" || li.dataset.a===b.dataset.f));
+  });
+});
+
+/* emoji mock */
+(function(){
+  const box = document.getElementById("emo"), un = document.getElementById("unlock");
+  box.addEventListener("click", ev => {
+    const b = ev.target.closest("button"); if (!b) return;
+    box.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", x===b));
+    un.textContent = `🔓 Ressenti « ${b.dataset.l} » enregistré : place aux chiffres`;
+  });
+})();
+
+/* loop track */
+(function(){
+  const svg = document.getElementById("loopsvg");
+  const cx=380, cy=200, rx=330, ry=165, ix=250, iy=95;
+  const st = ["Générer","Synchroniser","Courir","Remonter","Feedback","Réajuster"];
+  const sub = ["le plan","vers la montre","Apple Watch S10","montre → appli","😌 😐 🥵","respect × ressenti"];
+  let lanes = "";
+  for (let k=1;k<4;k++){ const f=k/4; lanes += `<ellipse class="lane" cx="${cx}" cy="${cy}" rx="${ix+(rx-ix)*f}" ry="${iy+(ry-iy)*f}"/>`; }
+  const mr = (rx+ix)/2, mry = (ry+iy)/2;
+  let stations = "";
+  st.forEach((s,i) => {
+    const a = -Math.PI/2 + i*2*Math.PI/6;
+    const x = cx + mr*Math.cos(a), y = cy + mry*Math.sin(a);
+    stations += `<g class="st"><circle cx="${x}" cy="${y}" r="38"/><text class="n" x="${x}" y="${y-12}">${i+1}</text><text x="${x}" y="${y+5}">${s}</text><text x="${x}" y="${y+21}" style="font-size:10px;font-weight:600;fill:var(--muted)">${sub[i]}</text></g>`;
+  });
+  const ga = -Math.PI/2 + 4.5*2*Math.PI/6, gx = cx + mr*Math.cos(ga), gy = cy + mry*Math.sin(ga);
+  svg.innerHTML = `<ellipse class="oval" cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}"/>${lanes}<ellipse class="infield" cx="${cx}" cy="${cy}" rx="${ix}" ry="${iy}"/>
+  <g class="center"><text x="${cx}" y="${cy-14}" style="font-size:13px;font-weight:800;letter-spacing:.14em;fill:var(--muted)">NOYAU DU MVP</text><text x="${cx}" y="${cy+12}" style="font-size:22px;font-weight:900">Profil vivant</text><text x="${cx}" y="${cy+32}" style="font-size:12px;fill:var(--muted)">le reste vient se greffer dessus</text></g>
+  <g class="gate"><rect x="${gx-58}" y="${gy-13}" width="116" height="26" rx="13"/><text x="${gx}" y="${gy+4}">✋ confirmation</text></g>
+  ${stations}<circle class="runner" id="runner" r="9" cx="${cx}" cy="${cy-mry}"/>`;
+  const r = document.getElementById("runner");
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  let t0 = null;
+  function f(t){ if(!t0) t0=t; const a = -Math.PI/2 + ((t-t0)/12000)*2*Math.PI; r.setAttribute("cx", cx + mr*Math.cos(a)); r.setAttribute("cy", cy + mry*Math.sin(a)); requestAnimationFrame(f); }
+  requestAnimationFrame(f);
+})();
+</script>
+</body>
+</html>
