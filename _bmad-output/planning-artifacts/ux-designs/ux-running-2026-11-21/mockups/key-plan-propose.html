@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Plan proposé</title>
+<style>
+/* =========================================================
+   KEY SCREEN — Plan proposé (+ sheet Consigne, + Génération en cours)
+   Sections qui gouvernent cet écran :
+   - EXPERIENCE.md · Information Architecture (Génération en cours, Plan proposé,
+     Sheet Consigne)
+   - EXPERIENCE.md · Component Patterns : Plan proposé, Sheet Consigne
+     (« Régénérer » désactivé tant que la Consigne est vide, FR-6),
+     Section de semaine, Ligne « pourquoi »
+   - EXPERIENCE.md · State Patterns › Plan : Génération en cours (étapes
+     Profil lu · Méthode choisie · Garde-fous vérifiés), proposé
+   - EXPERIENCE.md · Key Flows › Flux 1, étapes 6 à 9
+   - EXPERIENCE.md · Tab bar (masquée pendant l'onboarding)
+   - DESIGN.md · Components (week-section, chip-type-seance, why-line,
+     button-primary, button-secondary, sheet, form-field, ai-card pulse),
+     Colors, Elevation & Depth
+   Écart signalé : aucun token « bouton désactivé » dans DESIGN.md — rendu
+   provisoire ici en primary-strong à 40 % d'opacité.
+   ========================================================= */
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --background:#F6F7F9;--surface:#FFFFFF;--ink:#12151A;--ink-body:#3B4048;--ink-secondary:#6B7280;
+  --border:#E6E8EC;--skeleton:#EEF0F3;--primary:#FF5B2E;--primary-soft:#FFF0EB;
+  --primary-strong:#D6401A;--primary-ink:#C93A12;--on-primary:#FFFFFF;
+  --success:#1F7A4D;--success-soft:#EAF6EF;--warning:#B45309;--warning-soft:#FEF3E2;--scrim:#12151A66;
+  --font:-apple-system,BlinkMacSystemFont,"SF Pro Text",system-ui,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --font-display:-apple-system,BlinkMacSystemFont,"SF Pro Display",system-ui,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+/* Page de présentation (neutre, hors produit) */
+body{background:#EDEDED;color:#1A1A1A;font-family:var(--font);-webkit-font-smoothing:antialiased;padding:32px 16px 64px}
+.page-head{max-width:1400px;margin:0 auto 28px}
+.page-head h1{font-size:22px;font-weight:700;letter-spacing:-.01em}
+.page-head p{color:#555;font-size:14px;margin-top:6px;max-width:820px;line-height:1.5}
+.grid{max-width:1400px;margin:0 auto;display:flex;flex-wrap:wrap;gap:36px;justify-content:center;align-items:flex-start}
+.col{display:flex;flex-direction:column;align-items:center;gap:12px;max-width:100%}
+.cap{font-size:12px;color:#555;text-align:center;max-width:390px;line-height:1.45}
+.cap b{color:#1A1A1A}
+.num{font-variant-numeric:tabular-nums}
+
+/* Cadre iPhone */
+.phone{width:390px;max-width:100%;height:844px;border-radius:48px;border:10px solid #111;position:relative;overflow:hidden;box-shadow:0 18px 40px rgba(0,0,0,.18);background:var(--background);color:var(--ink)}
+.phone.tall{height:auto;min-height:844px;padding-bottom:96px}
+.phone.small{width:340px;height:auto;min-height:700px;border-radius:42px;border-width:9px;padding-bottom:24px}
+.notch{position:absolute;top:9px;left:50%;transform:translateX(-50%);width:110px;height:30px;background:#000;border-radius:20px;z-index:20}
+.sb{height:46px;display:flex;justify-content:space-between;align-items:center;padding:0 26px 0 30px;font-size:14px;font-weight:600}
+.sb .ic{display:flex;gap:5px;align-items:center;font-size:10px}
+.sb .ic b{display:block;width:22px;height:11px;border:1.5px solid currentColor;border-radius:3px;position:relative}
+.sb .ic b::after{content:"";position:absolute;inset:1.5px;right:5px;background:currentColor;border-radius:1px}
+.scr{padding:6px 20px 110px}
+
+/* Tab bar — 4 onglets */
+.tabbar{position:absolute;left:0;right:0;bottom:0;height:78px;background:var(--surface);border-top:1px solid var(--border);display:flex;justify-content:space-around;padding-top:10px;z-index:5}
+.tabbar span{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:10.5px;font-weight:500;line-height:1.2;color:var(--ink-secondary);min-width:64px}
+.tabbar svg{width:24px;height:24px;stroke:var(--ink-secondary)}
+.tabbar .act{color:var(--primary-ink)}
+.tabbar .act svg{stroke:var(--primary)}
+
+/* Typo */
+.date{font-size:13px;color:var(--ink-secondary);font-weight:500}
+.greeting{font-size:28px;font-weight:600;line-height:1.15;letter-spacing:-.02em;margin-top:4px}
+.title-md{font-size:22px;font-weight:600;line-height:1.2;letter-spacing:-.02em}
+.label{font-size:13px;font-weight:600;line-height:1.3;color:var(--ink-secondary)}
+.label.ink{color:var(--ink)}
+.sub{font-size:13px;color:var(--ink-secondary);margin-top:4px;line-height:1.4}
+.back{font-size:15px;color:var(--primary-ink);font-weight:500;min-height:44px;display:flex;align-items:center}
+.body{font-size:15px;line-height:1.45;color:var(--ink-body)}
+.body-sm{font-size:13.5px;line-height:1.45;color:var(--ink-secondary)}
+
+/* Cartes */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:16px}
+.card-sdj{background:var(--surface);border:1px solid var(--border);border-radius:22px;padding:22px}
+.card-sdj h2{font-size:26px;font-weight:600;line-height:1.15;letter-spacing:-.02em;margin:14px 0 6px}
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;line-height:1.3;color:var(--primary-ink);background:var(--primary-soft);padding:5px 10px;border-radius:9999px}
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:600;line-height:1.3;padding:4px 9px;border-radius:9999px;color:var(--ink-secondary);background:var(--background);white-space:nowrap}
+.badge.ok{color:var(--success);background:var(--success-soft)}
+.badge.ko{color:var(--warning);background:var(--warning-soft)}
+.toprow{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.stats{display:flex;gap:26px;margin-top:18px}
+.stats div{font-size:12px;font-weight:600;color:var(--ink-secondary)}
+.stats strong{display:block;font-size:22px;font-weight:600;line-height:1.15;color:var(--ink);letter-spacing:-.01em;font-family:var(--font-display)}
+.why{margin-top:16px;padding-top:14px;border-top:1px solid var(--border);font-size:13.5px;color:var(--ink-secondary);line-height:1.45}
+.why b{color:var(--ink);font-weight:600}
+
+/* Boutons */
+.btn{display:flex;align-items:center;justify-content:center;min-height:44px;padding:13px 16px;border-radius:14px;font-size:15px;font-weight:600;line-height:1.2;text-align:center;width:100%}
+.btn-primary{background:var(--primary-strong);color:var(--on-primary)}
+.btn-secondary{background:var(--surface);color:var(--ink);border:1px solid var(--border)}
+.btn-text{color:var(--primary-ink);font-size:15px;font-weight:600;min-height:44px;display:inline-flex;align-items:center}
+.icon-btn{width:44px;height:44px;border-radius:12px;background:var(--surface);border:1px solid var(--border);display:grid;place-items:center;color:var(--ink)}
+.mt-btn{margin-top:20px}
+
+/* Progression / compte à rebours */
+.week{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:16px 18px}
+.week .row{display:flex;justify-content:space-between;font-size:13px;color:var(--ink-secondary)}
+.week .row b{color:var(--ink)}
+.dots{display:flex;gap:8px;margin-top:12px}
+.dots i{flex:1;height:6px;border-radius:9999px;background:var(--border)}
+.dots i.on{background:var(--primary)}
+
+/* Ligne de liste */
+.list{background:var(--surface);border:1px solid var(--border);border-radius:18px;overflow:hidden}
+.lr{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:44px;padding:12px 16px;border-top:1px solid var(--border)}
+.lr:first-child{border-top:0}
+.lr .l{font-size:15px;line-height:1.35;color:var(--ink)}
+.lr .v{font-size:13.5px;color:var(--ink-secondary);display:flex;align-items:center;gap:6px;white-space:nowrap}
+.chev{color:var(--ink-secondary);font-size:18px;line-height:1}
+
+/* Avis IA */
+.ai .t{font-size:12px;font-weight:600;color:var(--ink-secondary);display:flex;align-items:center;gap:8px}
+.ai p{font-size:15px;line-height:1.45;color:var(--ink-body);margin-top:10px}
+.ai p b{color:var(--ink);font-weight:600}
+.pulse{width:8px;height:8px;border-radius:9999px;background:var(--primary);box-shadow:0 0 0 4px var(--primary-soft);flex:none}
+.sk{height:10px;border-radius:6px;background:var(--skeleton);margin-top:10px}
+
+/* Tes données */
+.metric-xl{font-size:44px;font-weight:600;line-height:1.05;letter-spacing:-.03em;font-family:var(--font-display);color:var(--ink)}
+.metric-xl small{font-size:15px;color:var(--ink-secondary);font-weight:400;letter-spacing:0;margin-left:4px}
+.ctx{font-size:13.5px;color:var(--ink-secondary);margin-top:4px}
+.two{display:flex;gap:10px;margin-top:12px}
+.two div{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:12px;font-size:11.5px;font-weight:500;color:var(--ink-secondary)}
+.two strong{display:block;font-size:18px;color:var(--ink);font-weight:600;margin-top:2px}
+.two strong small{font-size:13px;color:var(--ink-secondary);font-weight:500}
+.chart{margin-top:12px;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:12px}
+.chart .l{font-size:11.5px;font-weight:500;color:var(--ink-secondary);margin-bottom:8px}
+
+/* Ligne de Bloc */
+.bloc{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:11px 0;border-top:1px solid var(--border);font-size:13.5px;line-height:1.4}
+.bloc:first-child{border-top:0}
+.bloc .n{color:var(--ink)}
+.bloc .n small{display:block;color:var(--ink-secondary);font-size:12px}
+.bloc .r{text-align:right;white-space:nowrap}
+.bloc .r strong{color:var(--ink);font-weight:600}
+.bloc .r .ok{display:block;color:var(--success);font-size:12px;font-weight:600}
+.bloc .r .ko{display:block;color:var(--warning);font-size:12px;font-weight:600}
+
+/* Section de semaine */
+.wk{background:var(--surface);border:1px solid var(--border);border-radius:18px;margin-top:10px}
+.wk-h{display:flex;justify-content:space-between;align-items:center;min-height:52px;padding:12px 16px;gap:8px}
+.wk-h .t{font-size:13px;font-weight:600;color:var(--ink);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.wk-h .t small{font-weight:500;color:var(--ink-secondary)}
+.wk-h .v{font-size:13.5px;color:var(--ink-secondary);display:flex;align-items:center;gap:8px}
+.wk-h .v b{color:var(--ink);font-weight:600}
+.caret{display:inline-block;width:8px;height:8px;border-right:2px solid var(--ink-secondary);border-bottom:2px solid var(--ink-secondary);transform:rotate(-45deg);margin-left:2px}
+.caret.open{transform:rotate(45deg);margin-top:-4px}
+.ss{display:flex;align-items:center;gap:12px;min-height:56px;padding:10px 16px;border-top:1px solid var(--border)}
+.ss .d{width:40px;font-size:12px;font-weight:600;color:var(--ink-secondary);line-height:1.25;flex:none}
+.ss .d b{display:block;font-size:15px;color:var(--ink)}
+.ss .m{flex:1;min-width:0;font-size:15px;color:var(--ink);line-height:1.3}
+.ss .m small{display:block;font-size:12px;color:var(--ink-secondary);font-weight:500}
+
+/* Sheet */
+.scrim{position:absolute;inset:0;background:var(--scrim);z-index:8}
+.sheet{position:absolute;left:0;right:0;bottom:0;background:var(--surface);border-radius:28px 28px 0 0;padding:24px 24px 40px;z-index:9;box-shadow:0 -8px 24px rgba(18,21,26,.08)}
+.handle{width:38px;height:5px;border-radius:9999px;background:var(--border);margin:-12px auto 16px}
+.opts{display:flex;gap:10px;margin-top:20px}
+.opt{flex:1;background:var(--background);border:1.5px solid transparent;border-radius:18px;padding:18px 6px 14px;display:flex;flex-direction:column;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--ink);min-height:44px}
+.opt .e{font-size:40px;line-height:1}
+
+/* Champs */
+.field{margin-top:16px}
+.field .lab{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:6px;display:block}
+.input{background:var(--surface);border:1px solid var(--border);border-radius:12px;min-height:44px;padding:11px 14px;font-size:15px;line-height:1.45;color:var(--ink)}
+.input.ph{color:var(--ink-secondary)}
+.input.area{min-height:96px}
+.input.focus{border-color:var(--primary);border-width:1.5px}
+.toggles{display:flex;flex-wrap:wrap;gap:8px}
+.tg{min-height:44px;min-width:44px;padding:0 12px;border-radius:9999px;border:1px solid var(--border);background:var(--surface);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:var(--ink);line-height:1.15}
+.tg.on{background:var(--primary-soft);border-color:var(--primary);color:var(--primary-ink)}
+.notes{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:12px 14px;font-size:15px;line-height:1.45;color:var(--ink);min-height:72px}
+
+/* Bannière */
+.banner{border-radius:12px;padding:12px 14px;font-size:13.5px;line-height:1.45;color:var(--ink)}
+.banner.info{background:var(--primary-soft)}
+.banner.warn{background:var(--warning-soft)}
+.banner b{font-weight:600}
+
+.sec{font-size:13px;font-weight:600;color:var(--ink-secondary);margin:22px 0 10px}
+.gap{height:22px}
+.row2{display:flex;gap:10px}
+
+</style>
+</head>
+<body>
+<header class="page-head"><h1>Plan proposé — maquette clé</h1>
+<p>Dimanche 15 novembre au soir, premier lancement (Flux 1). Au centre : « Refuser » ouvre la sheet Consigne, champ vide donc « Régénérer » désactivé. À droite : l'écran d'attente pendant la génération (moins de 2 min).</p></header>
+<div class="grid">
+<div class="col">
+<div class="phone tall" style="padding-bottom:150px"><div class="notch"></div><div class="sb"><span class="num">21:04</span><span class="ic">●●● <b></b></span></div>
+<div class="scr" style="padding-bottom:24px"><h1 class="title-md">Ton plan est prêt</h1>
+  <div class="sub num">Marathon · 4 avril 2027 · 3 h 29 · 20 semaines · 4 séances par semaine</div>
+  <section class="card" style="margin-top:18px">
+    <span class="label">Méthode</span>
+    <div style="font-size:18px;font-weight:600;color:var(--ink);margin-top:4px">80/20</div>
+    <p class="why" style="margin-top:12px;padding-top:12px"><b>Pourquoi cette méthode</b> — ta base est solide (CTL 42) mais ton ancienne blessure au mollet invite à garder 80 % du volume en endurance facile.</p>
+  </section>
+  <div class="sec">Semaine par semaine</div>
+  <div class="wk"><div class="wk-h" role="button" aria-expanded="true"><span class="t">Semaine 1 <small class="num">16–22 nov.</small></span><span class="v num"><b>39 km</b><i class="caret open"></i></span></div><div class="ss num"><span class="d">mar.<b>17</b></span><span class="m">Footing 8 km<small>8 km · 5:40 /km</small></span><span class="chip">● Footing</span></div><div class="ss num"><span class="d">jeu.<b>19</b></span><span class="m">Fractionné 5×1000 m<small>9 km · 4:10 /km sur les 1000</small></span><span class="chip">● Fractionné</span></div><div class="ss num"><span class="d">sam.<b>21</b></span><span class="m">Footing récupération 6 km<small>6 km · 6:00 /km</small></span><span class="chip">● Footing</span></div><div class="ss num"><span class="d">dim.<b>22</b></span><span class="m">Sortie longue 16 km<small>16 km · 5:35 /km</small></span><span class="chip">● Sortie longue</span></div></div>
+  <div class="wk"><div class="wk-h" role="button" aria-expanded="false"><span class="t">Semaine 2 <small class="num">23–29 nov.</small></span><span class="v num"><b>41 km</b><i class="caret"></i></span></div></div>
+  <div class="wk"><div class="wk-h" role="button" aria-expanded="false"><span class="t">Semaine 3 <small class="num">30 nov.–6 déc.</small></span><span class="v num"><b>45 km</b><i class="caret"></i></span></div></div>
+  <div class="wk"><div class="wk-h" role="button" aria-expanded="false"><span class="t">Semaine 4 <small class="num">7–13 déc.</small> <span class="badge">allégée</span></span><span class="v num"><b>35 km</b><i class="caret"></i></span></div></div>
+  <div class="wk"><div class="wk-h" role="button" aria-expanded="false"><span class="t">Semaine 5 <small class="num">14–20 déc.</small></span><span class="v num"><b>46 km</b><i class="caret"></i></span></div></div>
+  <div class="wk"><div class="wk-h" role="button" aria-expanded="false"><span class="t">Semaine 6 <small class="num">21–27 déc.</small></span><span class="v num"><b>50 km</b><i class="caret"></i></span></div></div>
+  <p class="body-sm num" style="margin-top:12px;text-align:center">… jusqu'à la semaine 20 · 29 mars–4 avril</p></div>
+<div style="position:absolute;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--border);padding:12px 20px 30px;z-index:5">
+  <div class="btn btn-primary" role="button">Valider le plan</div>
+  <div class="btn btn-secondary" role="button" style="margin-top:10px">Refuser</div>
+</div>
+</div>
+<div class="cap"><b>Plan proposé</b> — Méthode + raison en une ligne, semaines dépliables lisibles avant validation ; rien n'est publié avant « Valider le plan » ; pas de barre d'onglets (onboarding) ; page défilée en entier</div>
+</div><div class="col">
+<div class="phone"><div class="notch"></div><div class="sb"><span class="num">21:06</span><span class="ic">●●● <b></b></span></div>
+<div class="scr"><h1 class="title-md">Ton plan est prêt</h1>
+  <div class="sub num">Marathon · 4 avril 2027 · 3 h 29 · 20 semaines · 4 séances par semaine</div>
+  <section class="card" style="margin-top:18px">
+    <span class="label">Méthode</span>
+    <div style="font-size:18px;font-weight:600;color:var(--ink);margin-top:4px">80/20</div>
+    <p class="why" style="margin-top:12px;padding-top:12px"><b>Pourquoi cette méthode</b> — ta base est solide (CTL 42) mais ton ancienne blessure au mollet invite à garder 80 % du volume en endurance facile.</p>
+  </section>
+  <div class="sec">Semaine par semaine</div>
+  <div class="wk"><div class="wk-h" role="button" aria-expanded="true"><span class="t">Semaine 1 <small class="num">16–22 nov.</small></span><span class="v num"><b>39 km</b><i class="caret open"></i></span></div><div class="ss num"><span class="d">mar.<b>17</b></span><span class="m">Footing 8 km<small>8 km · 5:40 /km</small></span><span class="chip">● Footing</span></div><div class="ss num"><span class="d">jeu.<b>19</b></span><span class="m">Fractionné 5×1000 m<small>9 km · 4:10 /km sur les 1000</small></span><span class="chip">● Fractionné</span></div><div class="ss num"><span class="d">sam.<b>21</b></span><span class="m">Footing récupération 6 km<small>6 km · 6:00 /km</small></span><span class="chip">● Footing</span></div><div class="ss num"><span class="d">dim.<b>22</b></span><span class="m">Sortie longue 16 km<small>16 km · 5:35 /km</small></span><span class="chip">● Sortie longue</span></div></div>
+  <div class="wk"><div class="wk-h" role="button" aria-expanded="false"><span class="t">Semaine 2 <small class="num">23–29 nov.</small></span><span class="v num"><b>41 km</b><i class="caret"></i></span></div></div>
+  <div class="wk"><div class="wk-h" role="button" aria-expanded="false"><span class="t">Semaine 3 <small class="num">30 nov.–6 déc.</small></span><span class="v num"><b>45 km</b><i class="caret"></i></span></div></div>
+  <div class="wk"><div class="wk-h" role="button" aria-expanded="false"><span class="t">Semaine 4 <small class="num">7–13 déc.</small> <span class="badge">allégée</span></span><span class="v num"><b>35 km</b><i class="caret"></i></span></div></div>
+  <div class="wk"><div class="wk-h" role="button" aria-expanded="false"><span class="t">Semaine 5 <small class="num">14–20 déc.</small></span><span class="v num"><b>46 km</b><i class="caret"></i></span></div></div>
+  <div class="wk"><div class="wk-h" role="button" aria-expanded="false"><span class="t">Semaine 6 <small class="num">21–27 déc.</small></span><span class="v num"><b>50 km</b><i class="caret"></i></span></div></div>
+  <p class="body-sm num" style="margin-top:12px;text-align:center">… jusqu'à la semaine 20 · 29 mars–4 avril</p></div>
+<div class="scrim"></div>
+<section class="sheet" role="dialog" aria-modal="true" aria-labelledby="cs-t">
+  <div class="handle" aria-hidden="true"></div>
+  <h2 id="cs-t" class="title-md">Qu'est-ce qui ne va pas ?</h2>
+  <p class="body-sm" style="margin-top:6px">Dis-moi quoi changer, je refais le plan à partir de ta consigne.</p>
+  <div class="field"><label class="lab" for="cs-in">Ta consigne (obligatoire)</label><div id="cs-in" class="input area ph focus">Ex. : moins de volume en semaine 3</div></div>
+  <div class="btn btn-primary" role="button" aria-disabled="true" style="margin-top:16px;opacity:.4">Régénérer</div>
+  <div class="btn btn-secondary" role="button" style="margin-top:10px">Annuler</div>
+</section>
+</div>
+<div class="cap"><b>Sheet Consigne</b> — ouverte par « Refuser » ; champ vide, « Régénérer » désactivé (FR-6)</div>
+</div><div class="col">
+<div class="phone"><div class="notch"></div><div class="sb"><span class="num">21:02</span><span class="ic">●●● <b></b></span></div>
+<div class="scr" style="padding-top:150px">
+  <h1 class="greeting" style="text-align:center">Je prépare ton plan…</h1>
+  <p class="body num" style="text-align:center;margin-top:10px">Marathon · 4 avril 2027 · 3 h 29</p>
+  <div class="list" style="margin-top:32px" role="status">
+    <div class="lr"><span class="l" style="display:flex;align-items:center;gap:12px;color:var(--ink)"><span style="color:var(--success);font-weight:700;width:18px;text-align:center" aria-hidden="true">✓</span>Profil lu<span class="sr" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)"> — fait</span></span></div>
+    <div class="lr"><span class="l" style="display:flex;align-items:center;gap:12px;color:var(--ink)"><span style="width:18px;display:grid;place-items:center" aria-hidden="true"><span class="pulse"></span></span>Méthode choisie<span class="sr" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)"> — en cours</span></span></div>
+    <div class="lr"><span class="l" style="display:flex;align-items:center;gap:12px;color:var(--ink-secondary)"><span style="width:18px;display:grid;place-items:center" aria-hidden="true"><span style="width:8px;height:8px;border-radius:9999px;background:var(--border)"></span></span>Garde-fous vérifiés<span class="sr" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)"></span></span></div>
+  </div>
+</div>
+</div>
+<div class="cap"><b>Génération en cours</b> — écran plein, étapes lisibles ; tentatives invisibles ; aucune barre d'onglets</div>
+</div>
+</div>
+</body>
+</html>
