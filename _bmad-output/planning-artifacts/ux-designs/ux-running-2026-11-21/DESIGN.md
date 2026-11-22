@@ -1,0 +1,621 @@
+---
+title: running — DESIGN
+name: running
+description: Coach de course à pied personnel en PWA iPhone. Calme clair — fond pâle aéré, cartes blanches, un seul orange pour l'action et la progression. Mode clair uniquement en v1.
+status: final
+updated: 2026-11-22
+sources:
+  - _bmad-output/planning-artifacts/prds/prd-running-2026-11-20/prd.md
+  - _bmad-output/planning-artifacts/briefs/brief-running-2026-11-18/brief.md
+colors:
+  # Direction 1 « Calme clair » — valeurs relevées dans mockups/direction-calme-clair.html
+  background: '#F6F7F9'
+  surface: '#FFFFFF'
+  ink: '#12151A'
+  ink-body: '#3B4048'
+  ink-secondary: '#6B7280'
+  border: '#E6E8EC'
+  skeleton: '#EEF0F3'
+  primary: '#FF5B2E'
+  primary-soft: '#FFF0EB'
+  # variantes ajoutées pour tenir WCAG AA (voir § Colors)
+  primary-strong: '#D6401A'
+  primary-ink: '#C93A12'
+  on-primary: '#FFFFFF'
+  success: '#1F7A4D'
+  success-soft: '#EAF6EF'
+  warning: '#B45309'
+  warning-soft: '#FEF3E2'
+  scrim: '#12151A66'
+typography:
+  # Police système iOS (SF Pro via -apple-system). Chiffres en tabular-nums partout.
+  greeting:
+    fontFamily: '-apple-system, "SF Pro Text", system-ui, sans-serif'
+    fontSize: 28px
+    fontWeight: '600'
+    lineHeight: '1.15'
+    letterSpacing: -0.02em
+  title-lg:
+    fontFamily: '-apple-system, "SF Pro Text", system-ui, sans-serif'
+    fontSize: 26px
+    fontWeight: '600'
+    lineHeight: '1.15'
+    letterSpacing: -0.02em
+  title-md:
+    fontFamily: '-apple-system, "SF Pro Text", system-ui, sans-serif'
+    fontSize: 22px
+    fontWeight: '600'
+    lineHeight: '1.2'
+    letterSpacing: -0.02em
+  metric-xl:
+    fontFamily: '-apple-system, "SF Pro Display", system-ui, sans-serif'
+    fontSize: 44px
+    fontWeight: '600'
+    lineHeight: '1.05'
+    letterSpacing: -0.03em
+  metric-md:
+    fontFamily: '-apple-system, "SF Pro Display", system-ui, sans-serif'
+    fontSize: 22px
+    fontWeight: '600'
+    lineHeight: '1.15'
+    letterSpacing: -0.01em
+  metric-sm:
+    fontFamily: '-apple-system, "SF Pro Text", system-ui, sans-serif'
+    fontSize: 18px
+    fontWeight: '600'
+    lineHeight: '1.2'
+  name-sm:
+    # nom de la prochaine séance (carte Repos), nom de Méthode (Plan proposé)
+    fontFamily: '-apple-system, "SF Pro Text", system-ui, sans-serif'
+    fontSize: 18px
+    fontWeight: '600'
+    lineHeight: '1.2'
+  body:
+    fontFamily: '-apple-system, "SF Pro Text", system-ui, sans-serif'
+    fontSize: 15px
+    fontWeight: '400'
+    lineHeight: '1.45'
+  body-sm:
+    fontFamily: '-apple-system, "SF Pro Text", system-ui, sans-serif'
+    fontSize: 13.5px
+    fontWeight: '400'
+    lineHeight: '1.45'
+  label:
+    fontFamily: '-apple-system, "SF Pro Text", system-ui, sans-serif'
+    fontSize: 13px
+    fontWeight: '600'
+    lineHeight: '1.3'
+  meta:
+    # sous-titre d'écran, date de l'Accueil (graisse 500)
+    fontFamily: '-apple-system, "SF Pro Text", system-ui, sans-serif'
+    fontSize: 13px
+    fontWeight: '400'
+    lineHeight: '1.4'
+  detail:
+    # 2e ligne de liste, de Séance, de Bloc
+    fontFamily: '-apple-system, "SF Pro Text", system-ui, sans-serif'
+    fontSize: 12px
+    fontWeight: '500'
+    lineHeight: '1.3'
+  link:
+    # lien retour « ‹ Accueil »
+    fontFamily: '-apple-system, "SF Pro Text", system-ui, sans-serif'
+    fontSize: 15px
+    fontWeight: '500'
+    lineHeight: '1.2'
+  caption:
+    fontFamily: '-apple-system, "SF Pro Text", system-ui, sans-serif'
+    fontSize: 12px
+    fontWeight: '600'
+    lineHeight: '1.3'
+  micro:
+    fontFamily: '-apple-system, "SF Pro Text", system-ui, sans-serif'
+    fontSize: 11.5px
+    fontWeight: '500'
+    lineHeight: '1.3'
+  button:
+    fontFamily: '-apple-system, "SF Pro Text", system-ui, sans-serif'
+    fontSize: 15px
+    fontWeight: '600'
+    lineHeight: '1.2'
+  tab-label:
+    fontFamily: '-apple-system, "SF Pro Text", system-ui, sans-serif'
+    fontSize: 10.5px
+    fontWeight: '500'
+    lineHeight: '1.2'
+rounded:
+  xs: 6px
+  sm: 8px
+  md: 12px
+  lg: 14px
+  xl: 18px
+  2xl: 22px
+  sheet: 28px
+  full: 9999px
+spacing:
+  '1': 4px
+  '2': 8px
+  '3': 12px
+  '4': 16px
+  '5': 20px
+  '6': 24px
+  '7': 32px
+  page-gutter: 20px
+  card-padding: 22px
+  tile-padding: 12px
+  section-gap: 22px
+  tabbar-height: 78px
+  tap-min: 44px
+  week-header-height: 52px
+  session-row-height: 56px
+  # tailles hors échelle (dimensions, pas espacements d'échelle)
+  week-stack-gap: 10px
+  day-column-width: 40px
+  action-bar-padding: 12px 20px 30px
+components:
+  tab-bar:
+    background: '{colors.surface}'
+    border-top: '{colors.border}'
+    icon-inactive: '{colors.ink-secondary}'
+    icon-active: '{colors.primary}'
+    label-active: '{colors.primary-ink}'
+    typography: '{typography.tab-label}'
+    height: '{spacing.tabbar-height}'
+    alert-dot: '{colors.warning}'
+    alert-dot-size: 6px
+  card:
+    background: '{colors.surface}'
+    border: '{colors.border}'
+    radius: '{rounded.xl}'
+    padding: '{spacing.4}'
+  card-seance-du-jour:
+    background: '{colors.surface}'
+    border: '{colors.border}'
+    radius: '{rounded.2xl}'
+    padding: '{spacing.card-padding}'
+    title: '{typography.title-lg}'
+    objective: '{typography.body}'
+    objective-color: '{colors.ink-body}'
+  card-repos:
+    # jour sans Séance : même carte que card-seance-du-jour, sans puce
+    background: '{colors.surface}'
+    border: '{colors.border}'
+    radius: '{rounded.2xl}'
+    padding: '{spacing.card-padding}'
+    title: '{typography.title-lg}'
+    body: '{typography.body}'
+    next-label: '{typography.label}'
+    next-name: '{typography.name-sm}'
+    divider: '{colors.border}'
+  chip-type-seance:
+    background: '{colors.primary-soft}'
+    foreground: '{colors.primary-ink}'
+    radius: '{rounded.full}'
+    typography: '{typography.caption}'
+  badge-etat:
+    radius: '{rounded.full}'
+    typography: '{typography.caption}'
+    neutral-background: '{colors.background}'
+    neutral-foreground: '{colors.ink-secondary}'
+    ok-background: '{colors.success-soft}'
+    ok-foreground: '{colors.success}'
+    ko-background: '{colors.warning-soft}'
+    ko-foreground: '{colors.warning}'
+  badge-plan:
+    # « terminé » / « annulé » — toujours neutre
+    background: '{colors.background}'
+    foreground: '{colors.ink-secondary}'
+    radius: '{rounded.full}'
+    typography: '{typography.caption}'
+  stat-group:
+    value: '{typography.metric-md}'
+    value-color: '{colors.ink}'
+    label: '{typography.caption}'
+    label-color: '{colors.ink-secondary}'
+  stat-split-ressentis:
+    # 3 colonnes centrées : emoji au-dessus du chiffre, libellé dessous
+    background: '{colors.surface}'
+    border: '{colors.border}'
+    radius: '{rounded.xl}'
+    emoji-size: 22px
+    value: '{typography.metric-md}'
+    label: '{typography.caption}'
+    label-color: '{colors.ink-secondary}'
+  bilan-group:
+    # groupe de chiffres du Bilan = grammaire « Tes données »
+    section-label: '{typography.label}'
+    section-label-color: '{colors.ink-secondary}'
+    primary: '{components.metric-primary}'
+    tiles: '{components.metric-tile}'
+    gap: '{spacing.section-gap}'
+  why-line:
+    typography: '{typography.body-sm}'
+    color: '{colors.ink-secondary}'
+    lead-color: '{colors.ink}'
+    divider: '{colors.border}'
+  button-primary:
+    background: '{colors.primary-strong}'
+    foreground: '{colors.on-primary}'
+    pressed: '{colors.primary-ink}'
+    radius: '{rounded.lg}'
+    typography: '{typography.button}'
+    min-height: '{spacing.tap-min}'
+  button-primary-disabled:
+    # validé sur maquettes : primary-strong à 40 % d'opacité
+    background: '{colors.primary-strong}'
+    foreground: '{colors.on-primary}'
+    opacity: '0.4'
+  button-secondary:
+    background: '{colors.surface}'
+    foreground: '{colors.ink}'
+    border: '{colors.border}'
+    radius: '{rounded.lg}'
+    typography: '{typography.button}'
+    min-height: '{spacing.tap-min}'
+  button-text:
+    foreground: '{colors.primary-ink}'
+    typography: '{typography.button}'
+  button-row:
+    # deux button-secondary côte à côte (Plan actuel : Empêchement · Modifier)
+    gap: '{spacing.2}'
+  back-link:
+    foreground: '{colors.primary-ink}'
+    typography: '{typography.link}'
+    min-height: '{spacing.tap-min}'
+  action-bar:
+    # barre d'action fixe en bas (Plan proposé)
+    background: '{colors.surface}'
+    border-top: '{colors.border}'
+    padding: '{spacing.action-bar-padding}'
+    gap: '{spacing.2}'
+  icon-button:
+    background: '{colors.surface}'
+    border: '{colors.border}'
+    foreground: '{colors.ink}'
+    radius: '{rounded.md}'
+    size: '{spacing.tap-min}'
+  week-progress:
+    background: '{colors.surface}'
+    border: '{colors.border}'
+    radius: '{rounded.xl}'
+    segment-off: '{colors.border}'
+    segment-on: '{colors.primary}'
+    segment-height: 6px
+    segment-gap: '{spacing.2}'
+    segment-radius: '{rounded.full}'
+  ai-card:
+    background: '{colors.surface}'
+    border: '{colors.border}'
+    radius: '{rounded.xl}'
+    title: '{typography.caption}'
+    title-color: '{colors.ink-secondary}'
+    body: '{typography.body}'
+    pulse: '{colors.primary}'
+    pulse-halo: '{colors.primary-soft}'
+  pulse-dot:
+    size: 8px
+    background: '{colors.primary}'
+    halo: '{colors.primary-soft}'
+    halo-width: 4px
+    radius: '{rounded.full}'
+  generation-steps:
+    # liste cochée de l'écran « Je prépare ton plan… »
+    background: '{colors.surface}'
+    border: '{colors.border}'
+    radius: '{rounded.xl}'
+    icon-column: 18px
+    done-icon: '{colors.success}'
+    current-icon: '{components.pulse-dot}'
+    todo-dot: '{colors.border}'
+    done-label: '{colors.ink}'
+    current-label: '{colors.ink}'
+    todo-label: '{colors.ink-secondary}'
+  skeleton-line:
+    background: '{colors.skeleton}'
+    radius: '{rounded.xs}'
+    height: 10px
+  metric-primary:
+    value: '{typography.metric-xl}'
+    unit: '{typography.body}'
+    unit-color: '{colors.ink-secondary}'
+  metric-tile:
+    background: '{colors.surface}'
+    border: '{colors.border}'
+    radius: '{rounded.lg}'
+    padding: '{spacing.tile-padding}'
+    value: '{typography.metric-sm}'
+    label: '{typography.micro}'
+  chart-card:
+    background: '{colors.surface}'
+    border: '{colors.border}'
+    radius: '{rounded.lg}'
+    padding: '{spacing.tile-padding}'
+    series: '{colors.primary}'
+    off-target-opacity: '0.5'
+    target-band: '{colors.primary-soft}'
+    bar-radius: '{rounded.sm}'
+    axis: 10px
+    axis-color: '{colors.ink-secondary}'
+    baseline: '{colors.border}'
+  bloc-row:
+    typography: '{typography.body-sm}'
+    ok: '{colors.success}'
+    ko: '{colors.warning}'
+    divider: '{colors.border}'
+  sheet:
+    background: '{colors.surface}'
+    radius: '{rounded.sheet}'
+    scrim: '{colors.scrim}'
+    padding: '{spacing.6}'
+    shadow: '0 -8px 24px rgba(18,21,26,0.08)'
+    handle: '{colors.border}'
+    handle-size: 38px x 5px
+    handle-radius: '{rounded.full}'
+  sheet-ressenti:
+    # exception : aucune poignée (sheet non fermable)
+    background: '{colors.surface}'
+    radius: '{rounded.sheet}'
+    scrim: '{colors.scrim}'
+    padding: '{spacing.6}'
+    handle: none
+  ressenti-option:
+    background: '{colors.background}'
+    selected-background: '{colors.primary-soft}'
+    selected-border: '{colors.primary}'
+    border-width: 1.5px
+    radius: '{rounded.xl}'
+    label: '{typography.label}'
+    emoji-size: 40px
+  list-row:
+    background: '{colors.surface}'
+    divider: '{colors.border}'
+    label: '{typography.body}'
+    value: '{typography.body-sm}'
+    value-color: '{colors.ink-secondary}'
+    chevron-color: '{colors.ink-secondary}'
+    min-height: '{spacing.tap-min}'
+  list-row-two-line:
+    # Historique : nom du Plan + dates, badge-plan + chevron à droite
+    background: '{colors.surface}'
+    divider: '{colors.border}'
+    label: '{typography.body}'
+    label-color: '{colors.ink}'
+    sub: '{typography.detail}'
+    sub-color: '{colors.ink-secondary}'
+    trailing: '{components.badge-plan}'
+    chevron-color: '{colors.ink-secondary}'
+    min-height: '{spacing.tap-min}'
+  week-section:
+    header: '{typography.label}'
+    header-color: '{colors.ink}'
+    header-meta: '{typography.detail}'
+    header-height: '{spacing.week-header-height}'
+    background: '{colors.surface}'
+    border: '{colors.border}'
+    radius: '{rounded.xl}'
+    row-height: '{spacing.session-row-height}'
+    stack-gap: '{spacing.week-stack-gap}'
+    day-column: '{spacing.day-column-width}'
+  form-field:
+    background: '{colors.surface}'
+    border: '{colors.border}'
+    focus-border: '{colors.primary}'
+    focus-border-width: 1.5px
+    radius: '{rounded.md}'
+    label: '{typography.label}'
+    input: '{typography.body}'
+    help: '{typography.body-sm}'
+    help-color: '{colors.ink-secondary}'
+    error: '{typography.body-sm}'
+    error-color: '{colors.warning}'
+    textarea-min-height: 96px
+    min-height: '{spacing.tap-min}'
+  chip-toggle:
+    # puces bascule (jours disponibles) — choix multiple
+    background: '{colors.surface}'
+    border: '{colors.border}'
+    foreground: '{colors.ink}'
+    on-background: '{colors.primary-soft}'
+    on-border: '{colors.primary}'
+    on-foreground: '{colors.primary-ink}'
+    radius: '{rounded.full}'
+    typography: '{typography.caption}'
+    min-size: '{spacing.tap-min}'
+  chip-choice:
+    # extension de chip-toggle à choix unique (jour de la sortie longue, nouveau jour)
+    background: '{colors.surface}'
+    border: '{colors.border}'
+    foreground: '{colors.ink}'
+    on-background: '{colors.primary-soft}'
+    on-border: '{colors.primary}'
+    on-foreground: '{colors.primary-ink}'
+    radius: '{rounded.full}'
+    typography: '{typography.caption}'
+    min-size: '{spacing.tap-min}'
+  notes-field:
+    background: '{colors.surface}'
+    border: '{colors.border}'
+    radius: '{rounded.lg}'
+    input: '{typography.body}'
+    min-height: 72px
+  banner-inline:
+    radius: '{rounded.md}'
+    typography: '{typography.body-sm}'
+    info-background: '{colors.primary-soft}'
+    info-foreground: '{colors.ink}'
+    warning-background: '{colors.warning-soft}'
+    warning-foreground: '{colors.ink}'
+  banner-with-action:
+    # bannière suivie d'un button-text séparé, sous la bannière (chrono irréaliste)
+    banner: '{components.banner-inline}'
+    action: '{components.button-text}'
+  sync-status:
+    ok: '{colors.success}'
+    error: '{colors.warning}'
+    typography: '{typography.label}'
+---
+
+## Brand & Style
+
+Un coach posé, sûr de lui, qui ne crie pas. L'app doit **donner envie d'être ouverte** : un écran qui respire, qui se lit d'un coup d'œil, et une seule touche d'orange vif qui apporte l'énergie sans le bruit. Minimaliste mais parlant — chaque carte dit *quoi*, *combien* et *pourquoi*, rien de plus.
+
+**En cas de conflit, ce document prime sur les maquettes.**
+
+Direction retenue : **1 « Calme clair »** — [mockups/direction-calme-clair.html](mockups/direction-calme-clair.html) (la page présente 4 directions ; **seule la direction 1 est retenue** ; les directions 2 à 4 sont rejetées). Fond gris très pâle, cartes blanches à filet fin, typo système de taille moyenne sans emphase. Les chiffres sont les héros visuels ; le texte de l'IA est sobre.
+
+Registre de référence : la clarté de Runna (accueil, présentation des Séances, commentaires) — comme niveau d'exigence, pas comme modèle à copier : pas de photos, pas de dégradés, pas d'univers « sport-énergie ».
+
+Mode clair uniquement en v1. Une seule personne utilise l'app ; aucune marque à afficher. Nom de l'app : « running » est un titre de travail (voir PRD).
+
+## Colors
+
+| Token | Hex | Rôle | Jamais pour |
+|---|---|---|---|
+| `background` | `#F6F7F9` | Fond de toutes les pages | Surfaces interactives |
+| `surface` | `#FFFFFF` | Cartes, tuiles, sheets, barre d'onglets | — |
+| `ink` | `#12151A` | Titres, chiffres, texte important | — |
+| `ink-body` | `#3B4048` | Texte courant des cartes (but de la Séance, avis IA) | — |
+| `ink-secondary` | `#6B7280` | Libellés, méta, « pourquoi », onglets inactifs | Texte de plus de 2 lignes |
+| `border` | `#E6E8EC` | Filets de cartes, séparateurs, segments de progression éteints, poignée de sheet, point d'étape non commencée | Délimiter seul un champ (ajouter le libellé) |
+| `skeleton` | `#EEF0F3` | Lignes de chargement | — |
+| `primary` | `#FF5B2E` | **Orange unique** : remplissages de progression, barres de graphe, icône d'onglet actif, pastille pulsante « Analyse en cours… », bordure du Ressenti choisi | Texte, fond de bouton avec texte blanc |
+| `primary-soft` | `#FFF0EB` | Fond de puce de type de Séance, bande de zone cible des graphes, halo de la pastille pulsante | — |
+| `primary-strong` | `#D6401A` | Fond du bouton principal (texte blanc) | Décor |
+| `primary-ink` | `#C93A12` | Orange **en texte** : puce de type, liens, libellé d'onglet actif, bouton principal pressé | Grands aplats |
+| `success` / `success-soft` | `#1F7A4D` / `#EAF6EF` | Bloc respecté, synchro ✅, ✓ d'étape de génération faite | Compliments, décor |
+| `warning` / `warning-soft` | `#B45309` / `#FEF3E2` | Bloc non respecté, synchro ⚠️ (et point d'alerte de l'onglet Synchro), chrono jugé irréaliste, échec explicite | Séance *manquée* (reste neutre) |
+| `scrim` | `#12151A` à 40 % | Voile derrière les sheets | — |
+
+**Contraste WCAG AA (calculé) :**
+
+| Combinaison | Ratio | Verdict |
+|---|---|---|
+| `primary` `#FF5B2E` sur blanc | 3,09:1 | ❌ texte courant · ✅ composant graphique (≥ 3:1) uniquement |
+| blanc sur `primary` | 3,09:1 | ❌ libellé de bouton 15 px → d'où `primary-strong` |
+| blanc sur `primary-strong` `#D6401A` | 4,56:1 | ✅ AA |
+| `primary-ink` sur blanc / sur `primary-soft` | 5,13:1 / 4,62:1 | ✅ AA |
+| `ink` sur `background` | 17,07:1 | ✅ |
+| `ink-secondary` sur blanc / sur `background` | 4,83:1 / 4,51:1 | ✅ AA (limite sur `background`) |
+| `success` sur blanc / `warning` sur blanc | 5,32:1 / 5,02:1 | ✅ |
+| `#9AA0A8` (onglet inactif de la maquette) sur blanc | 2,64:1 | ❌ → remplacé par `ink-secondary` |
+
+`primary-strong`, `primary-ink`, `success`, `warning` et leurs variantes `-soft` ne figurent pas dans la maquette : ajoutés pour tenir AA. L'orange vif `#FF5B2E` reste la couleur perçue de l'app (progression, graphes, onglet actif).
+
+Pas de rouge d'erreur : l'app est un coach, pas un formulaire. Pas de couleur par Ressenti — les emojis portent le sens.
+
+## Typography
+
+Police système iOS (SF Pro) : rendu natif dans la PWA, aucun chargement. Tous les chiffres en `font-variant-numeric: tabular-nums` (allures, distances, J-xx, bpm).
+
+| Rôle | Token | Usage |
+|---|---|---|
+| Salutation | `greeting` (28/600) | « Salut Badr » sur l'Accueil |
+| Titre de carte | `title-lg` (26/600) | Nom de la Séance du jour |
+| Titre d'écran | `title-md` (22/600) | Détail Séance, écrans Plan, Synchro, Profil |
+| Chiffre principal | `metric-xl` (44/600) | Chiffre principal de « Tes données » |
+| Chiffres de carte | `metric-md` (22/600) | Distance / durée / allure cible |
+| Chiffres secondaires | `metric-sm` (18/600) | 2 chiffres secondaires de « Tes données » |
+| Nom secondaire | `name-sm` (18/600) | Prochaine Séance de la carte Repos, nom de Méthode (Plan proposé) |
+| Texte | `body` (15/400) | But de la Séance, « Mon avis (IA) », formulaires, libellé de ligne de liste |
+| Lien retour | `link` (15/500) | « ‹ Accueil », « ‹ Plan », en `primary-ink` |
+| Texte secondaire | `body-sm` (13,5/400) | « Pourquoi cette séance », verdicts par Bloc, aide et erreur sous un champ, bannières |
+| Libellé de section | `label` (13/600) | « Séance du jour », « Tes données », « Cette semaine », titres de groupe du Bilan ; en `ink-secondary` au-dessus d'un bloc, en `ink` comme libellé de champ ou en-tête de semaine |
+| Sous-titre / date | `meta` (13/400 ; 500 pour la date de l'Accueil) | Ligne sous le titre d'écran (« Marathon · 4 avril 2027 · 3 h 29 · Méthode 80/20 ») |
+| Détail | `detail` (12/500) | 2e ligne d'une ligne de liste, d'une Séance de semaine, cible d'un Bloc |
+| Puce / méta | `caption` (12/600), `micro` (11,5/500) | Puces, badges, unités, titre de graphe ; axes de graphe en 10 px |
+| Onglets | `tab-label` (10,5/500) | Barre d'onglets |
+
+Libellés de section en casse normale (pas de capitales). Unités en `ink-secondary`, collées au chiffre (`4:05 /km`, `9,2 km`, `168 bpm`). Virgule décimale française.
+
+Les tailles en px de la maquette servent de base ; l'implémentation les exprime en `rem` pour suivre la taille de texte iOS (voir `EXPERIENCE.md` § Accessibility Floor).
+
+## Layout & Spacing
+
+- Marge latérale `{spacing.page-gutter}` (20 px), colonne unique, largeur iPhone (≥ 375 px).
+- Écart entre blocs majeurs `{spacing.section-gap}` (22 px) ; intérieur de la carte Séance du jour `{spacing.card-padding}` ; tuiles `{spacing.tile-padding}`.
+- Échelle 4 / 8 / 12 / 16 / 20 / 24 / 32 px.
+- Barre d'onglets fixe en bas (`{spacing.tabbar-height}` incluant la zone sûre iOS) ; le contenu défile au-dessus.
+- Écrans sans barre d'onglets (onboarding, Génération en cours, Plan proposé, sheets) : sur les écrans qui ont une action, la **barre d'action fixe** (`action-bar`) prend sa place (voir Components).
+- En-tête d'écran de sous-page : lien retour (`back-link`, ≥ 44 px) → titre `title-md` → sous-titre `meta`. Titre et badge (`badge-plan`) sur une même ligne quand l'écran a un statut (Bilan).
+- Sections de semaine empilées à `{spacing.week-stack-gap}` ; en-tête ≥ `{spacing.week-header-height}`, ligne de Séance ≥ `{spacing.session-row-height}` (colonne jour `{spacing.day-column-width}`).
+- Un groupe de chiffres par section (`bilan-group`), séparés par `{spacing.section-gap}`.
+- Respiration : l'Accueil ne montre que la salutation, la carte Séance du jour, la ligne « Dernier feedback », la progression de la semaine et le compte à rebours de l'Objectif — rien d'autre au-dessus de la ligne de flottaison. Seuls s'y ajoutent les bannières et états conditionnels (rappel HealthFit après une Publication, « Plan en pause »).
+
+## Elevation & Depth
+
+Pas d'ombre sur les cartes : la hiérarchie vient du ton (`surface` blanc sur `background` pâle) et du filet `border` 1 px. Seule exception : les **sheets** (Ressenti, Empêchement, confirmations) montent du bas sur un voile `scrim`, avec une ombre douce `0 -8px 24px rgba(18,21,26,0.08)`. Une seule sheet à la fois. La barre d'action fixe n'a pas d'ombre : seulement un filet `border` en haut.
+
+## Shapes
+
+Coins généreux et doux, cohérents par taille :
+
+| Token | Valeur | Usage |
+|---|---|---|
+| `rounded.xs` | 6 px | Lignes de skeleton |
+| `rounded.sm` | 8 px | Barres de graphe |
+| `rounded.md` | 12 px | Bouton icône (calendrier), champs, bannières |
+| `rounded.lg` | 14 px | Boutons, tuiles chiffres, carte graphe, notes |
+| `rounded.xl` | 18 px | Cartes secondaires (progression de la semaine, avis IA, sections de semaine) |
+| `rounded.2xl` | 22 px | Carte Séance du jour (la plus importante = la plus ronde) |
+| `rounded.sheet` | 28 px | Haut des sheets |
+| `rounded.full` | 9999 px | Puces, segments de progression, pastille pulsante |
+
+## Components
+
+| Composant | Anatomie et spec visuelle |
+|---|---|
+| **Barre d'onglets** (`tab-bar`) | 4 onglets icône + libellé : Accueil · Plan · Synchro · Profil. Fond blanc, filet haut. Actif : icône `primary`, libellé `primary-ink`. Inactif : `ink-secondary`. Point d'alerte 6 px `warning` sur l'icône Synchro quand la synchro est en erreur. |
+| **Carte Séance du jour** (`card-seance-du-jour`) | Puce de type → nom (`title-lg`) → but en 1–2 lignes (`body`, `ink-body`) → `stat-group` (distance · durée · allure ou FC cible) → `why-line` « **Pourquoi cette séance** — … » sous un filet → `button-primary` « Voir le détail ». Badge d'état à droite de la puce quand l'état n'est pas *à venir*. |
+| **Carte Repos** (`card-repos`) | Jour sans Séance. Même enveloppe que la carte Séance du jour, **sans puce** : « Repos » (`title-lg`) → une phrase (`body`, `ink-body`) → sous un filet, libellé `label` « Prochaine séance · jeudi 26 » → puce de type → nom (`name-sm`) → `stat-group` → `button-primary` « Voir le détail ». |
+| **Puce de type** (`chip-type-seance`) | Pastille `●` + « Fractionné · VMA », `primary-ink` sur `primary-soft`. Aussi à droite des lignes de Séance du Plan proposé. |
+| **Badge d'état** (`badge-etat`) | Puce neutre (`ink-secondary` sur `background`) pour *à venir*, *en attente de la course*, *manquée*, *annulée* ; `success` sur `success-soft` pour *réalisée* · *respectée* (préfixe ✓) ; `warning` sur `warning-soft` pour *non respectée*. *Manquée* reste neutre (discret, sans alerte). Badges neutres aussi pour « cette semaine », « allégée » (sections de semaine) et la note « Conformité 92 % ». |
+| **Badge de Plan** (`badge-plan`) | « terminé » / « annulé », toujours neutres (`ink-secondary` sur `background`) : à droite du titre du Bilan et des lignes d'Historique. |
+| **Groupe de stats** (`stat-group`) | 3 colonnes, valeur `metric-md` au-dessus du libellé `caption`. |
+| **Groupe de chiffres du Bilan** (`bilan-group`) | Une section par thème — Volume · Conformité · Forme et records · Ressentis — chacune en grammaire « Tes données » : libellé `label` `ink-secondary`, chiffre principal `metric-xl` + unité (« 912 km réalisés », « 86 % de moyenne », « 42 → 58 CTL »), ligne de contexte `body-sm` (« sur 968 km prévus · 94 % du volume »), puis 2 `metric-tile`. Note éventuelle en `body-sm` sous les tuiles. Pas de graphe CTL en v1. |
+| **Répartition des Ressentis** (`stat-split-ressentis`) | Une carte, 3 colonnes centrées : emoji 22 px → chiffre `metric-md` → libellé `caption` « facile » / « normal » / « dur ». Pas de couleur par Ressenti. |
+| **Ligne « pourquoi »** (`why-line`) | Amorce en gras `ink`, suite `ink-secondary`, `body-sm`. |
+| **Bouton principal** (`button-primary`) | Pleine largeur, `primary-strong`, texte blanc `button`, hauteur ≥ 44 px. **Désactivé** (`button-primary-disabled`) : même bouton à 40 % d'opacité. |
+| **Bouton secondaire** (`button-secondary`) | Blanc, filet, texte `ink`. Pour « Refuser », « Annuler », « Relancer », « Empêchement », « Arrêter le plan », alternatives. Paire côte à côte (`button-row`, 8 px d'écart) en tête du Plan actuel : « Empêchement » · « Modifier ». |
+| **Bouton texte** (`button-text`) | `primary-ink`, sans fond, ≥ 44 px. Liens et actions secondaires (« Voir dans intervals.icu », action de `banner-with-action`). |
+| **Lien retour** (`back-link`) | « ‹ Accueil » / « ‹ Plan », `link` en `primary-ink`, en haut à gauche, au-dessus du titre. |
+| **Barre d'action fixe** (`action-bar`) | Collée en bas d'écran, fond blanc, filet haut, marges `{spacing.action-bar-padding}` (zone sûre incluse) ; `button-primary` puis `button-secondary` empilés à 8 px d'écart (« Valider le plan » / « Refuser »). |
+| **Bouton icône** (`icon-button`) | 44 × 44 px, blanc, filet, `rounded.md`. Calendrier de l'Accueil. |
+| **Progression de la semaine** (`week-progress`) | Carte « Cette semaine · 2 / 4 séances » + une rangée de segments arrondis de 6 px de haut, un par Séance, `primary` si réalisée, `border` sinon. |
+| **Compte à rebours** | Même carte que la progression : « Marathon · 4 avril » à gauche, « J-134 » en gras à droite. |
+| **Carte « Mon avis (IA) »** (`ai-card`) | Titre `caption` « Mon avis (IA) » ; corps `body` en 3 paragraphes courts : **Point fort**, **À améliorer**, **Pour la suite** (amorces en gras). Pendant l'analyse : `pulse-dot` + « Analyse en cours… » + 2 lignes de skeleton (10 px). Erreur d'analyse : une phrase, `button-secondary` « Relancer » et `button-text` « Arrêter l'analyse » dans la carte. Avis indisponible : titre « Mon avis (IA) · avis indisponible », une phrase, `button-secondary` « Relancer » dans la carte. |
+| **Pastille pulsante** (`pulse-dot`) | Point 8 px `primary` avec halo 4 px `primary-soft`. |
+| **Étapes de génération** (`generation-steps`) | Carte-liste de `list-row`, colonne d'icône de 18 px puis libellé : **✓ en `success`** = étape faite ; **`pulse-dot`** = étape en cours ; **point gris 8 px (`border`)** = pas commencée (libellé en `ink-secondary`). Plein écran : titre `greeting` centré « Je prépare ton plan… », rappel de l'Objectif en `body` dessous. |
+| **« Tes données »** (`metric-primary` + `metric-tile`) | Libellé de section, chiffre principal `metric-xl` avec unité et contexte (« /km sur les 800 »), puis 2 tuiles côte à côte (`metric-sm`). Visuellement séparé de l'avis IA : pas dans la même carte. |
+| **Carte graphe** (`chart-card`) | Titre `caption` (« Allure par répétition · zone cible 4:00–4:10 »), barres `primary` à coins `rounded.sm`, bande de zone cible `primary-soft`, ligne de base `border`, axes 10 px `ink-secondary`, valeur au-dessus de chaque barre. Barre hors cible : même orange à 50 % d'opacité (le mot « hors cible » reste porté par la Ligne de Bloc et le texte alternatif). Pas de grille lourde, pas de légende multi-couleur. |
+| **Ligne de Bloc** (`bloc-row`) | Nom du Bloc + cible (`detail`) à gauche, réalisé + verdict à droite ; ✓ `success` / ✗ `warning` **accompagnés du mot** (« respecté » / « hors cible »). |
+| **Sheet** (`sheet`) | Monte du bas, coins `rounded.sheet`, poignée (38 × 5 px, `border`), titre `title-md`, sous-titre `body-sm`, voile `scrim`. **Toute sheet a une poignée, sauf la sheet Ressenti.** |
+| **Sheet Ressenti** (`sheet-ressenti`) | **Sans poignée** (elle ne se ferme pas). Titre `title-md`, sous-titre `body-sm`, 3 `ressenti-option`, puis rappel centré `body-sm`. Textes : `EXPERIENCE.md` § Microcopies validées. |
+| **Option de Ressenti** (`ressenti-option`) | 3 grandes tuiles côte à côte : emoji (40 px) + libellé « facile » / « normal » / « dur ». Sélection : bordure 1,5 px `primary`, fond `primary-soft`. |
+| **Ligne de liste** (`list-row`) | Libellé à gauche, valeur ou chevron `›` (`ink-secondary`) à droite, ≥ 44 px, filets entre lignes dans une carte `rounded.xl`. Hub Plan, Profil, Synchro, Profil coureur, « Dernier feedback », choix de mode de la sheet Modifier (sous-libellé `body-sm`). |
+| **Ligne à deux lignes** (`list-row-two-line`) | Historique : nom du Plan (« Marathon · 3 h 29 ») en `body` + dates et durée (« 16 nov. 2026 – 4 avril 2027 · 20 semaines ») en `detail` `ink-secondary` ; à droite `badge-plan` puis chevron. |
+| **Section de semaine** (`week-section`) | Carte « Semaine 3 · 30 nov.–6 déc. » + volume « 45 km » en gras à droite + chevron de dépliage ; lignes de Séance : colonne jour (« mar. » + « 24 »), nom + chiffres en `detail`, badge d'état (Plan actuel) ou puce de type (Plan proposé) à droite. Sections empilées à `{spacing.week-stack-gap}`, colonne jour `{spacing.day-column-width}`. |
+| **Champ** (`form-field`) | Libellé `label` `ink` au-dessus, champ blanc à filet, focus en bordure 1,5 px `primary`. Aide `body-sm` `ink-secondary` sous le champ ; erreur `body-sm` `warning` à la place de l'aide. Zone de texte ≥ 96 px. Champs à sélecteur (distance, chrono, date, nombre de jours) : même champ, valeur affichée. |
+| **Puces bascule** (`chip-toggle`) | Jours disponibles, choix multiple : puces rondes ≥ 44 × 44 px, blanches à filet ; actives en `primary-soft`, bordure `primary`, texte `primary-ink`. |
+| **Puces à choix unique** (`chip-choice`) | Extension des puces bascule, même rendu, une seule active : jour de la sortie longue (Nouvel Objectif), nouveau jour (sheet Déplacer, jour + date sur 2 lignes). |
+| **Sheet « Modifier »** (`sheet` + `form-field`) | Trois `list-row` de choix (« Déplacer », « Modifier à la main », « Demander à l'IA »), puis le formulaire ou le champ du mode choisi. Avertissement de garde-fou franchi dans une `banner-inline` d'avertissement au-dessus du bouton de confirmation. |
+| **Notes perso** (`notes-field`) | Zone de texte libre en bas du Détail Séance (≥ 72 px), libellé « Mes notes », texte indicatif `ink-secondary`, rappel `body-sm` dessous (texte : `EXPERIENCE.md` § Microcopies validées). |
+| **Bannière** (`banner-inline`) | Info (`primary-soft`) ou avertissement (`warning-soft`), texte `ink` `body-sm`, amorce en gras (« ⚠️ Règle franchie — … »), une ou deux lignes, jamais de rouge. |
+| **Bannière + action** (`banner-with-action`) | La bannière ne contient pas de bouton : l'action est un `button-text` **séparé, juste sous la bannière** (chrono irréaliste du Nouvel Objectif). |
+| **État de synchro** (`sync-status`) | Ligne ✅ / ⚠️ + texte ; cause de l'erreur en `body-sm` dessous. |
+
+→ Écrans clés (direction 1 appliquée, 4 onglets) : [Accueil](mockups/key-accueil.html) · [Détail Séance](mockups/key-seance-detail.html) · [Plan actuel](mockups/key-plan-actuel.html) · [Plan proposé](mockups/key-plan-propose.html) · [Nouvel Objectif](mockups/key-nouvel-objectif.html) · [Bilan et Historique](mockups/key-bilan.html).
+
+## Do's and Don'ts
+
+| Faire | Ne pas faire |
+|---|---|
+| Un seul orange, réservé à l'action et à la progression | Colorer par Ressenti, par type de Séance ou par humeur |
+| Orange en texte = `primary-ink` ; bouton = `primary-strong` | Texte blanc ou orange vif `#FF5B2E` en taille courante |
+| Les chiffres en grand, le texte de l'IA sobre | Mettre le texte de l'IA en vedette au-dessus des chiffres dans une même carte |
+| Séparer visuellement « Mon avis (IA) » et « Tes données » | Fusionner avis et données dans un même bloc |
+| Ton + filet pour la hiérarchie | Ombres de cartes, dégradés, photos, illustrations |
+| Mot + icône pour tout verdict | Couleur seule pour dire respecté / non respecté |
+| Séance *manquée* en badge neutre | Rouge, alerte ou culpabilisation |
+| Une carte Séance du jour unique sur l'Accueil | Tableau de bord, séries, badges, confettis |
+| Mode clair uniquement (v1) | Livrer un mode sombre partiel |
+| Bouton désactivé = `primary-strong` à 40 % | Bouton gris ou masqué quand l'action est temporairement impossible |

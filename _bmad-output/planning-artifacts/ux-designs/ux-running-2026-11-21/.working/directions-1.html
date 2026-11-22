@@ -1,0 +1,485 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Directions visuelles 1</title>
+<style>
+/* =========================================================
+   PAGE (neutre, hors directions)
+   #EDEDED fond page · #1A1A1A texte · #666 secondaire
+   ========================================================= */
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#EDEDED;color:#1A1A1A;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;padding:32px 16px 64px}
+.page-head{max-width:1800px;margin:0 auto 28px}
+.page-head h1{font-size:22px;font-weight:700;letter-spacing:-.01em}
+.page-head p{color:#666;font-size:14px;margin-top:6px;max-width:760px;line-height:1.5}
+.grid{max-width:1800px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:28px}
+.dir{background:#fff;border-radius:18px;padding:22px 18px 28px;display:flex;flex-direction:column;align-items:center;gap:18px}
+.dir-info{width:100%;max-width:390px}
+.dir-info .num{font-size:12px;font-weight:600;color:#666;letter-spacing:.08em;text-transform:uppercase}
+.dir-info h2{font-size:20px;font-weight:700;margin:4px 0 8px}
+.dir-info p{font-size:13.5px;line-height:1.5;color:#444}
+.swatches{display:flex;gap:6px;margin-top:10px}
+.swatches i{width:22px;height:22px;border-radius:6px;border:1px solid rgba(0,0,0,.1);display:block}
+.cap{font-size:11.5px;color:#777;text-align:center;letter-spacing:.02em;width:100%;max-width:390px}
+.state-tag{display:inline-block;background:#1A1A1A;color:#fff;font-size:10.5px;padding:2px 7px;border-radius:5px;margin-left:4px;vertical-align:1px}
+
+/* Cadre iPhone générique */
+.phone{width:390px;max-width:100%;height:800px;border-radius:48px;border:10px solid #111;position:relative;overflow:hidden;box-shadow:0 18px 40px rgba(0,0,0,.18)}
+.phone.small{width:340px;height:660px;border-radius:42px;border-width:9px}
+.phone .sb{height:46px;display:flex;justify-content:space-between;align-items:center;padding:0 26px 0 30px;font-size:14px;font-weight:600}
+.phone .notch{position:absolute;top:9px;left:50%;transform:translateX(-50%);width:110px;height:30px;background:#000;border-radius:20px;z-index:5}
+.phone .sb .ic{display:flex;gap:5px;align-items:center}
+.phone .sb .ic b{display:block;width:22px;height:11px;border:1.5px solid currentColor;border-radius:3px;position:relative}
+.phone .sb .ic b::after{content:"";position:absolute;inset:1.5px;right:5px;background:currentColor;border-radius:1px}
+.scr{padding:6px 20px 0;height:calc(100% - 46px);overflow:hidden;position:relative}
+.tabbar{position:absolute;left:0;right:0;bottom:0;height:78px;display:flex;justify-content:space-around;padding-top:12px;font-size:10.5px}
+.tabbar span{display:flex;flex-direction:column;align-items:center;gap:4px}
+.tabbar svg{width:22px;height:22px}
+.num{font-variant-numeric:tabular-nums}
+
+/* =========================================================
+   D1 — CALME CLAIR
+   #F6F7F9 fond · #FFFFFF surface · #12151A texte
+   #6B7280 texte secondaire · #E6E8EC bordure
+   #FF5B2E accent (orange vif) · #FFF0EB accent doux
+   ========================================================= */
+.d1 .phone{background:#F6F7F9;color:#12151A}
+.d1 .hello small{display:block;font-size:13px;color:#6B7280;font-weight:500}
+.d1 .hello h3{font-size:28px;font-weight:600;letter-spacing:-.02em;margin-top:4px}
+.d1 .meta{display:flex;justify-content:space-between;align-items:center;margin:22px 0 12px}
+.d1 .meta .lbl{font-size:13px;font-weight:600;color:#6B7280}
+.d1 .calbtn{width:38px;height:38px;border-radius:12px;background:#fff;border:1px solid #E6E8EC;display:grid;place-items:center;color:#12151A}
+.d1 .card{background:#fff;border-radius:22px;padding:22px;border:1px solid #E6E8EC}
+.d1 .chip{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:#FF5B2E;background:#FFF0EB;padding:5px 10px;border-radius:99px}
+.d1 .card h4{font-size:26px;font-weight:600;letter-spacing:-.02em;margin:14px 0 6px}
+.d1 .card .obj{font-size:15px;color:#3B4048;line-height:1.45}
+.d1 .why{margin-top:16px;padding-top:14px;border-top:1px solid #E6E8EC;font-size:13.5px;color:#6B7280;line-height:1.45}
+.d1 .why b{color:#12151A;font-weight:600}
+.d1 .stats{display:flex;gap:26px;margin-top:18px}
+.d1 .stats div{font-size:12px;color:#6B7280}
+.d1 .stats strong{display:block;font-size:22px;font-weight:600;color:#12151A;letter-spacing:-.01em}
+.d1 .cta{margin-top:20px;background:#FF5B2E;color:#fff;text-align:center;padding:15px;border-radius:14px;font-weight:600;font-size:15px}
+.d1 .week{margin-top:22px;background:#fff;border:1px solid #E6E8EC;border-radius:18px;padding:16px 18px}
+.d1 .week .row{display:flex;justify-content:space-between;font-size:13px;color:#6B7280}
+.d1 .week .row b{color:#12151A}
+.d1 .dots{display:flex;gap:8px;margin-top:12px}
+.d1 .dots i{flex:1;height:6px;border-radius:9px;background:#E6E8EC}
+.d1 .dots i.on{background:#FF5B2E}
+.d1 .tabbar{background:#fff;border-top:1px solid #E6E8EC;color:#9AA0A8}
+.d1 .tabbar .act{color:#FF5B2E}
+/* D1 détail */
+.d1 .back{font-size:14px;color:#6B7280;margin:4px 0 14px}
+.d1 .dt h3{font-size:22px;font-weight:600;letter-spacing:-.02em}
+.d1 .dt .sub{font-size:13px;color:#6B7280;margin-top:3px}
+.d1 .ai{margin-top:18px;background:#fff;border:1px solid #E6E8EC;border-radius:18px;padding:16px}
+.d1 .ai .t{font-size:12px;font-weight:600;color:#6B7280;display:flex;align-items:center;gap:8px}
+.d1 .pulse{width:8px;height:8px;border-radius:50%;background:#FF5B2E;box-shadow:0 0 0 4px #FFF0EB}
+.d1 .sk{height:10px;border-radius:6px;background:linear-gradient(90deg,#EEF0F3,#F6F7F9,#EEF0F3);margin-top:10px}
+.d1 .wait{font-size:13.5px;color:#3B4048;margin-top:10px}
+.d1 .sec{font-size:12px;font-weight:600;color:#6B7280;margin:22px 0 10px}
+.d1 .big{font-size:44px;font-weight:600;letter-spacing:-.03em}
+.d1 .big small{font-size:16px;color:#6B7280;font-weight:500;margin-left:4px}
+.d1 .two{display:flex;gap:10px;margin-top:12px}
+.d1 .two div{flex:1;background:#fff;border:1px solid #E6E8EC;border-radius:14px;padding:12px;font-size:11.5px;color:#6B7280}
+.d1 .two strong{display:block;font-size:18px;color:#12151A;font-weight:600;margin-top:2px}
+.d1 .chart{margin-top:12px;background:#fff;border:1px solid #E6E8EC;border-radius:14px;padding:12px}
+.d1 .chart .l{font-size:11.5px;color:#6B7280;margin-bottom:6px}
+
+/* =========================================================
+   D2 — NUIT SPORTIVE
+   #0A0C0F fond · #15191F surface · #1F242C surface haute
+   #F3F5F7 texte · #8A93A0 texte secondaire · #262C35 bordure
+   #C8FF2E accent (lime électrique) · #0A0C0F texte sur accent
+   #36D6FF accent secondaire (FC / données)
+   ========================================================= */
+.d2 .phone{background:#0A0C0F;color:#F3F5F7;border-color:#000}
+.d2 .top{display:flex;justify-content:space-between;align-items:flex-start}
+.d2 .top small{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#8A93A0;font-weight:600}
+.d2 .top h3{font-size:26px;font-weight:800;letter-spacing:-.01em;margin-top:4px}
+.d2 .calbtn{width:40px;height:40px;border-radius:12px;background:#15191F;border:1px solid #262C35;display:grid;place-items:center;color:#C8FF2E}
+.d2 .count{margin-top:16px;display:flex;gap:8px}
+.d2 .count span{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:6px 10px;border-radius:8px;background:#15191F;border:1px solid #262C35;color:#8A93A0}
+.d2 .count span b{color:#F3F5F7}
+.d2 .card{margin-top:18px;background:#15191F;border-radius:20px;overflow:hidden;border:1px solid #262C35}
+.d2 .card .hd{background:#C8FF2E;color:#0A0C0F;padding:14px 18px 16px}
+.d2 .card .hd small{font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase}
+.d2 .card .hd h4{font-size:30px;font-weight:900;letter-spacing:-.02em;text-transform:uppercase;line-height:1;margin-top:6px}
+.d2 .card .bd{padding:16px 18px 18px}
+.d2 .obj{font-size:14.5px;line-height:1.45;color:#D5DAE0}
+.d2 .why{margin-top:12px;font-size:13px;color:#8A93A0;line-height:1.4;padding-left:10px;border-left:2px solid #C8FF2E}
+.d2 .blocks{display:flex;gap:3px;margin-top:16px;height:34px;align-items:flex-end}
+.d2 .blocks i{display:block;background:#262C35;border-radius:3px}
+.d2 .blocks i.w{height:14px;flex:3}
+.d2 .blocks i.r{height:34px;flex:1.1;background:#C8FF2E}
+.d2 .blocks i.e{height:10px;flex:.7}
+.d2 .stats{display:grid;grid-template-columns:1fr 1fr 1fr;margin-top:16px;border-top:1px solid #262C35;padding-top:14px}
+.d2 .stats div{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:#8A93A0;font-weight:600}
+.d2 .stats strong{display:block;font-size:24px;font-weight:800;color:#F3F5F7;letter-spacing:-.01em;text-transform:none;margin-top:2px}
+.d2 .week{margin-top:16px;display:flex;justify-content:space-between;align-items:center;background:#15191F;border:1px solid #262C35;border-radius:16px;padding:14px 16px}
+.d2 .week small{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:#8A93A0;font-weight:700}
+.d2 .week strong{display:block;font-size:20px;font-weight:800;margin-top:2px}
+.d2 .ring{width:46px;height:46px}
+.d2 .tabbar{background:#0A0C0F;border-top:1px solid #1F242C;color:#5C6470}
+.d2 .tabbar .act{color:#C8FF2E}
+/* D2 détail */
+.d2 .back{font-size:13px;color:#8A93A0;margin:4px 0 12px;font-weight:600}
+.d2 .dt h3{font-size:22px;font-weight:900;text-transform:uppercase;letter-spacing:-.01em}
+.d2 .dt .sub{display:flex;gap:6px;margin-top:8px}
+.d2 .dt .sub span{font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:4px 8px;border-radius:6px;background:#15191F;border:1px solid #262C35;color:#8A93A0}
+.d2 .dt .sub span.ok{color:#0A0C0F;background:#C8FF2E;border-color:#C8FF2E}
+.d2 .ai{margin-top:16px;background:#15191F;border:1px solid #262C35;border-radius:16px;padding:14px 16px}
+.d2 .ai .t{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#C8FF2E;font-weight:800}
+.d2 .ai p{font-size:13.5px;line-height:1.5;color:#D5DAE0;margin-top:8px}
+.d2 .sec{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#8A93A0;font-weight:800;margin:18px 0 8px}
+.d2 .big{font-size:52px;font-weight:900;letter-spacing:-.03em;line-height:1}
+.d2 .big small{font-size:14px;color:#8A93A0;font-weight:700;margin-left:4px;letter-spacing:0}
+.d2 .two{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.d2 .two div{background:#15191F;border:1px solid #262C35;border-radius:12px;padding:10px 12px;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#8A93A0;font-weight:700}
+.d2 .two strong{display:block;font-size:20px;color:#F3F5F7;font-weight:800;letter-spacing:0;text-transform:none;margin-top:2px}
+.d2 .two .hr strong{color:#36D6FF}
+.d2 .chart{margin-top:10px;background:#15191F;border:1px solid #262C35;border-radius:12px;padding:10px 12px}
+
+/* =========================================================
+   D3 — ÉDITORIAL
+   #F1EFEA fond (papier) · #0B0B0B encre
+   #6E6A63 texte secondaire · #CFCBC2 filet
+   #E10600 accent unique (rouge signal, usage parcimonieux)
+   ========================================================= */
+.d3 .phone{background:#F1EFEA;color:#0B0B0B}
+.d3 .mast{display:flex;justify-content:space-between;align-items:baseline;border-bottom:2px solid #0B0B0B;padding-bottom:8px}
+.d3 .mast span{font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase}
+.d3 .mast .cal{display:flex;align-items:center;gap:6px}
+.d3 .hello{font-size:15px;color:#6E6A63;margin-top:16px}
+.d3 .hello b{color:#0B0B0B}
+.d3 .kicker{margin-top:26px;font-size:11px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;display:flex;justify-content:space-between;align-items:center}
+.d3 .kicker em{font-style:normal;color:#E10600;display:flex;align-items:center;gap:6px}
+.d3 .kicker em::before{content:"";width:7px;height:7px;border-radius:50%;background:#E10600}
+.d3 .hero{font-size:88px;font-weight:900;letter-spacing:-.06em;line-height:.88;margin-top:10px}
+.d3 .hero span{display:block;font-size:30px;letter-spacing:-.03em;font-weight:800;line-height:1.1;margin-top:6px}
+.d3 .obj{font-size:17px;line-height:1.4;margin-top:16px;font-weight:500}
+.d3 .why{font-family:ui-serif,Georgia,"Times New Roman",serif;font-style:italic;font-size:15.5px;line-height:1.45;color:#3A3732;margin-top:12px}
+.d3 .rule{display:grid;grid-template-columns:1fr 1fr 1fr;border-top:1px solid #0B0B0B;border-bottom:1px solid #0B0B0B;margin-top:22px}
+.d3 .rule div{padding:10px 0;font-size:10.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#6E6A63}
+.d3 .rule div+div{border-left:1px solid #CFCBC2;padding-left:12px}
+.d3 .rule strong{display:block;font-size:26px;font-weight:900;color:#0B0B0B;letter-spacing:-.03em;text-transform:none;margin-top:2px}
+.d3 .wk{margin-top:18px;display:flex;align-items:center;gap:12px;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+.d3 .wk .bars{display:flex;gap:4px}
+.d3 .wk .bars i{width:30px;height:4px;background:#CFCBC2}
+.d3 .wk .bars i.on{background:#0B0B0B}
+.d3 .tabbar{background:#F1EFEA;border-top:2px solid #0B0B0B;color:#6E6A63;font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:10px}
+.d3 .tabbar .act{color:#0B0B0B}
+/* D3 détail */
+.d3 .dt .k{font-size:11px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:#6E6A63;margin-top:6px}
+.d3 .dt h3{font-size:40px;font-weight:900;letter-spacing:-.04em;line-height:.95;margin-top:6px}
+.d3 .ai{margin-top:18px;border-top:2px solid #0B0B0B;padding-top:10px}
+.d3 .ai .t{font-size:11px;font-weight:800;letter-spacing:.18em;text-transform:uppercase}
+.d3 .ai p{font-family:ui-serif,Georgia,"Times New Roman",serif;font-size:19px;line-height:1.35;margin-top:8px;letter-spacing:-.005em}
+.d3 .sec{font-size:11px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;border-top:2px solid #0B0B0B;padding-top:10px;margin-top:20px}
+.d3 .big{font-size:64px;font-weight:900;letter-spacing:-.05em;line-height:1;margin-top:6px}
+.d3 .big small{font-size:14px;font-weight:700;letter-spacing:.06em;color:#6E6A63;margin-left:6px;text-transform:uppercase}
+.d3 .two{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid #CFCBC2;margin-top:8px}
+.d3 .two div{padding:8px 0;font-size:10.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#6E6A63}
+.d3 .two div+div{border-left:1px solid #CFCBC2;padding-left:12px}
+.d3 .two strong{display:block;font-size:22px;color:#0B0B0B;font-weight:900;letter-spacing:-.02em;text-transform:none}
+.d3 .chart{border-top:1px solid #CFCBC2;padding-top:10px}
+
+/* =========================================================
+   D4 — CHALEUREUX
+   #FBF3EA fond (crème) · #FFFFFF surface · #FFF8F1 surface douce
+   #3B2A21 texte (brun) · #8C7466 texte secondaire · #F0E2D4 bordure
+   #E2734A accent (terracotta) · #FCE6DA accent doux
+   #7FAE8C vert sauge (réussite) · #E3F0E6 sauge doux
+   #F4B860 ocre (mi-parcours)
+   ========================================================= */
+.d4 .phone{background:#FBF3EA;color:#3B2A21}
+.d4 .top{display:flex;justify-content:space-between;align-items:center}
+.d4 .av{width:44px;height:44px;border-radius:50%;background:#FCE6DA;display:grid;place-items:center;font-weight:700;color:#E2734A;font-size:17px}
+.d4 .calbtn{width:44px;height:44px;border-radius:50%;background:#fff;display:grid;place-items:center;color:#3B2A21;box-shadow:0 2px 8px rgba(120,80,50,.08)}
+.d4 .hello{margin-top:18px}
+.d4 .hello h3{font-size:27px;font-weight:700;letter-spacing:-.015em;line-height:1.15}
+.d4 .hello p{font-size:14.5px;color:#8C7466;margin-top:6px}
+.d4 .card{margin-top:20px;background:#fff;border-radius:30px;padding:22px;box-shadow:0 8px 24px rgba(120,80,50,.08)}
+.d4 .card .lbl{font-size:13px;font-weight:600;color:#E2734A;display:flex;align-items:center;gap:6px}
+.d4 .card h4{font-size:25px;font-weight:700;letter-spacing:-.015em;margin-top:8px}
+.d4 .obj{font-size:15px;line-height:1.45;color:#5C4638;margin-top:6px}
+.d4 .why{margin-top:14px;background:#FFF8F1;border-radius:18px;padding:12px 14px;font-size:13.5px;line-height:1.45;color:#5C4638;display:flex;gap:10px}
+.d4 .why .e{font-size:18px;line-height:1}
+.d4 .pills{display:flex;gap:8px;margin-top:16px}
+.d4 .pills span{background:#FBF3EA;border-radius:99px;padding:8px 14px;font-size:14px;font-weight:600}
+.d4 .cta{margin-top:18px;background:#E2734A;color:#fff;text-align:center;padding:15px;border-radius:99px;font-weight:700;font-size:15px}
+.d4 .week{margin-top:16px;background:#fff;border-radius:24px;padding:14px 18px;display:flex;align-items:center;gap:14px;box-shadow:0 4px 14px rgba(120,80,50,.06)}
+.d4 .week .ds{display:flex;gap:6px}
+.d4 .week .ds i{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-size:12px;font-weight:700;background:#FBF3EA;color:#8C7466}
+.d4 .week .ds i.done{background:#E3F0E6;color:#4F8A60}
+.d4 .week .ds i.today{background:#E2734A;color:#fff}
+.d4 .week p{font-size:13px;color:#8C7466;line-height:1.3}
+.d4 .week p b{color:#3B2A21;display:block;font-size:15px}
+.d4 .tabbar{background:#fff;border-radius:28px 28px 0 0;color:#B9A496;box-shadow:0 -4px 16px rgba(120,80,50,.06)}
+.d4 .tabbar .act{color:#E2734A}
+/* D4 détail + pop-up ressenti */
+.d4 .back{font-size:14px;color:#8C7466;margin:4px 0 12px}
+.d4 .dt h3{font-size:22px;font-weight:700}
+.d4 .dt .sub{font-size:13px;color:#8C7466;margin-top:3px}
+.d4 .ghost{margin-top:16px;background:#fff;border-radius:24px;padding:16px;height:120px}
+.d4 .ghost i{display:block;height:10px;border-radius:6px;background:#F3E8DD;margin-top:10px}
+.d4 .ghost2{margin-top:12px;background:#fff;border-radius:24px;height:140px}
+.d4 .veil{position:absolute;inset:0;background:rgba(59,42,33,.35)}
+.d4 .sheet{position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:32px 32px 0 0;padding:14px 22px 34px;text-align:center}
+.d4 .grab{width:40px;height:5px;border-radius:9px;background:#F0E2D4;margin:0 auto 16px}
+.d4 .sheet h4{font-size:21px;font-weight:700}
+.d4 .sheet p{font-size:14px;color:#8C7466;margin-top:6px;line-height:1.4}
+.d4 .feel{display:flex;gap:10px;margin-top:18px}
+.d4 .feel div{flex:1;background:#FBF3EA;border-radius:22px;padding:14px 4px 12px;font-size:13px;font-weight:600;border:2px solid transparent}
+.d4 .feel div span{display:block;font-size:30px;margin-bottom:6px}
+.d4 .feel div.sel{border-color:#E2734A;background:#FCE6DA}
+.d4 .proc{margin-top:18px;display:flex;align-items:center;justify-content:center;gap:8px;font-size:12.5px;color:#8C7466}
+.d4 .proc i{display:flex;gap:3px}
+.d4 .proc i b{width:5px;height:5px;border-radius:50%;background:#E2734A;display:block}
+.d4 .proc i b:nth-child(2){opacity:.6}.d4 .proc i b:nth-child(3){opacity:.3}
+.d4 .note{margin-top:14px;font-size:13px;color:#B9A496}
+
+@media (max-width:440px){
+  body{padding:20px 16px 48px}
+  .dir{padding:18px 10px 24px}
+  .phone{height:760px}
+}
+</style>
+</head>
+<body>
+
+<header class="page-head">
+  <h1>Coach running — 4 directions visuelles</h1>
+  <p>Même contenu, quatre personnalités. Pour chaque direction : l'écran d'Accueil (carte « Séance du jour ») et le haut du détail de séance après la course. Les états d'attente sont répartis : « Analyse en cours… » (1), pop-up Ressenti (4), « en attente de la course » (3).</p>
+</header>
+
+<div class="grid">
+
+<!-- ===================== D1 CALME CLAIR ===================== -->
+<section class="dir d1">
+  <div class="dir-info">
+    <div class="num">Direction 1</div>
+    <h2>Calme clair</h2>
+    <p>Beaucoup d'air, un fond gris très pâle et des cartes blanches : l'écran respire et se lit d'un coup d'œil. Un seul orange vif réservé à l'action et à la progression donne l'énergie sans le bruit. Typo moyenne, sans emphase : un coach posé et sûr de lui.</p>
+    <div class="swatches"><i style="background:#F6F7F9"></i><i style="background:#FFFFFF"></i><i style="background:#12151A"></i><i style="background:#6B7280"></i><i style="background:#FF5B2E"></i></div>
+  </div>
+
+  <div class="phone"><div class="notch"></div>
+    <div class="sb"><span>9:41</span><span class="ic">●●● <b></b></span></div>
+    <div class="scr">
+      <div class="hello"><small>Samedi 21 novembre</small><h3>Salut Badr</h3></div>
+      <div class="meta"><span class="lbl">Séance du jour</span>
+        <span class="calbtn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></span></div>
+      <div class="card">
+        <span class="chip">● Fractionné · VMA</span>
+        <h4>Fractionné 6×800 m</h4>
+        <p class="obj">Six 800 m à 4:05/km, récup 400 m en trottinant. Échauffement et retour au calme inclus.</p>
+        <div class="stats num"><div><strong>9 km</strong>distance</div><div><strong>50 min</strong>durée</div><div><strong>4:05</strong>allure cible</div></div>
+        <p class="why"><b>Pourquoi cette séance</b> — ta base est solide (CTL 42), on ajoute de l'intensité courte.</p>
+        <div class="cta">Voir le détail</div>
+      </div>
+      <div class="week">
+        <div class="row"><span>Cette semaine</span><b class="num">2 / 4 séances</b></div>
+        <div class="dots"><i class="on"></i><i class="on"></i><i></i><i></i></div>
+      </div>
+      <div class="week" style="margin-top:10px"><div class="row"><span>Marathon · 4 avril</span><b class="num">J-134</b></div></div>
+    </div>
+    <div class="tabbar"><span class="act"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Accueil</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18"/></svg>Plan</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/></svg>Profil</span></div>
+  </div>
+  <div class="cap">Accueil</div>
+
+  <div class="phone small"><div class="notch"></div>
+    <div class="sb"><span>18:12</span><span class="ic">●●● <b></b></span></div>
+    <div class="scr dt">
+      <div class="back">‹ Accueil</div>
+      <h3>Fractionné 6×800 m</h3>
+      <div class="sub">Aujourd'hui · réalisée · 😐 normal</div>
+      <div class="ai">
+        <div class="t"><span class="pulse"></span>Mon avis (IA) · Analyse en cours…</div>
+        <p class="wait">Je regarde tes 800 m un par un. Une petite minute.</p>
+        <div class="sk" style="width:92%"></div><div class="sk" style="width:70%"></div>
+      </div>
+      <div class="sec">Tes données</div>
+      <div class="big num">4:05<small>/km sur les 800</small></div>
+      <div class="two num"><div>Distance<strong>9,2 km</strong></div><div>FC moyenne<strong>168 bpm</strong></div></div>
+      <div class="chart">
+        <div class="l">Allure par répétition · zone cible 4:00–4:10</div>
+        <svg viewBox="0 0 280 96" width="100%" role="img" aria-label="Allure des 6 répétitions">
+          <rect x="0" y="12" width="280" height="40" fill="#FFF0EB"/>
+          <g fill="#FF5B2E"><rect x="8" y="26" width="34" height="70" rx="8"/><rect x="54" y="34" width="34" height="62" rx="8"/><rect x="100" y="30" width="34" height="66" rx="8"/><rect x="146" y="38" width="34" height="58" rx="8"/><rect x="192" y="42" width="34" height="54" rx="8"/><rect x="238" y="50" width="34" height="46" rx="8" opacity=".55"/></g>
+        </svg>
+      </div>
+    </div>
+  </div>
+  <div class="cap">Détail séance — <span class="state-tag">état : Analyse en cours…</span></div>
+</section>
+
+<!-- ===================== D2 NUIT SPORTIVE ===================== -->
+<section class="dir d2">
+  <div class="dir-info">
+    <div class="num">Direction 2</div>
+    <h2>Nuit sportive</h2>
+    <p>Sombre d'abord, contraste fort et un lime électrique qui claque comme un dossard : l'app donne envie de sortir courir. Plus dense, majuscules espacées, chiffres en gras et profil de séance en barres. Le registre d'un tableau de bord de montre, en plus chaleureux.</p>
+    <div class="swatches"><i style="background:#0A0C0F"></i><i style="background:#15191F"></i><i style="background:#F3F5F7"></i><i style="background:#C8FF2E"></i><i style="background:#36D6FF"></i></div>
+  </div>
+
+  <div class="phone"><div class="notch"></div>
+    <div class="sb"><span>9:41</span><span class="ic">●●● <b></b></span></div>
+    <div class="scr">
+      <div class="top">
+        <div><small>Sam. 21 nov · Semaine 3</small><h3>Salut Badr 👋</h3></div>
+        <span class="calbtn"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></span>
+      </div>
+      <div class="count num"><span>Marathon <b>J-134</b></span><span>Objectif <b>&lt; 3:30</b></span></div>
+      <div class="card">
+        <div class="hd"><small>Séance du jour</small><h4>Fractionné<br>6×800 m</h4></div>
+        <div class="bd">
+          <p class="obj">6 × 800 m à 4:05/km, récup 400 m trot. Tu restes dans la zone, pas plus vite.</p>
+          <p class="why">Pourquoi : base solide (CTL 42), on ajoute de l'intensité courte.</p>
+          <div class="blocks"><i class="w"></i><i class="r"></i><i class="e"></i><i class="r"></i><i class="e"></i><i class="r"></i><i class="e"></i><i class="r"></i><i class="e"></i><i class="r"></i><i class="e"></i><i class="r"></i><i class="w"></i></div>
+          <div class="stats num"><div>Dist.<strong>9 km</strong></div><div>Durée<strong>50′</strong></div><div>Cible<strong>4:05</strong></div></div>
+        </div>
+      </div>
+      <div class="week">
+        <div><small>Cette semaine</small><strong class="num">2 / 4 séances</strong></div>
+        <svg class="ring" viewBox="0 0 46 46"><circle cx="23" cy="23" r="19" fill="none" stroke="#262C35" stroke-width="5"/><circle cx="23" cy="23" r="19" fill="none" stroke="#C8FF2E" stroke-width="5" stroke-dasharray="59.7 119.4" stroke-linecap="round" transform="rotate(-90 23 23)"/></svg>
+      </div>
+    </div>
+    <div class="tabbar"><span class="act"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Accueil</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18"/></svg>Plan</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/></svg>Profil</span></div>
+  </div>
+  <div class="cap">Accueil</div>
+
+  <div class="phone small"><div class="notch"></div>
+    <div class="sb"><span>18:20</span><span class="ic">●●● <b></b></span></div>
+    <div class="scr dt">
+      <div class="back">‹ ACCUEIL</div>
+      <h3>Fractionné 6×800 m</h3>
+      <div class="sub"><span class="ok">Réalisée</span><span>🥵 dur</span><span>Respectée</span></div>
+      <div class="ai">
+        <div class="t">Mon avis (IA)</div>
+        <p>Séance respectée. Tes 800 sont réguliers, le dernier a coûté plus — cohérent avec ton 🥵. Demain : footing facile, sans montre si tu veux.</p>
+      </div>
+      <div class="sec">Tes données</div>
+      <div class="big num">4:05<small>/km · 800 m</small></div>
+      <div class="two num"><div>Distance<strong>9,2 km</strong></div><div class="hr">FC moy.<strong>168 bpm</strong></div></div>
+      <div class="chart">
+        <svg viewBox="0 0 280 80" width="100%" role="img" aria-label="Allure des 6 répétitions">
+          <rect x="0" y="14" width="280" height="30" fill="#C8FF2E" opacity=".08"/>
+          <polyline points="20,30 68,36 116,33 164,39 212,42 260,48" fill="none" stroke="#C8FF2E" stroke-width="2.5" stroke-linejoin="round"/>
+          <g fill="#0A0C0F" stroke="#C8FF2E" stroke-width="2.5"><circle cx="20" cy="30" r="4"/><circle cx="68" cy="36" r="4"/><circle cx="116" cy="33" r="4"/><circle cx="164" cy="39" r="4"/><circle cx="212" cy="42" r="4"/><circle cx="260" cy="48" r="4"/></g>
+          <g fill="#8A93A0" font-size="9" font-weight="700" font-family="-apple-system,sans-serif" text-anchor="middle"><text x="20" y="74">4:03</text><text x="68" y="74">4:05</text><text x="116" y="74">4:04</text><text x="164" y="74">4:06</text><text x="212" y="74">4:07</text><text x="260" y="74">4:09</text></g>
+        </svg>
+      </div>
+    </div>
+  </div>
+  <div class="cap">Détail séance — Mon avis (IA) + Tes données</div>
+</section>
+
+<!-- ===================== D3 ÉDITORIAL ===================== -->
+<section class="dir d3">
+  <div class="dir-info">
+    <div class="num">Direction 3</div>
+    <h2>Éditorial</h2>
+    <p>La séance traitée comme une une de magazine : « 6×800 » en très grand, des filets plutôt que des cartes, papier et encre. Presque monochrome, un rouge signal pour un seul message (l'état). Le « pourquoi » en italique serif, comme la voix d'un coach qui parle.</p>
+    <div class="swatches"><i style="background:#F1EFEA"></i><i style="background:#0B0B0B"></i><i style="background:#6E6A63"></i><i style="background:#CFCBC2"></i><i style="background:#E10600"></i></div>
+  </div>
+
+  <div class="phone"><div class="notch"></div>
+    <div class="sb"><span>19:05</span><span class="ic">●●● <b></b></span></div>
+    <div class="scr">
+      <div class="mast"><span>Sam. 21.11 · S3</span><span class="cal"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><rect x="3" y="5" width="18" height="16" rx="1"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Plan</span></div>
+      <p class="hello">Salut <b>Badr</b>. Marathon dans <b class="num">134 jours</b>.</p>
+      <div class="kicker"><span>Séance du jour</span><em>en attente de la course</em></div>
+      <div class="hero num">6×800<span>Fractionné</span></div>
+      <p class="obj">Six 800 m à 4:05/km, récup 400 m en trottinant.</p>
+      <p class="why">« Ta base est solide (CTL 42) : on ajoute de l'intensité courte. »</p>
+      <div class="rule num"><div>Distance<strong>9 km</strong></div><div>Durée<strong>50′</strong></div><div>Allure<strong>4:05</strong></div></div>
+      <div class="wk"><span class="num">Semaine · 2/4</span><span class="bars"><i class="on"></i><i class="on"></i><i></i><i></i></span></div>
+    </div>
+    <div class="tabbar"><span class="act">Aujourd'hui</span><span>Plan</span><span>Profil</span></div>
+  </div>
+  <div class="cap">Accueil — <span class="state-tag">état : en attente de la course</span></div>
+
+  <div class="phone small"><div class="notch"></div>
+    <div class="sb"><span>19:40</span><span class="ic">●●● <b></b></span></div>
+    <div class="scr dt">
+      <div class="k">‹ Sam. 21.11 · Réalisée · 😐</div>
+      <h3>6×800<br>Fractionné</h3>
+      <div class="ai">
+        <div class="t">Mon avis (IA)</div>
+        <p>Séance respectée. Régulier du début à la fin, juste un léger tassement sur le dernier. Demain, footing facile.</p>
+      </div>
+      <div class="sec">Tes données</div>
+      <div class="big num">4:05<small>/km</small></div>
+      <div class="two num"><div>Distance<strong>9,2 km</strong></div><div>FC moy.<strong>168 bpm</strong></div></div>
+      <div class="chart">
+        <svg viewBox="0 0 280 70" width="100%" role="img" aria-label="Allure des 6 répétitions">
+          <line x1="0" y1="20" x2="280" y2="20" stroke="#CFCBC2" stroke-dasharray="3 3"/>
+          <line x1="0" y1="50" x2="280" y2="50" stroke="#CFCBC2" stroke-dasharray="3 3"/>
+          <g fill="#0B0B0B"><rect x="14" y="26" width="14" height="44"/><rect x="62" y="32" width="14" height="38"/><rect x="110" y="29" width="14" height="41"/><rect x="158" y="35" width="14" height="35"/><rect x="206" y="38" width="14" height="32"/></g>
+          <rect x="254" y="44" width="14" height="26" fill="#E10600"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+  <div class="cap">Détail séance — Mon avis (IA) + Tes données</div>
+</section>
+
+<!-- ===================== D4 CHALEUREUX ===================== -->
+<section class="dir d4">
+  <div class="dir-info">
+    <div class="num">Direction 4</div>
+    <h2>Chaleureux</h2>
+    <p>Crème, terracotta et vert sauge, formes très arrondies : un coach bienveillant plutôt qu'un chrono. Les émojis du Ressenti deviennent des éléments d'interface à part entière. Le plus accueillant des quatre, pensé pour qu'on ait envie de l'ouvrir même les jours de repos.</p>
+    <div class="swatches"><i style="background:#FBF3EA"></i><i style="background:#3B2A21"></i><i style="background:#E2734A"></i><i style="background:#7FAE8C"></i><i style="background:#F4B860"></i></div>
+  </div>
+
+  <div class="phone"><div class="notch"></div>
+    <div class="sb"><span>9:41</span><span class="ic">●●● <b></b></span></div>
+    <div class="scr">
+      <div class="top"><span class="av">B</span>
+        <span class="calbtn"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="4"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></span></div>
+      <div class="hello"><h3>Bonjour Badr ☀️</h3><p>Belle journée pour du rythme.</p></div>
+      <div class="card">
+        <div class="lbl">⚡ Séance du jour</div>
+        <h4>Fractionné 6×800 m</h4>
+        <p class="obj">Six 800 m à 4:05/km, avec 400 m de trot pour souffler entre chaque.</p>
+        <div class="pills num"><span>9 km</span><span>50 min</span><span>4:05 /km</span></div>
+        <div class="why"><span class="e">💡</span><span><b>Pourquoi cette séance</b><br>Ta base est solide, on ajoute un peu d'intensité courte.</span></div>
+        <div class="cta">C'est parti</div>
+      </div>
+      <div class="week">
+        <div class="ds"><i class="done">✓</i><i class="done">✓</i><i class="today">S</i><i>D</i></div>
+        <p><b class="num">2 / 4 séances</b>cette semaine</p>
+      </div>
+    </div>
+    <div class="tabbar"><span class="act"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Accueil</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="4"/><path d="M3 10h18"/></svg>Plan</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/></svg>Profil</span></div>
+  </div>
+  <div class="cap">Accueil</div>
+
+  <div class="phone small"><div class="notch"></div>
+    <div class="sb"><span>18:05</span><span class="ic">●●● <b></b></span></div>
+    <div class="scr dt">
+      <div class="back">‹ Accueil</div>
+      <h3>Fractionné 6×800 m</h3>
+      <div class="sub">Aujourd'hui · 9,2 km · 49 min</div>
+      <div class="ghost"><i style="width:40%"></i><i style="width:90%"></i><i style="width:75%"></i><i style="width:60%"></i></div>
+      <div class="ghost2"></div>
+      <div class="veil"></div>
+      <div class="sheet">
+        <div class="grab"></div>
+        <h4>Bien joué ! Comment c'était ?</h4>
+        <p>Pendant que je regarde ta course, dis-moi ton ressenti.</p>
+        <div class="feel"><div><span>😌</span>facile</div><div class="sel"><span>😐</span>normal</div><div><span>🥵</span>dur</div></div>
+        <div class="proc"><i><b></b><b></b><b></b></i>Analyse en cours…</div>
+        <div class="note">Plus tard</div>
+      </div>
+    </div>
+  </div>
+  <div class="cap">Détail séance — <span class="state-tag">état : pop-up Ressenti</span></div>
+</section>
+
+</div>
+</body>
+</html>
