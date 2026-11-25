@@ -1,0 +1,115 @@
+1	Types HealthKit course (runningPower, GCT…), pas de type cadence	Apple Developer	https://developer.apple.com/documentation/healthkit/hkquantitytypeidentifier/runningpower	2022-06	medium
+2	Métriques de course Apple Watch (définitions, disponibilité)	Apple Support	https://support.apple.com/guide/watch/apd1f24d4d35/watchos	2025	medium
+3	Training Load : 7 j vs 28 j	Apple Support	https://support.apple.com/guide/watch/apde4c07a6cf	2026	high
+4	estimatedWorkoutEffortScore (iOS 18)	Apple Developer	https://developer.apple.com/documentation/healthkit/hkquantitytypeidentifier/estimatedworkouteffortscore	2024	high
+5	Entrées du score d'effort (secondaire)	DC Rainmaker	https://dcrainmaker.com/2024/07/apples-training-load-vitals-watchos11.html	2024-07	low
+6	White paper stades de sommeil (kappa 0,63→0,68)	Apple	https://www.apple.com/kr/health/pdf/Estimating_Sleep_Stages_from_Apple_Watch_Oct_2025.pdf	2025-10	high
+7	Recalibrage du score de sommeil watchOS 26.2	MacRumors	https://www.macrumors.com/2025/11/04/watchos-26-2-updates-sleep-score-ranges/	2025-11	medium
+8	White paper VO2max (méthode, validation N=221)	Apple	https://www.apple.com/healthcare/docs/site/Using_Apple_Watch_to_Estimate_Cardio_Fitness_with_VO2_max.pdf	2021-05	high
+9	VO2max Series 7 : fiabilité faible (n=19)	JMIR Biomed Eng (Caserman et al.)	https://pmc.ncbi.nlm.nih.gov/articles/PMC11325102	2024-08	medium
+10	VO2max Series 10 : biais −6,25 ml/kg/min, MAPE 13,2 % (n=40)	Mayo Clin Proc Digital Health (Lambe et al.)	https://doi.org/10.1016/j.mcpdig.2026.100357	2026-04	high
+11	Vitals : plage 7 nuits, alerte multi-métriques, VFC Series 12 seulement	Apple Support	https://support.apple.com/120142	2026-09	high
+12	Validité FC optique en course selon l'intensité	PMC (étude relue)	https://pmc.ncbi.nlm.nih.gov/articles/PMC6732081	2019	medium
+13	FC Apple Watch : mesure continue, lectures aberrantes possibles	Apple Support	https://support.apple.com/en-AU/120277	2026-09	medium
+14	Comparaisons puissance de course Apple/Stryd (blog)	the5krunner	https://the5krunner.com/2022/08/06/running-power-comparisons-more-comparisons-with-apple-garmin-stryd-coros-polar/	2022-08	low
+15	HealthFit → intervals.icu : VFC en SDNN, sync bien-être	Forum intervals.icu	https://forum.intervals.icu/t/healthfit-sync-for-activities-and-health-metrics/2718?page=4	2021-03	medium
+16	VFC Series 6 vs ECG (n=78), accord modéré	MDPI Sensors	https://www.mdpi.com/1424-8220/25/8/2380	2025-04	medium
+17	RR Apple Watch vs Polar H7 au repos (n=20)	Sensors (PMC)	https://pmc.ncbi.nlm.nih.gov/articles/PMC6111985	2018	medium
+18	HealthFit importe les séances planifiées ; abonnement requis	Forum intervals.icu (dév. HealthFit)	https://forum.intervals.icu/t/import-planned-workouts-from-intervals-icu-into-apple-health/112136	2026-03	high
+19	HealthFit App Store : tarifs, VFC de récupération Series 12+	Apple App Store	https://apps.apple.com/us/app/healthfit/id1202650514	2026-10	medium
+20	IntervalsWellnessSync : VFC/FC repos du sommeil	Forum intervals.icu	https://forum.intervals.icu/t/intervalswellnesssync-simple-apple-watch-health-data-sync-to-intervals-icu/125843	2026-03	low
+21	Sommeil Series 8 vs polysomnographie (n=35)	Sensors / PubMed	https://pubmed.ncbi.nlm.nih.gov/39460013/	2024	medium
+22	VFC Apple = SDNN à moments opaques ; pas d’accès RR	Marco Altini (praticien, HRV4Training)	https://medium.com/@marco_alt/how-to-make-sense-of-your-apple-watch-heart-rate-variability-hrv-data-89bf4a510438	2023	medium
+23	Vitesse critique et D′ : modèle d = CS·t + D′, 70–90 % VO2max	Sports Medicine (Jones & Vanhatalo)	https://pmc.ncbi.nlm.nih.gov/articles/PMC5371646	2017-03	high
+24	La CS (pas la MLSS) indexe l'état stable métabolique maximal	Physiological Reports (Jones et al.)	https://doi.org/10.14814/phy2.14098	2019-05	medium
+25	Domaines d'intensité ; méthodes de seuil non interchangeables ; % fixes peu valides	Sports Medicine (Jamnick et al.)	https://pubmed.ncbi.nlm.nih.gov/32729096/	2020	medium
+26	FC max = 208 − 0,7 × âge (Tanaka)	J Am Coll Cardiol (Tanaka et al.)	https://pubmed.ncbi.nlm.nih.gov/11153730/	2001-01	high
+27	Formules TRIMP Banister/Edwards, sRPE, réserve cardiaque	Frontiers in Physiology (Shaw et al.)	https://pmc.ncbi.nlm.nih.gov/articles/PMC7240108/	2020-05	high
+28	SDNN vs RMSSD : signification, durées d'enregistrement, normes	Frontiers in Public Health (Shaffer & Ginsberg)	https://www.frontiersin.org/articles/10.3389/fpubh.2017.00258/full	2017	high
+29	Glossaire TSS/rTSS/hrTSS, CTL/ATL/TSB, EF, découplage	TrainingPeaks	https://www.trainingpeaks.com/learn/articles/glossary-of-trainingpeaks-metrics/	2026-06	high
+30	Monotonie et contrainte (Foster 1998)	MSSE (Foster)	https://doi.org/10.1097/00005768-199807000-00023	1998-07	medium
+31	Consensus ECSS/ACSM surmenage/surentraînement	MSSE / EJSS (Meeusen et al.)	https://pubmed.ncbi.nlm.nih.gov/23247672/	2013	high
+32	vVO2max et Tlim (Billat)	Sports Medicine (Billat & Koralsztein)	https://pubmed.ncbi.nlm.nih.gov/8857705/	1996	medium
+33	Économie de course : revue	Sports Medicine Open (Barnes & Kilding)	https://link.springer.com/article/10.1186/s40798-015-0007-y	2015	medium
+34	Dérive cardiovasculaire	Exerc Sport Sci Rev (Coyle & González-Alonso)	https://scilit.com/publications/b2c41c04695672f811b81cfb09bf4f36	2001	medium
+35	Protocole LTHR de Friel (20 min − 5 %)	Joe Friel (site d'auteur)	https://joefrieltraining.com/a-quick-guide-to-setting-zones/	2025-09	medium
+36	Indice de polarisation (Treff)	Frontiers in Physiology (Treff et al.)	https://www.frontiersin.org/articles/10.3389/fphys.2019.00707/full	2019-06	high
+37	Modèle à 3 zones de Seiler	Frontiers in Physiology (revue)	https://www.frontiersin.org/articles/10.3389/fphys.2015.00295/full	2015	medium
+38	Équations VDOT (secondaire, calculateur)	getfitcraft (secondaire)	https://getfitcraft.com/tools/vdot-calculator	2025	low
+39	Charge allure intervals.icu = h × IF² × 100 (code développeur)	Forum intervals.icu (développeur)	https://forum.intervals.icu/t/running-load-vs-trainingpeaks-rtss/5774	2022-01	medium
+40	HRSS = TRIMP normalisé (développeur)	Forum intervals.icu (développeur)	https://forum.intervals.icu/t/hrss-normalized-trimp-training-load/569	2020-03	medium
+41	Form = Fitness − Fatigue le jour même ; 42/7 j ; zone rouge −30	Forum intervals.icu (guide + développeur)	https://forum.intervals.icu/t/fitness-page-a-guide-to-getting-started/17702	2023-02	high
+42	Critique de l'ACWR (Impellizzeri et al.)	Journal of Athletic Training	https://pmc.ncbi.nlm.nih.gov/articles/PMC7534938	2020	high
+43	Indice de polarisation dans intervals.icu	Forum intervals.icu (développeur)	https://forum.intervals.icu/t/polarization-index-added/49877	2023-09	high
+44	Affûtage : 2 sem, volume −41–60 % (méta-analyse)	MSSE (Bosquet et al.)	https://pubmed.ncbi.nlm.nih.gov/17762369/	2007	high
+45	Périodisation par blocs (Issurin) et critique	Sports Medicine (Issurin)	https://pubmed.ncbi.nlm.nih.gov/20199119/	2010	medium
+46	Méta-analyse IPD polarisé vs pyramidal (13 études), sous-groupes	Sports Medicine (Rosenblat et al.)	https://doi.org/10.1007/s40279-024-02149-3	2025-01	high
+47	Méta-analyse TID (17 études) : POL > autres sur VO2peak seulement	Sports Medicine (Oliveira et al.)	https://doi.org/10.1007/s40279-024-02034-z	2024	high
+48	Pyramidal/polarisé > seuil-dominant chez coureurs de fond	IJSPP (Kenneally et al.)	https://pubmed.ncbi.nlm.nih.gov/29182410/	2018	medium
+49	ECR coureurs amateurs 10 km : POL > entre-seuils	IJSPP (Muñoz et al.)	https://pubmed.ncbi.nlm.nih.gov/23752040/	2014	medium
+50	≥ 70 % bas + ≤ 30 % seuil/HIIT pour demi-fond et fond	Int J Sports Med (Campos et al.)	https://pubmed.ncbi.nlm.nih.gov/34749417/	2022	medium
+51	Méthode Daniels (VDOT, plafonds par séance) – secondaire	Coach Ray (blog, d'après Daniels' Running Formula)	https://www.coachray.nz/2021/10/11/jack-daniels-phd-formulaic-approach-to-periodisation/	2021-10	medium
+52	Plans 80/20 : niveaux 0–3, zones ancrées sur seuil	TrainingPeaks / 80/20 Endurance	https://www.trainingpeaks.com/partners/80-20-endurance/	2025	medium
+53	Modèle norvégien : description, absence d'essais	IJERPH (Casado et al.)	https://pmc.ncbi.nlm.nih.gov/articles/PMC10000870/	2023	medium
+54	MAF : article d'hypothèse, formule non validée	Frontiers in Physiology (Maffetone & Laursen)	https://pmc.ncbi.nlm.nih.gov/articles/PMC7142223	2020	high
+55	ECR course-marche marathon (n=42)	J Sci Med Sport (Hottenrott et al.)	https://pubmed.ncbi.nlm.nih.gov/25467199/	2016	medium
+56	Affûtage endurance : ≤ 21 j, volume −41–60 %	PLoS One (Wang et al.)	https://pmc.ncbi.nlm.nih.gov/articles/PMC10171681/	2023	medium
+57	Sortie longue ≈ 25–30 % du volume, plafond ~3 h (Daniels/Hansons) – convention	Luke Humphrey Running (Hansons)	https://lukehumphreyrunning.com/hansons-marathon-method-the-16-miler/	2020	low
+58	Évaluation experte de plans ChatGPT (10 coachs, 22 critères)	J Sports Sci Med (Düking et al.)	https://jssm.org/jssm-23-56.xml-Fulltext	2024	high
+59	Étude de cas semi-marathon coaché par ChatGPT (prépublication)	arXiv	https://arxiv.org/html/2509.26593v1	2025-09	low
+60	Feedback dans l'auto-suivi : d = 0,29 (corrigé)	IJBNPA (Krukowski et al.)	https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10765525/	2024-01	medium
+61	Bloom : coach GPT-4o vs app sans LLM (N=54, prépublication CHI 2026)	arXiv	https://arxiv.org/html/2510.05449v2	2026-03	low
+62	Limites du modèle de Banister (mauvais conditionnement, instabilité)	J Sports Sci (Hellard et al.)	https://doi.org/10.1080/02640410500244697	2006	medium
+63	Validité des modèles fitness-fatigue mal étudiée ; bruit > 4 % rédhibitoire (thèse)	Robert Gordon University (Stephens Hemingway, thèse)	https://rgu-repository.worktribe.com/output/682069	2021	medium
+64	Zones de Form = Friel, « règle empirique » (développeur intervals.icu)	Forum intervals.icu (développeur)	https://forum.intervals.icu/t/zones-of-form-in-fitness-chart/3623	2021-04	medium
+65	Garmin-RUNSAFE : pic sur une sortie vs 30 j ; pas d'association semaine/ACWR	BJSM (Frandsen et al.)	https://pmc.ncbi.nlm.nih.gov/articles/PMC12421110	2025	high
+66	Éditorial : littérature ACWR contestée	Frontiers (éditorial)	https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8138569/	2021	medium
+67	Méta-analyse VFC guidée : ES 0,40 VO2max	IJERPH (Granero-Gallegos et al.)	https://pmc.ncbi.nlm.nih.gov/articles/PMC7663087	2020	medium
+68	Méta-analyse VFC guidée : non significatif, moins de non-répondeurs	PubMed (Düking et al.)	https://pubmed.ncbi.nlm.nih.gov/34489178/	2021	medium
+69	Méta-analyse VFC guidée : petit, non significatif	IJERPH (Manresa-Rocamora et al.)	https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8507742/	2021	medium
+70	Suivi par FC/VFC : CV individuel, plus petit changement, aucun seuil prouvé	Frontiers in Physiology (Buchheit)	https://www.frontiersin.org/journals/physiology/articles/10.3389/fphys.2014.00073/full	2014	high
+71	Moyenne VFC sur 7 j > valeurs isolées (cas élites)	EJAP (Plews et al.)	https://pubmed.ncbi.nlm.nih.gov/22367011/	2012	medium
+72	Apple Watch S9/Ultra 2 : SDNN −8,3 ms vs Polar H10 ; FC repos −0,08 bpm	MDPI Sensors (O'Grady et al.)	https://www.mdpi.com/1424-8220/24/19/6220	2024	high
+73	Validation VFC nocturne vs ECG (Oura, Whoop, Garmin ; Apple non testée)	Physiological Reports (Dial et al.)	https://pmc.ncbi.nlm.nih.gov/articles/PMC12367097	2025-08	high
+74	Critique VFC Apple, préférer une mesure matinale (praticien)	Marco Altini (Substack)	https://marcoaltini.substack.com/p/trusting-the-right-tool-for-the-job	2024-11	medium
+75	< 8 h de sommeil : risque de blessure ×1,7 (adolescents)	J Pediatr Orthop (Milewski et al.)	https://doi.org/10.1097/bpo.0000000000000151	2014-03	medium
+76	Mesures subjectives > objectives pour suivre la charge (revue de 56 études)	BJSM (Saw, Main & Gastin)	https://bjsm.bmj.com/content/50/5/281.short	2016	high
+77	Incidence : 17,8 (débutants) vs 7,7 (loisir) blessures/1000 h	Sports Medicine (Videbæk et al.)	https://pubmed.ncbi.nlm.nih.gov/25951917/	2015	high
+78	Incidence ~40 % ; blessures les plus fréquentes	J Sport Health Sci (Kakouris et al.)	https://pubmed.ncbi.nlm.nih.gov/33862272	2021	high
+79	Blessure antérieure = principal facteur de risque	BJSM (Saragiotto et al.)	https://pubmed.ncbi.nlm.nih.gov/24809248/	2014	medium
+80	Facteurs de risque/protection en course de fond (blessure antérieure)	Sports Medicine (Hulme et al.)	https://www.doi.org/10.1007/s40279-016-0636-4	2017	medium
+81	Biomécanique non liée aux blessures chez non-élites	Sports Medicine Open (méta-analyse)	https://pubmed.ncbi.nlm.nih.gov/35254562/	2022	medium
+82	Renforcement musculaire : blessures < 1/3 (tous sports)	BJSM (Lauersen et al.)	https://pubmed.ncbi.nlm.nih.gov/24100287/	2014	high
+83	ECR renforcement hanches/tronc chez débutants (efficace) vs pied/cheville	PubMed (ECR 2024)	https://pubmed.ncbi.nlm.nih.gov/38724071/	2024	medium
+84	GRONORUN : règle des 10 % hebdo n'a pas réduit les blessures	AJSM (Buist et al.) via J Athl Train	https://pmc.ncbi.nlm.nih.gov/articles/PMC9528699	2008	high
+85	Débutants : > 30 %/sem vs < 10 % (p = 0,07)	JOSPT (Nielsen et al.)	https://vbn.aau.dk/da/publications/excessive-progression-in-weekly-running-distance-and-risk-of-runn	2014	medium
+86	Retour progressif après maladie (paliers ≥ 48 h, J5/J10)	BJSM blog (Elliott et al.)	https://blogs.bmj.com/bjsm/?p=10084	2022-04	medium
+87	« Neck check » sans base scientifique solide (revue liée au CIO)	Univ. Pretoria SEMLI (résumé)	https://www.up.ac.za/Sport-Exercise-Medicine-and-Lifestyle-Institute/news/medical-guidance-athletes-returning-sport-after-acute-respiratory-illness	2023	medium
+88	Pas de reprise avant fin de la fièvre ; risque de myocardite	Sports Medicine (revue)	https://link.springer.com/content/pdf/10.1007/s40279-023-01969-z.pdf	2023	medium
+89	Modèle de surveillance de la douleur ≤ 5/10 (Achille, ECR)	AJSM (Silbernagel et al.)	https://doi.org/10.1177/0363546506298279	2007	medium
+90	Reprise après fracture de fatigue tibiale (revue exploratoire)	Sports Medicine	https://link.springer.com/article/10.1007/s40279-024-02051-y	2024	medium
+91	Désentraînement : VO2max −7 % à J21, −16 % à J56	J Appl Physiol (Coyle et al.)	https://europepmc.org/article/MED/6511559	1984	high
+92	Désentraînement > 4 sem : VO2max récemment acquise perdue	Sports Medicine (Mujika & Padilla)	https://europepmc.org/article/MED/10999420	2000	high
+93	Réduire volume/fréquence en gardant l'intensité préserve la VO2max	Sports Medicine (Neufer)	https://pubmed.ncbi.nlm.nih.gov/2692122/	1989	medium
+94	Trous d'entraînement et marathon (Strava, ~44 000 coureurs)	Outside (sur Feely, Smyth et al. 2022)	https://www.outsideonline.com/health/training-performance/missed-marathon-training-study-2023	2023-01	medium
+95	Table d'ajustement du VDOT après arrêt (convention Daniels)	VDOT O2 (site officiel Daniels)	https://news.vdoto2.com/?p=1285	2022-03	high
+96	Consensus CIO REDs 2023 et outil CAT2	BJSM (Mountjoy et al.)	https://pubmed.ncbi.nlm.nih.gov/37752011/	2023-09	high
+97	Conformité intervals.icu : charge/prévu, vert 80–120 %	Forum intervals.icu (développeur)	https://forum.intervals.icu/t/compliance-activity-field/47805	2023-08	high
+98	Appariement : pas d'auto-appariement si charge < 50 % du prévu	Forum intervals.icu	https://forum.intervals.icu/t/workout-planning-and-matching-activities/1809	2021	medium
+99	Conformité TrainingPeaks (TSS > durée > distance)	TrainingPeaks	https://www.trainingpeaks.com/learn/trainingpeaks-athlete-user-guide/	2025	medium
+100	HRR comme marqueur d'entraînement : revue, facteurs confondants	IJSPP (Daanen et al.)	https://research.vu.nl/ws/files/3163042/292221.pdf	2012	medium
+101	HRRc intervals.icu calculée si FC ≥ FC seuil	Forum intervals.icu (développeur)	https://forum.intervals.icu/t/heart-rate-recovery-hrrc/387	2021-12	medium
+102	Découplage chez 82 303 marathoniens ; améliore la prédiction	Sports Medicine (Smyth et al.)	https://link.springer.com/article/10.1007/s40279-022-01680-5	2022	medium
+103	Découplage et EF (Friel) : définitions	TrainingPeaks blog	https://trainingpeaks.com/blog/efficiency-factor-and-decoupling	2024	medium
+104	GAP : polynôme de Minetti, modèle Strava 2017 (rétro-ingénierie)	Aaron Schroeder (analyse secondaire)	https://aaron-schroeder.github.io/reverse-engineering/grade-adjusted-pace.html	2023-11	medium
+105	CS depuis données Strava d'entraînement (400/800/5000 m, 16 sem.)	MSSE (Smyth & Muniz-Pumares)	https://uhra.herts.ac.uk/handle/2299/22878	2020	high
+106	Météo et performance marathon (WBGT 5–25 °C)	MSSE (Ely et al.)	https://experts.umn.edu/en/publications/impact-of-weather-on-marathon-running-performance/	2007	medium
+107	CS/D′ sur la courbe d'allures intervals.icu (efforts 1–5 km)	Forum intervals.icu (développeur)	https://forum.intervals.icu/t/towards-grade-adjusted-best-paces-and-cs-d-computation/12197	2022-05	medium
+108	Pas de mise à jour auto de l'allure seuil en course (intervals.icu)	Forum intervals.icu (utilisateurs)	https://forum.intervals.icu/t/automatic-threshold-pace-calculation/112254	2025-09	medium
+109	Test 30 min FC seuil vs labo : erreur type ~8 bpm	PubMed (2005)	https://pubmed.ncbi.nlm.nih.gov/16095403/	2005	medium
+110	TrainingPeaks : seuil FC auto uniquement à la hausse	TrainingPeaks	https://www.trainingpeaks.com/learn/articles/thresholds-411/	2024	medium
+111	Riegel sous-estime le temps marathon des amateurs ; + kilométrage	BMC Sports Sci Med Rehabil (Vickers & Vertosick)	https://link.springer.com/article/10.1186/s13102-016-0052-y	2016	medium
+112	Retard de la FC optique vs ceinture sur fractionnés (presse)	Coach (presse)	https://coachweb.com/gear/fitness-trackers/are-apple-and-garmin-heart-rate-monitors-accurate-this-study-says-yes	2023	low
+113	Échantillonnage VFC Apple ~toutes les 2 h la nuit (blog éditeur)	Terra (blog éditeur)	https://tryterra.co/research/how-hrv-actually-works	2025	low
+114	Ligne de base de 4 semaines avant entraînement guidé par la VFC	IJSPP (Javaloyes et al.)	https://pubmed.ncbi.nlm.nih.gov/29809080/	2019	medium
+115	Définition divergente du rouge dans la conformité TrainingPeaks	TrainingPeaks Help Center	https://help.trainingpeaks.com/hc/en-us/articles/204861204	2025	medium

@@ -1,0 +1,60 @@
+# D6 — Session analysis, round 2.1: intervals.icu metric definitions, auto-estimating critical speed, GAP, heat
+
+Accessed: 2026-11-25 for all sources. "full read" means the page or PDF text was retrieved and read (for forum threads, page 1 only). "snippet" means search-result text only.
+No project files were read (research firewall).
+
+## (a) Claims
+
+### Q1 — intervals.icu definitions (tool-behaviour)
+
+| # | Claim | Source | Publisher | Pub date | Read | Confidence | Class |
+|---|---|---|---|---|---|---|---|
+| 1 | **Pace-based running load** (developer code posted by "david"): `mps = GAP if available else distance/moving_time; intensity = mps/threshold_pace; load = round(moving_time * mps * intensity * 100 / (threshold_pace*3600))`. This is the same as **load = moving_time_h × IF² × 100**, where IF = average GAP speed / threshold speed. It is computed on the whole activity's **average** GAP speed (not a normalized pace) and counts **moving time only**. | https://forum.intervals.icu/t/running-load-vs-trainingpeaks-rtss/5774 | forum.intervals.icu (developer post) | 2022-01-07 | full read | High for 2022; Medium for now (older than 18 months, may have changed) | formula / tool-behaviour |
+| 2 | "Intervals.icu uses gradient adjusted pace for the run TSS calc and also only counts moving time." Elevation correction should stay on "Auto". The /settings change only applies to new activities. | same | same | 2022-01-07/09 | full read | Medium-High | tool-behaviour |
+| 3 | **Load priority** is set per sport, as an ordered preference (power / pace / HR). It is configured in Settings once the disciplines are enabled. A bug thread says that when a planned step has both power and HR, power is used. | https://forum.intervals.icu/t/fitness-page-a-guide-to-getting-started/17702 (Gerald, 2023-02-14); search snippets for /t/gradient-adjusted-pace-pace-training-load/4031 and /t/training-load-bug/1370 | forum.intervals.icu | 2023-02-14 | full read (guide) / snippet (others) | Medium (user statements, not a developer spec) | tool-behaviour |
+| 4 | **HRSS** = "normalized TRIMP" as used in Elevate. It is scaled so that 100 = 1 h at max (threshold) effort. It needs resting HR and a good threshold HR, and it is the default model when there is not enough data for the others. Settings can differ per sport. The developer post does **not** give the exact equation; it points to Elevate issue #341. | https://forum.intervals.icu/t/hrss-normalized-trimp-training-load/569 | forum.intervals.icu (developer "david") | 2020-03-21 | full read | High for the description; exact formula unverified | tool-behaviour |
+| 5 | User-reported Banister-style HR load: HRr = (HR−rest)/(LTHR−rest), with sex constants 0.64/1.92 (men) and 0.86/1.67 (women). This is a user's reconstruction, **not** confirmed as intervals.icu's code. | https://forum.intervals.icu/t/is-the-formula-for-load-from-hr-public-domain/118072 | forum.intervals.icu (user) | 2026-01-24 | full read | Low (treat as a hypothesis) | formula |
+| 6 | **Fitness/Fatigue** use exponentially weighted averages with defaults of 42 d and 7 d. **They can be changed**: Fitness page → Options → "Adjust Fitness Days", or per date from the calendar ("Fitness Days", which can be backdated). | https://forum.intervals.icu/t/change-fatigue-atl-and-fitness-ctl-factors/300 ; guide 17702 | forum.intervals.icu | various (thread from about 2020; guide 2022-08) | snippet (300) / full read (17702) | Medium-High | tool-behaviour |
+| 7 | **Form = Fitness − Fatigue computed on the same day** (not yesterday's values, unlike TrainingPeaks). Developer: "it just seemed the right way to was to do it all on the day." Form can also be shown as a percentage: (Fitness−Fatigue)×100/Fitness. The default boundary between the Green (optimal) and Red (high risk) zones is −30. | https://forum.intervals.icu/t/fitness-page-a-guide-to-getting-started/17702 | forum.intervals.icu (david post #20) | 2023-02-14 | full read | High | tool-behaviour |
+| 8 | **Polarization Index** (added 2023-09-23): Treff 2019 formula on a 3-zone model where **S1 = Z1+Z2, S2 = Z3+Z4, S3 = Z5+** of the user's zones. It returns null if there is no time in S3 or if S3 > S1. It needs time in zones from power, HR or (for runs) pace. Weekly and /totals values add up time in zones over the period. It can be negative, because it uses log10 of a ratio below 1. | https://forum.intervals.icu/t/polarization-index-added/49877 | forum.intervals.icu (david) | 2023-09-23/29 | full read | High | tool-behaviour |
+| 9 | Treff formula: PI = log10((Z1/Z2) × Z3 × 100), using fractions of total volume. PI > 2.00 means polarized. It is invalid if Z3 > Z1. | https://www.frontiersin.org/articles/10.3389/fphys.2019.00707/full (Treff et al., Front Physiol) | Frontiers | 2019-06 | snippet | High | formula |
+| 10 | **Decoupling** (developer): uses the output/HR ratio (power/HR, or pace/HR), not HR reserve: (ratio of 1st half − ratio of 2nd half) / ratio of 1st half. **Efficiency factor** = raw output / raw HR (user description). | https://forum.intervals.icu/t/stephen-sieler-on-cardiac-drift-power-hr-and-so-on/734/101 ; https://forum.intervals.icu/t/efficiency-factor/38610 | forum.intervals.icu | not captured | snippet | Medium | formula / tool-behaviour |
+| 11 | **Critical speed on the Pace page** (live 2022-05-31): a CS/D′ model fitted on best efforts from the pace curve. Points are chosen among the 1, 2, 3, 4 and 5 km efforts, "picking points >= 2 minutes and the last point >= 15 minutes". The circles on the chart mark the points used. It is framed as the distance-time slope (CS) and intercept (D′). The thread does not say whether GAP or raw pace is used. | https://forum.intervals.icu/t/towards-grade-adjusted-best-paces-and-cs-d-computation/12197 | forum.intervals.icu (david) | 2022-05-31 | full read (page 1) | Medium-High (older than 18 months) | tool-behaviour |
+| 12 | **No automatic threshold-pace update** for running as of Sep 2025, unlike eFTP for power: "No, there's no functionality like that for running pace." Users are told to copy CS by hand, or use a 10 km pace. This has been raised as a feature request. | https://forum.intervals.icu/t/automatic-threshold-pace-calculation/112254 ; https://forum.intervals.icu/t/how-to-set-threshold-pace/52295 | forum.intervals.icu (experienced users, not the developer) | 2025-09-19 | full read (112254) / snippet | Medium (no developer confirmation; recheck) | tool-behaviour |
+
+### Q2 — Critical speed from raw training data (Smyth & Muniz-Pumares 2020, MSSE 52(12):2637–45)
+Full read of the accepted-manuscript PDF (University of Hertfordshire repository, uhra.herts.ac.uk/id/eprint/8225, CC BY-NC-ND), extracted with Ghostscript.
+
+| # | Claim | Confidence | Class |
+|---|---|---|---|
+| 13 | Data: Strava activities of **31,190** runners (Dublin, London and New York marathons, 2014–2017). Training data covers the **16 weeks before the race**. Time, distance and elevation are sampled **every 100 m**. | High | empirical |
+| 14 | Best efforts: the fastest **grade-adjusted** time for each of **400, 800, 1000, 1500, 3000 and 5000 m** in the 16 weeks. Each is a rolling average over consecutive 100 m GAP values (for example, 10 values for 1 km). Efforts are taken from training as recorded, with no check that they were maximal ("intentional and non-intentional efforts"). | High | empirical |
+| 15 | Model: the **2-parameter linear distance–time model** (D = CS·t + D′; slope = CS, intercept = D′). **42 models** were fitted, one for every combination of at least 3 distances. Linearity: R² = 0.9999 ± 0.0001. Across all models CS = 3.74 ± 0.08 m/s and D′ = 149 ± 24 m. **Best model: 400 + 800 + 5000 m**, with CS = 3.69 ± 0.57 m/s, D′ = 136 ± 39 m, R² = 0.695 against marathon time and **7.67 % prediction error** (leave-one-out). The worst model was 400/800/1000 m (short distances only). Mean error over all models: 8.01 ± 0.51 %. | High | empirical |
+| 16 | Marathon speed relative to CS: **~93 % of CS for a ~150 min finish, 78.9 % for a finish over 300 min**. The relationship is strongly linear for both sexes and age groups (R² ≥ 0.98). Mean 84–85 % of CS. Women run slightly closer to CS than men. Base speed (km 2–16) = 87.6 ± 6.9 % of CS. Even-paced runners average ~88 % of CS. Recommendation: **stay ≤ ~94 % of CS in the first half**. | High | empirical |
+| 17 | An "adjusted model" that corrects best efforts which were not maximal (a fast 1 km inside a run where the remaining 9 km were also not much slower) raised CS by ~5 % (3.69 → 3.84 m/s). The main conclusions did not change. | High | empirical |
+| 18 | GAP used in the paper: **Minetti 2002** cost-of-running adjustment (Supplement 1). | High | formula |
+
+### Q3 — GAP and heat
+
+| # | Claim | Source | Pub date | Read | Confidence | Class |
+|---|---|---|---|---|---|---|
+| 19 | Minetti 2002 energy cost of running: **Cr(i) = 155.4i⁵ − 30.4i⁴ − 43.3i³ + 46.3i² + 19.5i + 3.6** (J·kg⁻¹·m⁻¹, i = grade as a decimal). GAP factor = Cr(i)/3.6. (Quoted by a secondary source; original: J Appl Physiol 93:1039–46.) | https://aaron-schroeder.github.io/reverse-engineering/grade-adjusted-pace.html | 2023-11-03 | full read | High (well-known polynomial; secondary transcription) | formula |
+| 20 | Strava's 2017 GAP model (Drew Robb, 2017-10-03) replaced Minetti with an **HR-based** empirical model fitted on Strava's bulk activity data. It gives much more credit to downhill running and less to uphill than Minetti. In the reconstruction, adjusted pace becomes faster than actual pace at around **−18 %** grade. The coefficients were not published (only a reverse-engineered notebook exists). | https://medium.com/strava-engineering/an-improved-gap-model-8b07ae8886c3 (403 blocked); Schroeder page above | 2017-10-03 | snippet (Medium) / full read (Schroeder) | Medium | empirical |
+| 21 | Ely et al. 2007 (MSSE 39:487–93): marathon performance slows progressively as WBGT rises from 5 to 25 °C, with slower runners affected more. A secondary review cites a **2.7 % decrement at 25 °C WBGT** for elites. A press summary gives elite slowdowns of 1.7 % (WBGT 5–10 °C) up to 4.5 % (WBGT 21–25 °C). The exact per-°C slope was **not verified** from the primary paper. | https://experts.umn.edu/en/publications/impact-of-weather-on-marathon-running-performance/ ; https://coachsci.sdsu.edu/csa/vol145/ely.htm | 2007 | snippet | Medium | empirical |
+
+## (b) Leads
+- Elevate issue #341 (github.com/thomaschampagne/elevate/issues/341) may hold the exact HRSS/TRIMP formula used by intervals.icu.
+- intervals.icu API docs (intervals.icu/api-docs.html): field names (icu_training_load, icu_efficiency_factor, decoupling, polarization_index, icu_hrr, threshold_pace, lthr, max_hr). Not fetched this run.
+- Forum thread 12197 page 2 and later: has the CS model changed since 2022, and does it use GAP?
+- Forum thread /t/estimate-lthr-from-heart-rate-at-best-power/1440 for LTHR estimation behaviour.
+- Smyth & Muniz-Pumares 2020 Supplement 2: algorithm for the adjusted model (links.lww.com/MSS/C11). Useful for filtering best efforts that were not maximal.
+- Primary Ely 2007 full text (PubMed 17473775) for the per-°C slope. Also Périard et al. 2021 (Physiol Rev) and El Helou 2012 (PLoS ONE, HAL link found) for temperature–performance curves.
+- Strava patent US11623121B1 for the GAP model method.
+- runningwritings.com 2024 critical speed guide (secondary) for test-protocol summaries.
+
+## (c) Not found / not verified this run
+- Exact intervals.icu HRSS equation. Definitions of HRRc and compliance %. Whether intervals.icu auto-detects LTHR or max HR for running. The current (2025–26) developer statement on the pace load formula.
+- Jones & Vanhatalo 2017 (Sports Med) test-protocol recommendations: not retrieved. Treat "3–5 trials of 2–15 min" as an unverified belief.
+- Newer (2022–2026) validation of CS from wearable or Strava data: not searched (budget).
+- Q4, estimating HRmax from field data versus formulas: not searched (budget). No evidence was gathered.
+- A quantified HR rise per °C (cardiac drift in heat): not found.
