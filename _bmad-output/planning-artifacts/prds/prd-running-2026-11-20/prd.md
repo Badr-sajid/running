@@ -2,7 +2,7 @@
 title: "PRD : application de course à pied personnelle"
 status: final
 created: 2026-11-20
-updated: 2026-11-22
+updated: 2026-11-25
 ---
 
 # PRD : application de course à pied personnelle
@@ -10,7 +10,7 @@ updated: 2026-11-22
 
 ## 0. Objet du document
 
-Ce PRD sert d'entrée à `bmad-ux`, puis à `bmad-architecture` et `bmad-create-epics-and-stories`. L'UX passe avant l'architecture, parce que le rituel après la Course pèse sur le modèle de données. Ce PRD s'appuie sur le [Product Brief du 18/11](../../briefs/brief-running-2026-11-18/brief.md), sur sa revue en party mode du 20/11 et sur le brainstorming du 17/11, sans les répéter. Les termes du §2 (Glossaire) sont employés tels quels partout. Les exigences fonctionnelles (FR) sont numérotées globalement. Les arbitrages validés par Badr figurent au §13 ; les points encore déduits sans confirmation portent un tag. Le « comment » technique (API, pipelines, hébergement, bandes chiffrées des Méthodes, vérifications en attente) se trouve dans [addendum.md](addendum.md).
+Ce PRD sert d'entrée à `bmad-ux`, puis à `bmad-architecture` et `bmad-create-epics-and-stories`. L'UX passe avant l'architecture, parce que le rituel après la Course pèse sur le modèle de données. Ce PRD s'appuie sur le [Product Brief du 18/11](../../briefs/brief-running-2026-11-18/brief.md), sur sa revue en party mode du 20/11, sur le brainstorming du 17/11 et, depuis le 25/11, sur la [recherche domaine « données Apple Watch et science de l'entraînement »](../../research/domain-donnees-apple-watch-entrainement-course-2026-11-25/research.md) (références entre crochets, ex. [65]), sans les répéter. Les termes du §2 (Glossaire) sont employés tels quels partout. Les exigences fonctionnelles (FR) sont numérotées globalement. Les arbitrages validés par Badr figurent aux §13 à §15 ; les points encore déduits sans confirmation portent un tag. Le « comment » technique (API, pipelines, hébergement, bandes chiffrées des Méthodes, vérifications en attente) se trouve dans [addendum.md](addendum.md).
 
 ## 1. Vision
 
@@ -22,12 +22,14 @@ C'est aussi un outil qu'on construit soi-même, et bien. Il sert d'abord un util
 
 ## 2. Glossaire
 
-- **Profil coureur** : mémoire durable de l'utilisateur (historique, records, charge, CTL, FC au repos, blessures actuelles et passées, disponibilités, jour de la sortie longue, périodes d'indisponibilité, Bilans de fin de Plan). Il contient des emplacements vides prévus pour la nutrition et le sommeil. Il y en a un par utilisateur.
+- **Profil coureur** : mémoire durable de l'utilisateur (historique, records, charge, CTL, FC au repos, durée de sommeil, Seuil d'allure, blessures actuelles et passées, disponibilités, jour de la sortie longue, périodes d'indisponibilité, Bilans de fin de Plan). Il contient un emplacement vide prévu pour la nutrition. Il y en a un par utilisateur.
+- **Seuil d'allure** : la vitesse critique (CS), c'est-à-dire l'allure limite tenable sans épuisement rapide, estimée par l'application à partir des meilleurs efforts. Voir FR-23.
 - **CTL** : la charge chronique d'entraînement calculée par intervals.icu (la « forme » au sens long terme).
 - **Objectif** : ce que vise le Plan. Il y a un Objectif principal (un chrono sur une distance à une date) et zéro ou plusieurs Objectifs secondaires (ex. « ne pas se blesser »). Il peut viser une Épreuve.
 - **Épreuve** : la compétition visée (distance, date). Ne pas confondre avec Course.
-- **Méthode** : la doctrine d'entraînement choisie par l'application dans une liste fermée (v1 : 80/20, Daniels, polarisé).
+- **Méthode** : la doctrine d'entraînement choisie par l'application dans une liste fermée (FR-5).
 - **Plan** : la suite de Séances générée pour un Objectif selon une Méthode. États : *proposé*, *actif* (accepté et publié), *suspendu*, *terminé*, *annulé*. Un seul Plan est actif ou suspendu à la fois.
+- **Mode Reprise** : l'état d'un Plan généré ou repris après au moins 14 jours sans Course (FR-24).
 - **Bilan de fin de Plan** : la synthèse déterministe d'un Plan terminé ou annulé, stockée dans le Profil coureur.
 - **Consigne** : instruction en langage naturel qui accompagne un refus de Plan et guide sa régénération.
 - **Séance** : un entraînement planifié à une date, composé de Blocs. États : *à venir*, *en attente de la course*, *réalisée*, *manquée*, *annulée*.
@@ -38,6 +40,7 @@ C'est aussi un outil qu'on construit soi-même, et bien. Il sert d'abord un util
 - **Conformité** : la comparaison entre le prévu et le réalisé, avec un verdict par Bloc (respecté ou non) et une note globale en pourcentage.
 - **Feedback** : l'analyse d'une Course, en deux couches visuellement séparées : « Mon avis (IA) » et « Tes données ».
 - **Matrice respect × ressenti** : la lecture combinée de la Conformité et du Ressenti, qui qualifie l'**état du jour**.
+- **Ligne de base** : la valeur habituelle d'un signal (FC au repos, durée de sommeil) calculée sur au moins 28 jours, avec sa variabilité propre.
 - **Seuil de surmenage** : la combinaison de signaux concordants qui déclenche une proposition d'Ajustement.
 - **Imprévu** : un événement qui remet en cause le Plan (dernière minute, maladie, blessure, ou Seuil de surmenage atteint).
 - **Ajustement** : une modification du Plan (annuler, déplacer, alléger, suspendre, reprendre, régénérer), proposée avec son « pourquoi » et appliquée après confirmation seulement.
@@ -72,16 +75,17 @@ Ces principes arbitrent les choix de l'UX, de l'architecture et des stories quan
 - **UJ-1. Badr configure son Profil coureur une seule fois.** À la première ouverture, l'application importe l'historique depuis intervals.icu et préremplit records, charge et CTL. Badr complète un formulaire (blessures, disponibilités, jour de la sortie longue, périodes d'indisponibilité), puis valide. Le Profil est complet ; la synchronisation initiale peut prendre du temps.
 - **UJ-2. Badr crée un Plan pour son Objectif.** Il saisit son Objectif : un chrono sur une distance à une date (« semi en 1 h 40 le 12 avril »). L'application propose un Plan avec la Méthode retenue et sa raison en une ligne. Badr refuse une première fois avec une Consigne (« moins de volume en semaine 3 »), accepte la version régénérée, et les Séances apparaissent dans intervals.icu puis sur la montre. **Climax** : il n'a rien saisi.
 - **UJ-3. Badr court, puis lit son Feedback.** Après sa Séance de fractionné, il ouvre l'application. Dès que la Course est récupérée depuis intervals.icu, l'application lui demande son Ressenti (😌 / 😐 / 🥵), avant de montrer le moindre chiffre. Il lit ensuite le verdict bloc par bloc, « Mon avis (IA) » (point fort, point à améliorer, conséquence pour la suite) et « Tes données » (1 chiffre principal, 2 secondaires). **Cas limite** : si la Course n'est pas encore remontée, la Séance du jour s'affiche « en attente de la course ».
-- **UJ-4. Badr tombe malade.** Il touche « Empêchement », puis « Malade » (deux taps). Il indique si ses symptômes sont au-dessus ou en dessous du cou. L'application propose de transformer la Séance du jour en footing léger, ou de la remplacer par du repos et de décaler la suite, avec la raison en une ligne. Badr confirme d'un tap, et le Plan est republié.
+- **UJ-4. Badr tombe malade.** Il touche « Empêchement », puis « Malade » (deux taps). Il répond à une question : fièvre ou symptômes sous le cou ? Il a de la fièvre : l'application propose d'annuler les Séances des 5 prochains jours, puis de reprendre par paliers, avec la raison en une ligne et les signaux qui doivent le faire consulter un médecin. Badr confirme d'un tap, et le Plan est republié. Avec un simple rhume, elle aurait proposé d'alléger ou d'annuler la Séance du jour.
 
 ## 5. Fonctionnalités
 
 ### 5.1 Profil coureur
-**Description :** c'est la colonne vertébrale du produit. Le Profil est rempli à la première utilisation par import et par formulaire, puis enrichi par chaque Course et chaque Plan. On vise un Profil complet, pas un démarrage rapide. Réalise UJ-1.
+**Description :** c'est la colonne vertébrale du produit. Le Profil est rempli à la première utilisation par import et par formulaire, puis enrichi par chaque Course et chaque Plan. On vise un Profil complet, pas un démarrage rapide. Il tient aussi à jour le Seuil d'allure (FR-23). Réalise UJ-1.
 
 #### FR-1 : Import initial
-Le système importe depuis intervals.icu l'historique des Courses, les records, la charge, la CTL et la FC au repos. HealthFit n'est jamais lu directement : ses données arrivent uniquement via intervals.icu.
+Le système importe depuis intervals.icu l'historique des Courses, les records, la charge, la CTL, la FC au repos et la durée de sommeil. HealthFit n'est jamais lu directement : ses données arrivent uniquement via intervals.icu.
 - La première synchronisation affiche sa progression ; elle peut durer plusieurs minutes sans être considérée comme une erreur.
+- Pour le sommeil, seule la durée est lue ; elle sert de signal au Seuil de surmenage (FR-16) ; les stades et scores de sommeil Apple ne sont pas utilisés (NFR-10).
 
 #### FR-2 : Complément et validation du Profil
 L'utilisateur complète par formulaire ce que l'import ne fournit pas (blessures actuelles et passées, disponibilités par jour, jour de la sortie longue, périodes d'indisponibilité) et corrige les valeurs importées.
@@ -90,28 +94,48 @@ L'utilisateur complète par formulaire ce que l'import ne fournit pas (blessures
 
 #### FR-3 : Profil vivant
 Le Profil intègre automatiquement chaque Course, son Ressenti et chaque Bilan de fin de Plan, pour que tout nouveau Plan parte de l'état réel sans rien réexpliquer.
-- Le modèle de données comporte des emplacements nutrition et sommeil, vides en v1.
-- Le Profil est consultable : records, CTL, FC au repos et leurs tendances.
+- Le modèle de données comporte un emplacement nutrition, vide en v1.
+- Le Profil est consultable : records, CTL, FC au repos, durée de sommeil, Seuil d'allure (avec sa date de mise à jour) et leurs tendances.
+
+#### FR-23 : Maintien du Seuil d'allure
+Le système réestime automatiquement le Seuil d'allure, à la hausse comme à la baisse, pour que les allures, les zones et la Conformité ne dérivent pas [105][108].
+- Il est calculé sur les meilleurs efforts des 16 dernières semaines (règle de calcul dans l'addendum §2). Il est réestimé dès qu'une Course améliore l'un de ces meilleurs efforts, et réestimé aussi toutes les 4 à 6 semaines (paramètre) : il baisse quand les efforts qui le fondaient sortent de la fenêtre.
+- En Mode Reprise (FR-24), il est réduit par le facteur de désentraînement, puis réestimé sur les Courses de la reprise.
+- Le même Seuil d'allure sert aux cibles des Séances et à l'analyse des Courses.
+- Un changement du Seuil d'allure n'est jamais appliqué en silence : il produit un Ajustement proposé (« allures de la semaine prochaine plus rapides de 4 s/km : nouveau meilleur 5 km »), appliqué aux Séances à venir après confirmation puis republié (FR-19). Refuser laisse les cibles inchangées ; l'analyse utilise le Seuil d'allure en vigueur à la date de chaque Course.
+- Chaque changement est visible dans le Profil avec sa date et sa raison en une ligne.
 
 ### 5.2 Objectif et Plan
-**Description :** l'utilisateur saisit un Objectif daté ; l'application choisit la Méthode et génère un Plan à partir du Profil. La relecture est binaire : on accepte le Plan entier, ou on le refuse avec une Consigne. Une fois accepté, le Plan reste modifiable (FR-22). Réalise UJ-2.
+**Description :** l'utilisateur saisit un Objectif daté ; l'application choisit la Méthode et génère un Plan à partir du Profil. La relecture est binaire : on accepte le Plan entier, ou on le refuse avec une Consigne. Une fois accepté, le Plan reste modifiable (FR-22). Après un arrêt, le Plan repart en Mode Reprise (FR-24). Réalise UJ-2.
 
 #### FR-4 : Saisie de l'Objectif
 L'utilisateur saisit un Objectif principal (un chrono sur une distance, avec une date obligatoire : celle de l'Épreuve, ou une date cible) et des Objectifs secondaires en texte libre.
 - Le Plan s'étend d'aujourd'hui à la date de l'Objectif ; une date à moins de 4 semaines est refusée.
-- Si le chrono cible s'écarte de l'équivalence de performance calculée sur les records des 6 derniers mois, l'application l'avertit en une ligne et indique le chrono jugé réaliste ; l'utilisateur peut maintenir son chrono.
+- Si le chrono cible s'écarte de l'équivalence de performance calculée sur les records des 6 derniers mois, l'application avertit l'utilisateur en une ligne et indique le chrono jugé réaliste. Elle précise que les équivalences de ce type tendent à être optimistes [111] et que les coefficients VDOT eux-mêmes viennent d'une source faible [38]. L'utilisateur peut maintenir son chrono.
 - Les Objectifs secondaires sont transmis comme contraintes à la génération et cités dans la raison du Plan quand ils l'influencent.
 
 #### FR-5 : Génération du Plan
-Le système génère un Plan à partir du Profil (y compris le dernier Bilan de fin de Plan) et de l'Objectif. La Méthode est choisie par l'application dans la liste fermée et affichée avec sa raison en une ligne.
-- Garde-fous vérifiés de façon déterministe avant affichage :
-  - le volume hebdomadaire augmente de 10 % au plus d'une semaine à l'autre ;
-  - une semaine allégée revient toutes les 3 ou 4 semaines ;
-  - en distance, aucune Séance ne dépasse de plus de 10 % la plus longue Course ou Séance planifiée des 30 jours précédents (fenêtre glissante qui inclut les Séances du Plan) ;
-  - la répartition des intensités respecte la bande chiffrée de la Méthode annoncée (bandes dans l'addendum §2) ;
-  - les disponibilités, le jour de la sortie longue et les blessures du Profil sont respectés.
+Le système génère un Plan à partir du Profil (y compris le dernier Bilan de fin de Plan) et de l'Objectif.
+- **Méthode** : choisie par une règle déterministe, pas par le LLM. Par défaut, Daniels (répartition pyramidale) ; au-delà d'un volume hebdomadaire paramétré, polarisé. 80/20 est retiré de la liste en v1, faute de règle qui le distingue de Daniels. La raison du choix de la Méthode, en une ligne, dit honnêtement que les études montrent peu d'écart entre Méthodes [46][47].
+- Garde-fous vérifiés de façon déterministe avant affichage, en trois familles (FR-22 en définit le comportement lors d'une modification) :
+  - **sécurité physique** :
+    - en distance, aucune Séance ne dépasse de plus de 10 % la plus longue des 30 jours précédents, parmi les Courses réalisées et les Séances à venir du Plan ; les Séances manquées ou annulées sont exclues (§15.16). La sortie longue suit le même plafond (paramètre, §15.2) ;
+    - une semaine allégée revient toutes les 3 ou 4 semaines ;
+    - la répartition des intensités respecte la bande chiffrée de la Méthode annoncée (bandes dans l'addendum §2) ;
+    - quand l'Objectif vise une Épreuve, le Plan se termine par un affûtage : 2 semaines (3 pour un marathon), volume réduit dans la fourchette de l'addendum §2, intensité et fréquence maintenues [44][56] ;
+    - les blessures du Profil sont respectées ;
+  - **secondaire** : le volume hebdomadaire augmente de 10 % au plus d'une semaine à l'autre. La génération respecte toujours cette règle ; ce n'est pas une règle de sécurité (§15.1) ;
+  - **préférences du Profil** : les disponibilités, le jour de la sortie longue et les périodes d'indisponibilité sont respectés.
+- Les garde-fous qui imposent un minimum (bande d'intensités, intensité maintenue pendant l'affûtage, structure de la semaine allégée) ne sont vérifiés qu'à la génération. Un Ajustement déterministe qui réduit la charge (FR-19) ne déclenche donc jamais de régénération.
 - Un Plan qui viole un garde-fou n'est jamais présenté : il est régénéré, 3 tentatives au plus. Après 3 échecs, l'application affiche un échec explicite qui nomme le garde-fou violé, propose de modifier l'Objectif et ne publie rien.
 - La progression semaine par semaine est lisible avant l'acceptation.
+
+#### FR-24 : Mode Reprise
+Après au moins 14 jours sans Course (maladie, blessure, longue pause), le Plan généré ou repris (bouton « Reprendre », FR-17) passe en Mode Reprise.
+- **Allures** : elles sont réduites par un facteur de désentraînement qui dépend de la durée de l'arrêt (facteurs de Daniels, paramètres [95]), via le Seuil d'allure (FR-23). Ce facteur ne s'applique qu'aux allures, jamais au volume.
+- **Volume** : la première semaine ne dépasse pas 50 % du volume de la dernière semaine normale avant l'arrêt `[ASSUMPTION]` (paramètre). La première Séance ne dépasse pas la plus longue Séance de cette semaine.
+- **Plafond par sortie** : il se calcule sur les seules Courses réalisées depuis la reprise, comme en FR-5 ; une Course d'avant l'arrêt n'ouvre jamais de droit à une sortie plus longue.
+- Le Mode Reprise prend fin quand la fenêtre de 30 jours ne contient plus que des Courses de la reprise. La raison en une ligne dit que le Plan démarre en Mode Reprise et pourquoi.
 
 #### FR-6 : Relecture (accepter, ou refuser avec Consigne)
 L'utilisateur accepte le Plan entier, ou le refuse avec une Consigne qui déclenche une régénération (soumise aux mêmes garde-fous et à la même limite de tentatives).
@@ -133,7 +157,7 @@ L'utilisateur accepte le Plan entier, ou le refuse avec une Consigne qui déclen
 
 #### FR-9 : Publication du Plan
 Le système publie chaque Séance avec ses Blocs et ses cibles dans le calendrier intervals.icu.
-- Chaque Bloc porte une seule cible. Les Blocs à allure spécifique (fractionné, tempo, seuil, allure de course) sont ciblés en allure ; tous les autres (échauffement, récupération, retour au calme, footing, sortie longue en endurance) sont ciblés en FC.
+- Chaque Bloc porte une seule cible. Les Blocs à allure spécifique (fractionné, tempo, seuil, allure de course) sont ciblés en allure ; tous les autres (échauffement, récupération, retour au calme, footing, sortie longue en endurance) sont ciblés en FC. Les fractionnés courts sont ciblés et jugés en allure, car, selon des tests de presse, la FC optique réagit en retard [112].
 - Republier le même Plan ne crée aucun doublon.
 - Une Séance relue depuis intervals.icu après Publication est identique à la Séance du Plan (Blocs, durées, cibles).
 
@@ -158,15 +182,17 @@ Dès qu'une Course est récupérée, l'utilisateur pose son Ressenti (une seule 
 
 #### FR-13 : Conformité bloc par bloc
 Le système compare chaque Bloc prévu au réalisé et produit un verdict d'une ligne par Bloc ainsi qu'une note de Conformité globale.
-- Un Bloc ciblé en allure est respecté si son allure moyenne est à ±5 s/km de la cible. Un Bloc ciblé en FC est respecté si au moins 80 % de sa durée se passe dans la zone cible.
+- Un Bloc ciblé en allure est respecté si son allure moyenne ajustée à la pente (GAP) [104] est à ±5 s/km de la cible (tolérance arbitrée, non sourcée). Un Bloc ciblé en FC est respecté si au moins 80 % de sa durée se passe dans la zone cible.
+- Pour un Bloc ciblé en FC de plus de 60 min (sortie longue), la Conformité est jugée sur ses deux premiers tiers (paramètre) : la dérive cardiaque de fin de sortie est physiologique [34]. Cette dérive est affichée à titre indicatif, sans pénaliser le verdict.
 - La note globale est le pourcentage de Blocs respectés. Une Séance est « respectée » si cette note atteint au moins 80 %.
+- La température de la Course est enregistrée et affichée comme contexte du verdict [106].
 - Les tolérances sont des paramètres ajustables.
 - Si le nombre de laps ne correspond pas au nombre de Blocs, ou si la Course n'était pas planifiée, le Feedback est global, sans verdict par Bloc, et l'application le dit.
 
 #### FR-14 : Feedback en deux couches
 Le système affiche « Mon avis (IA) » et « Tes données », visuellement séparés.
 - « Mon avis (IA) » couvre trois niveaux (la Séance, son rôle dans le Plan, l'Objectif) et contient exactement 1 point fort, 1 point à améliorer et 1 conséquence pour la suite. Si la Séance n'est pas respectée, il dit ce qui a manqué et comment faire mieux.
-- « Tes données » montre 1 chiffre principal et 2 secondaires, choisis par une règle déterministe selon le type de Séance (ex. fractionné : allure moyenne des Blocs rapides par rapport à la cible) ; le détail complet reste dans intervals.icu.
+- « Tes données » montre 1 chiffre principal et 2 secondaires, choisis par une règle déterministe selon le type de Séance (ex. fractionné : allure moyenne des Blocs rapides par rapport à la cible) ; le détail complet reste dans intervals.icu. Peuvent aussi être retenus, en plus des chiffres de Conformité, deux indicateurs de tendance : la FC à allure comparable [70] et le découplage allure / FC sur les sorties longues [102]. Les données exclues par NFR-10 ne sont jamais retenues.
 - Chaque nombre cité dans « Mon avis (IA) » doit figurer dans les données calculées ; sinon, le texte est rejeté et régénéré, 3 tentatives au plus. Après 3 échecs, seuls « Tes données » et la Conformité s'affichent, avec la mention « avis indisponible ».
 - En cas d'erreur d'analyse, l'utilisateur peut « Relancer » (nouveau cycle de 3 tentatives au plus) ou « Arrêter l'analyse » (état « avis indisponible »). 2 relances au plus par Feedback, uniquement tant que le Plan est actif. Chaque relance compte dans le coût mesuré (NFR-4).
 - Aucun compliment sans chiffre qui le justifie.
@@ -183,10 +209,15 @@ Le système qualifie chaque Course rattachée selon les 6 cases de la Matrice, e
 | **Non respectée** | Séance mal calibrée ou trop prudente | exécution à revoir | fatigue probable |
 
 #### FR-16 : Seuil de surmenage
-Le système propose un Ajustement quand les deux signaux sont réunis : 3 Courses 🥵 d'affilée (non planifiées comprises) et une FC au repos supérieure d'au moins 5 bpm à sa moyenne des 7 jours précédents.
-- Sous le seuil, le Plan n'est jamais modifié.
-- La proposition affiche son « pourquoi » en une ligne (ex. « allégé car 🥵 ×3 et FC au repos +6 »).
-- Les valeurs du seuil sont des paramètres ajustables.
+Le système propose un Ajustement quand un ressenti dégradé répété concorde avec au moins un signal objectif [31][70][76] :
+- **ressenti** : 3 Courses 🥵 d'affilée (non planifiées comprises) ;
+- **signaux objectifs** (un seul suffit) :
+  - la FC au repos, en moyenne sur 7 jours, dépasse sa Ligne de base d'un écart exprimé en multiple de sa variabilité propre [70][114] ;
+  - la durée de sommeil, en moyenne sur 7 jours, passe sous sa Ligne de base de la même façon.
+- Quand les deux signaux objectifs concordent, la proposition est plus ferme (allègement plus marqué). Le ressenti dégradé reste toujours requis (§15.3).
+- Sous le Seuil de surmenage, le Plan n'est jamais modifié. Tant que la Ligne de base n'a pas 28 jours de données, le signal concerné n'est pas utilisé, et l'application le dit.
+- La proposition affiche son « pourquoi » en une ligne (ex. « allégé car 🥵 ×3 et FC au repos au-dessus de ta normale depuis 7 jours »). Elle cite l'écart mesuré, jamais le seuil comme s'il était un fait établi : les seuils n'ont pas de base numérique validée [64][70].
+- Les valeurs du Seuil de surmenage sont des paramètres ajustables, calibrés par rétro-analyse des périodes de maladie et de fatigue de l'historique importé (FR-1) avant la mise en usage. Critère de fin du calibrage : Badr date les épisodes connus, et les paramètres retenus déclenchent sur au moins la majorité d'entre eux sans fausse alerte hors épisode `[ASSUMPTION]`. Faute d'épisodes datés, le squelette vertical tourne avec le détecteur en observation seule (il signale, sans proposer d'Ajustement).
 
 ### 5.6 Empêchements, Séances manquées et modifications
 **Description :** c'est la gestion des Imprévus déclarés, des Séances non courues et des modifications à l'initiative de l'utilisateur. C'est un arbre de décision déterministe ; l'IA n'intervient que pour régénérer un Plan ou répondre à une demande de l'utilisateur (FR-22). Réalise UJ-4.
@@ -194,8 +225,17 @@ Le système propose un Ajustement quand les deux signaux sont réunis : 3 Course
 #### FR-17 : Déclarer un Imprévu
 L'utilisateur déclare un Imprévu en deux taps (« Empêchement », puis le type) : **dernière minute**, **malade** ou **blessé**. Il répond ensuite à une question au plus, puis confirme la proposition d'un tap.
 - *Dernière minute* : annuler ou déplacer la Séance.
-- *Malade* : règle au-dessus ou en dessous du cou (rhume léger : footing possible ; fièvre : repos).
-- *Blessé* : suspendre le Plan, ou l'annuler. Un Plan suspendu est réactivé uniquement par un bouton « Reprendre », que l'utilisateur touche lui-même.
+- *Malade* : la question est « fièvre ou symptômes sous le cou (poitrine, courbatures généralisées, troubles digestifs) ? » [86][88].
+  - Oui : les Séances sont annulées pendant au moins 5 jours, puis la reprise se fait par paliers d'au moins 48 h, sans entraînement normal avant environ J10 (paramètres).
+  - Non (symptômes au-dessus du cou seulement) : la Séance du jour est allégée ou annulée ; reprise normale vers J5.
+  - Dans les deux cas, l'application affiche les signaux d'alarme qui imposent l'arrêt et un avis médical (douleur thoracique, palpitations, essoufflement anormal).
+  - Ces règles transposent un guide écrit pour le COVID [86] ; ce sont des paramètres prudents, pas un protocole validé pour toute maladie.
+- *Blessé* : une seule question, à trois réponses [89][90] :
+  - « Douleur osseuse, ou présente à la marche, ou qui modifie ma foulée, ou au-dessus de 5/10 » (un seul critère suffit) : le Plan est suspendu et l'application conseille de consulter un professionnel de santé ;
+  - « Douleur légère (5/10 au plus), qui ne change pas ma foulée » : le Plan est adapté (charge réduite) ;
+  - « Autre » : l'utilisateur choisit de suspendre ou d'annuler le Plan.
+- Un Plan suspendu est réactivé uniquement par un bouton « Reprendre », que l'utilisateur touche lui-même ; après au moins 14 jours sans Course, la reprise passe en Mode Reprise (FR-24).
+- Les messages restent non diagnostiques : l'application oriente, elle ne nomme ni ne soigne une pathologie.
 
 #### FR-18 : Séance manquée
 Une Séance dont la date est dépassée, sans Course rattachée ni Imprévu déclaré, passe à l'état *manquée* le lendemain.
@@ -214,10 +254,11 @@ Depuis le Plan actif, l'utilisateur modifie une Séance à venir de trois façon
 - **Séances modifiables** : seulement les Séances à venir sans Course rattachée. Une Séance passée ou rattachée est verrouillée.
 - **Déplacer** : le jour cible est postérieur à aujourd'hui, antérieur à la date de l'Objectif et libre ; deux Séances ne tombent jamais le même jour.
 - **Modifier à la main** : changer le type reconstruit les Blocs à partir d'un modèle déterministe par type, avec la règle de ciblage allure / FC de FR-9.
-- **Demander à l'IA** : une demande porte sur une semaine au plus ; au-delà (plusieurs semaines, ajout ou suppression de Séance, changement d'Objectif, demande ambiguë), l'application répond que ce n'est pas pris en charge et ne change rien. Chaque Séance touchée est vérifiée. La proposition affiche son « pourquoi » en une ligne et respecte la limite de 3 tentatives (FR-5) ; après 3 échecs, l'application nomme le garde-fou, ne change rien et propose la modification à la main. Elle est confirmée ou refusée comme un Ajustement (FR-19). Ce n'est pas une conversation (v1.2).
-- **Vérification** : après toute modification, les garde-fous de FR-5 sont revérifiés de façon déterministe sur toutes les Séances restantes du Plan (semaine de départ et semaine d'arrivée comprises pour un déplacement). Ils forment deux familles :
-  - **sécurité physique** (progression du volume hebdomadaire, distance maximale d'une Séance, semaine allégée, répartition des intensités, blessures) : une modification qui augmente le risque et en franchit un est **refusée**. L'application nomme le garde-fou (« Sortie longue à 24 km : +20 % au lieu de 10 % max ») et rien n'est enregistré ni publié. Une modification qui réduit la charge (distance, intensité, volume) n'est jamais refusée ;
-  - **préférences du Profil** (disponibilités, jour de la sortie longue, périodes d'indisponibilité) : tout changement demandé par l'utilisateur (modification à la main, demande à l'IA, « déplacer » de FR-17) peut s'en écarter ponctuellement, sans changer le Profil. Les Plans générés par l'application les respectent toujours.
+- **Demander à l'IA** : une demande porte sur une semaine au plus ; au-delà (plusieurs semaines, ajout ou suppression de Séance, changement d'Objectif, demande ambiguë), l'application répond que ce n'est pas pris en charge et ne change rien. Chaque Séance touchée est vérifiée. La proposition affiche son « pourquoi » en une ligne et respecte la limite de 3 tentatives (FR-5) ; après 3 échecs, l'application nomme le garde-fou, ne change rien et propose la modification à la main. Elle est confirmée ou refusée comme un Ajustement (FR-19). Ce n'est pas une conversation : le dialogue avec l'IA est prévu en v1.2 (§9.2).
+- **Vérification** : après toute modification, les garde-fous de FR-5 sont revérifiés de façon déterministe sur toutes les Séances restantes du Plan (semaine de départ et semaine d'arrivée comprises pour un déplacement). Ils forment trois familles (FR-5) :
+  - **sécurité physique** : une modification qui augmente le risque, c'est-à-dire qui augmente la distance d'une Séance, l'intensité d'un Bloc ou le volume d'une semaine, et qui franchit un plafond est **refusée**, sans exception. L'application nomme le garde-fou (« Sortie longue à 24 km : +20 % au lieu de 10 % max ») et rien n'est enregistré ni publié. Une modification qui réduit la charge (distance, intensité, volume) n'est jamais refusée, même si elle s'écarte d'un garde-fou à minimum (affûtage, bande d'intensités) ; un déplacement est vérifié contre les plafonds de sa nouvelle date ;
+  - **secondaire** : une modification qui dépasse la règle du volume hebdomadaire est enregistrée, avec un avertissement en une ligne qui nomme l'écart (« volume de la semaine 5 : +14 % par rapport à la semaine 4 ») ;
+  - **préférences du Profil** : tout changement demandé par l'utilisateur (modification à la main, demande à l'IA, « déplacer » de FR-17) peut s'en écarter ponctuellement, sans changer le Profil. Les Plans générés par l'application les respectent toujours.
 - **Après un Ajustement de surmenage** (FR-16) : pendant 7 jours, toute hausse manuelle d'une Séance allégée est refusée.
 - **Publication** : toute modification enregistrée est republiée (FR-9) ; un déplacement retire la Séance de son ancienne date dans intervals.icu. Si la republication échoue, la modification est conservée et l'état de la synchro affiche ⚠️ (FR-10).
 - **Concurrence** : une proposition en attente (FR-16, FR-17, demande à l'IA) est revérifiée contre le Plan courant au moment de sa confirmation.
@@ -231,7 +272,7 @@ L'accueil affiche une carte unique « Séance du jour » (son but, sa durée, so
 - Sans Plan actif, l'accueil propose de définir un Objectif.
 
 #### FR-21 : Détail d'une Séance
-L'utilisateur consulte le détail de toute Séance : son but dans le Plan, en une ligne, et la liste de ses Blocs avec leur durée ou leur distance et leur cible.
+L'utilisateur consulte le détail de toute Séance : son but dans le Plan (en une ligne), les sensations attendues (ex. « tu dois pouvoir parler en phrases complètes ») [59] et la liste de ses Blocs avec leur durée ou leur distance et leur cible.
 
 ## 6. Exigences non fonctionnelles transverses
 
@@ -244,6 +285,7 @@ L'utilisateur consulte le détail de toute Séance : son but dans le Plan, en un
 - **NFR-7 Dépendances** : intervals.icu et HealthFit sont des tiers non maîtrisés. HealthFit, avec l'achat intégré « Fanatical Supporter », est la seule source des Courses et le transport vers la montre ; il faut ouvrir HealthFit pour que la montre reçoive les Séances, ce qui est accepté en v1. Strava n'est pas connecté à intervals.icu. Les quotas d'API sont respectés, et les erreurs restent visibles dans l'état de la synchro (FR-10).
 - **NFR-8 Solidité** : pas d'échéance ; on préfère livrer moins mais stable. Aucune version instable n'est mise en usage. Les règles de qualité de l'addendum §4 (tests, tests de contrat, recalcul des chiffres) sont obligatoires.
 - **NFR-9 Temps de réponse** : un Feedback s'affiche en moins de 30 s après la pose du Ressenti, et un Plan en moins de 2 min, avec un état d'attente visible.
+- **NFR-10 Hiérarchie des données** : seules les données fiables fondent une décision : allure GPS (fiable à l'usage, sans validation indépendante publiée), FC en effort stable [12], FC au repos [72] et durée de sommeil [6][21]. La puissance, la VO2max, la VFC, la dynamique de foulée, les stades et les scores de sommeil Apple ne sont jamais une cible, une source de charge, un signal du Seuil de surmenage ni la base d'un verdict ; ils peuvent seulement être affichés à titre descriptif [8][10][14][72]. La CTL reste descriptive et ne sert jamais de base à une décision, a fortiori si intervals.icu la calcule à partir de la puissance (§12 Q4).
 
 ## 7. Ton et voix
 
@@ -256,20 +298,23 @@ Motivant et réaliste, jamais flatteur. Concret : chaque affirmation cite une do
 - Ce n'est pas un tableau de bord d'analyse : le détail des données reste dans intervals.icu.
 - Pas de Strava ni de lecture directe de HealthKit ou WorkoutKit.
 - Pas de choix manuel de la Méthode, ni de version « minimum vital » des Séances.
+- Pas de diagnostic médical : face à une maladie ou une douleur, l'application oriente vers un professionnel sans nommer de pathologie (FR-17). Le dépistage du déficit énergétique relatif dans le sport (REDs) est hors périmètre [96].
 - Pas un produit commercial en v1 : pas de comptes, de paiement ni de conformité réglementaire au-delà des données de l'utilisateur.
 
 ## 9. Périmètre MVP
 
 ### 9.1 Inclus
-FR-1 à FR-22, soit l'ensemble du §5.
+FR-1 à FR-24, soit l'ensemble du §5.
+
+Les préalables du §12 sont levés avant de coder les stories concernées.
 
 Ordre de livraison : un squelette vertical d'abord. Un Plan de 4 semaines, pour un Objectif, est publié, couru et commenté de bout en bout, avec l'expérience après la Course (FR-11 à FR-14) dès ce squelette, avant d'élargir.
 
 ### 9.2 Hors MVP
 - **v1.1 (motivation et lisibilité)** : jauge de faisabilité continue, alerte « pas assez ambitieux », prédiction de chrono en fourchette, rappel du « vrai pourquoi », échauffements et étirements par Séance, vue « escalier », trois notifications ciblées.
-- **v1.2 (continuité et dialogue)** : saison de Plans enchaînés (préparation, Épreuve, récupération, préparation suivante), conversation IA rattachée au Feedback, retour de blessure progressif, signaux de surmenage supplémentaires (douleurs, jambes lourdes, motivation, effort perçu à charge égale) avec recalibrage du Seuil.
+- **v1.2 (continuité et dialogue)** : saison de Plans enchaînés (préparation, Épreuve, récupération, préparation suivante), conversation IA rattachée au Feedback, retour de blessure progressif, signaux de surmenage supplémentaires (douleurs, jambes lourdes, motivation, effort perçu à charge égale) avec un nouveau recalibrage du Seuil.
 - **v2** : les cinq autres types d'Objectif (distance, durée, récupération après une Épreuve, condition générale, reprise après blessure) ; un transport vers la montre qui ne demande plus d'ouvrir HealthFit ; renforcement ; empêchements « moins de temps » et « voyage » ; carnet de blessures ; chaussures ; parcours ; graphiques enrichis.
-- **v3 et au-delà** : nutrition, sommeil, calendrier, météo ; partage ou publication à d'autres coureurs.
+- **v3 et au-delà** : nutrition ; fonctionnalité sommeil dédiée (la durée est lue dès la v1, FR-16) ; calendrier ; météo (la température est enregistrée dès la v1, FR-13) ; partage ou publication à d'autres coureurs.
 
 > `[NOTE FOR PM]` La saison de Plans enchaînés porte le « vrai moteur » du projet : voir §12.
 
@@ -299,20 +344,25 @@ La v1 est **finie** quand SM-1 à SM-6 passent en conditions réelles.
 - **Crédibilité de l'IA** : des chiffres inventés ou de la flatterie détruisent la confiance. Parade : le validateur de FR-14 et le principe « le LLM raconte, le code compte ».
 - **Coût réel de l'IA** : il n'est pas encore mesuré. Parade : la mesure de NFR-4 et la limite de tentatives (FR-5, FR-14).
 - **Dépendances tierces** : intervals.icu (API, quotas) et HealthFit (bêta, achat intégré) ne sont pas maîtrisés. Parade : l'état de la synchro, le transport interchangeable (principe 6) et le plan B Watchletic (addendum §3).
-- **Calibrage des seuils** : la Conformité et le Seuil de surmenage sont fixés sans données d'usage. Parade : des paramètres ajustables et un recalibrage en v1.2.
+- **Calibrage des seuils** : les seuils d'alerte (surmenage, FC au repos, sommeil) n'ont aucune base numérique validée [64][70], et la Conformité est fixée sans données d'usage. Parade : des paramètres ajustables, calibrés (FR-16) par rétro-analyse des périodes de maladie et de fatigue de l'historique importé (FR-1) **avant la mise en usage**, puis ajustés à l'usage. Le critère de fin du calibrage et le mode observation seule sont dans FR-16.
+- **Seuil d'allure périmé** : un seuil non tenu à jour fausse ensemble les allures, la charge et la Conformité. Parade : FR-23, la vérification du comportement d'intervals.icu (Q4) et la décision Q10.
+- **Données Apple trompeuses** : les mesures les plus riches (VO2max, VFC, puissance) sont les moins fiables. Parade : NFR-10.
 
 ## 12. Questions ouvertes et points en attente
 
-Aucun n'est bloquant pour l'UX ou l'architecture.
+Seule Q5 demande une mise à jour de l'UX. **Préalables au code** : Q4, Q9, Q10 et Q11 sont levées pendant l'architecture, avant de coder les stories concernées.
 
-1. **Vérification sur la montre** : WorkoutKit n'accepte-t-il qu'une cible par Bloc ? (addendum §5)
-2. **Seuil d'écart du chrono irréaliste** : à fixer en architecture (addendum §2).
-3. **Bandes de répartition des Méthodes** : à valider en architecture (addendum §2).
-4. **Mécanismes intervals.icu** : à vérifier en architecture (addendum §1).
-5. ~~Table type de Séance → chiffres de « Tes données » et libellés de la Matrice~~ : **résolu** en UX (`ux-designs/ux-running-2026-11-21/EXPERIENCE.md`) ; libellés de la Matrice provisoires, ajustables à l'usage.
-6. **Saison de Plans enchaînés** : elle porte le « vrai moteur » du projet (la continuité), et la v1 n'en livre que la mémoire et le Bilan de fin de Plan (FR-3, FR-8). À avancer si la v1 se termine vite.
-7. **Semaine allégée chiffrée** : définir numériquement une semaine allégée (ex. volume ≤ X % de la semaine précédente) pour que FR-5 et FR-22 la vérifient de façon déterministe. À fixer en architecture.
-8. **Blessures testables** : traduire les blessures du Profil en contraintes vérifiables (types de Séance exclus, distance maximale) pour le garde-fou de FR-5 / FR-22. À fixer en architecture.
+- **Q1.** **Vérification sur la montre** : WorkoutKit n'accepte-t-il qu'une cible par Bloc ? (addendum §5)
+- **Q2.** **Seuil d'écart du chrono irréaliste** : à fixer en architecture (addendum §2).
+- **Q3.** **Bandes de répartition des Méthodes** : à valider en architecture (addendum §2), y compris le volume de bascule de Daniels vers polarisé (FR-5).
+- **Q4.** **Mécanismes intervals.icu** : à vérifier en architecture (addendum §1 et §5) : Publication, quotas, mise à jour du seuil d'allure propre à intervals.icu [108] (à revérifier en mars 2027), formule de charge et sa source pour une Course (allure, FC ou puissance), Form, bandes de conformité, mise à disposition de la GAP et de la température.
+- **Q5.** **Table type de Séance → chiffres de « Tes données »** : résolue en UX (`ux-designs/ux-running-2026-11-21/EXPERIENCE.md`), mais à mettre à jour pour intégrer la FC à allure comparable et le découplage (FR-14, 25/11), ainsi que les sensations attendues (FR-21). Libellés de la Matrice provisoires, ajustables à l'usage.
+- **Q6.** **Saison de Plans enchaînés** : elle porte le « vrai moteur » du projet (la continuité), et la v1 n'en livre que la mémoire et le Bilan de fin de Plan (FR-3, FR-8). À avancer si la v1 se termine vite.
+- **Q7.** **Semaine allégée chiffrée** : définir numériquement une semaine allégée (ex. volume ≤ X % de la semaine précédente) pour que FR-5 et FR-22 la vérifient de façon déterministe. À fixer en architecture.
+- **Q8.** **Blessures testables** : traduire les blessures du Profil en contraintes vérifiables (types de Séance exclus, distance maximale) pour le garde-fou de FR-5 / FR-22. À fixer en architecture.
+- **Q9.** **Contenu du FIT exporté par HealthFit** : fréquence de la FC, tours, puissance. Aucune documentation n'existe [15][19] ; c'est un test d'une soirée sur une vraie Course, avant les stories Feedback (addendum §5).
+- **Q10.** **Écriture du Seuil d'allure dans intervals.icu** : si Q4 confirme qu'intervals.icu ne met pas à jour son propre seuil d'allure [108], faut-il une deuxième écriture (réglages de sport), contraire au glossaire « Publication = seule écriture », ou une mise à jour manuelle ? À trancher en architecture.
+- **Q11.** **Durée de sommeil disponible** : vérifier qu'elle arrive bien dans intervals.icu via HealthFit (wellness), condition nécessaire au signal sommeil de FR-16.
 
 ## 13. Arbitrages validés (20/11)
 
@@ -325,7 +375,7 @@ Les contradictions entre le brainstorming, le brief et la revue party mode ont �
 6. Détection des Courses à l'ouverture et sur rafraîchissement, sans notification. → FR-11
 7. Feedback global si les laps ne correspondent pas aux Blocs, ou si la Course n'était pas planifiée. → FR-13
 8. Accueil : une carte unique « Séance du jour ». → FR-20
-9. Seuil de surmenage : 3 🥵 d'affilée (non planifiées comprises) et FC au repos +5 bpm au moins par rapport à la moyenne des 7 jours précédents. HealthFit envoie bien les données de FC au repos. Les autres signaux passent en v1.2. → FR-16, §9.2
+9. Seuil de surmenage, version initiale. *Remplacé par §15.3.*
 10. HealthFit n'est lu que via intervals.icu. → FR-1
 11. Critère de continuité SM-6 ajouté et bloquant, appuyé sur un Bilan de fin de Plan minimal dès la v1 (FR-8). → FR-8, SM-6
 12. Fiabilité de la synchro en critère secondaire, non bloquant (SM-7). → SM-7
@@ -334,7 +384,7 @@ Les contradictions entre le brainstorming, le brief et la revue party mode ont �
 15. Devoir ouvrir HealthFit est accepté ; un remplacement éventuel sera une future fonctionnalité. → NFR-7, §9.2
 16. Un Plan suspendu se réactive par un bouton « Reprendre ». → FR-17
 17. « Tes données » : 1 chiffre principal et 2 secondaires (et non 3 à 5). → FR-14
-18. Conformité : ±5 s/km pour l'allure, 80 % du temps dans la zone pour la FC, note globale en pourcentage de Blocs respectés. → FR-13
+18. Conformité : ±5 s/km pour l'allure, 80 % du temps dans la zone pour la FC, note globale en pourcentage de Blocs respectés. → FR-13 *(précisé par §15.5)*
 19. Une Séance manquée sans Imprévu ne déclenche aucun Ajustement. → FR-18
 20. L'Objectif a une date obligatoire, et un Plan dure au moins 4 semaines. → FR-4
 21. 3 tentatives de régénération au plus, puis un échec explicite. → FR-5, FR-14
@@ -345,19 +395,39 @@ Les contradictions entre le brainstorming, le brief et la revue party mode ont �
 26. Les chiffres de « Tes données » dépendent du type de Séance ; la table est fixée en UX. → FR-14
 27. Les 6 lectures de la Matrice sont reprises telles quelles et seront affinées en UX. → FR-15
 28. Temps de réponse : Feedback en moins de 30 s, Plan en moins de 2 min. → NFR-9
-29. Méthode choisie par le LLM dans la liste fermée, contrôlée par une bande chiffrée par Méthode. → FR-5, addendum §2
-30. Garde-fou des 10 % mesuré en distance, sur une fenêtre glissante qui inclut les Séances planifiées. → FR-5
+29. Choix de la Méthode, version initiale. *Remplacé par §15.9.*
+30. Garde-fou des 10 % mesuré en distance, sur une fenêtre glissante qui inclut les Séances planifiées. → FR-5 *(précisé par §15.16)*
 31. Accepter un nouveau Plan annule le Plan actif, après confirmation, et retire ses Séances à venir. → FR-7
 
 ## 14. Arbitrages validés (22/11, après l'UX)
 
 Écarts entre les spécifications UX (`ux-designs/ux-running-2026-11-21/`) et le PRD, tranchés avec Badr :
 1. Le Plan accepté est modifiable par l'utilisateur : déplacer, modifier à la main ou demander à l'IA. → FR-22, FR-6, §8, principe 3
-2. Une modification manuelle qui franchit un garde-fou de sécurité physique est refusée, sans contournement. Les préférences du Profil (disponibilités, jour de la sortie longue) peuvent être contournées ponctuellement par l'utilisateur. → FR-22
+2. Une modification manuelle qui franchit un garde-fou de sécurité physique est refusée, sans contournement. Les préférences du Profil (disponibilités, jour de la sortie longue) peuvent être contournées ponctuellement par l'utilisateur. → FR-22 *(précisé par §15.1 et §15.2)*
 3. « Demander à l'IA » est un troisième déclencheur de changement du Plan, à l'initiative de l'utilisateur, soumis aux garde-fous et confirmé. → FR-18, FR-22
 4. Les modifications de l'utilisateur sont comptées à part des Ajustements. → SM-C1
 5. Le Ressenti est obligatoire et définitif. → FR-12
 6. Après une erreur d'analyse : « Relancer » ou « Arrêter l'analyse ». → FR-14
 7. Le Profil coureur est consultable (records, CTL, FC au repos, tendances). → FR-3
 8. Relecture des cas limites de FR-22 (`review-edge-case.md`) : Séances passées ou rattachées verrouillées ; une réduction de charge n'est jamais refusée ; tout changement demandé par l'utilisateur (y compris via l'IA et FR-17) peut s'écarter des préférences ; une demande à l'IA couvre une semaine au plus ; une régénération ne conserve pas les modifications antérieures et le dit ; 2 relances au plus par Feedback ; 7 jours sans hausse manuelle après un allègement de surmenage. → FR-22, FR-19, FR-14, FR-8, FR-11, FR-12, NFR-4, §12
+
+## 15. Arbitrages validés (25/11, après la recherche domaine)
+
+Écarts entre la [recherche du 25/11](../../research/domain-donnees-apple-watch-entrainement-course-2026-11-25/research.md) et le PRD (détail : `reconcile-research-2026-11-25.md`), tranchés avec Badr selon la règle « la prudence d'abord, les preuves ensuite ». Ils remplacent les arbitrages 9 et 29 du §13, et précisent les arbitrages 18 et 30 du §13 ainsi que l'arbitrage 2 du §14.
+1. La règle du volume hebdomadaire (+10 %) passe de la sécurité physique à un garde-fou secondaire : respectée à la génération, dépassable avec avertissement lors d'une modification [65][84]. → FR-5, FR-22
+2. Le plafond par sortie (+10 %) reste en sécurité physique, sans exception ; il s'applique aussi à la sortie longue, sans plafond plus strict. → FR-5, FR-22
+3. Seuil de surmenage : 3 🥵 d'affilée et au moins un signal objectif (FC au repos ou durée de sommeil, moyenne de 7 jours comparée à une Ligne de base de 28 jours au moins). Remplace l'arbitrage 9. → FR-16
+4. La durée de sommeil est lue dès la v1. → FR-1, FR-3, §9.2
+5. Sortie longue ciblée en FC : Conformité jugée sur les deux premiers tiers ; allure comparée en GAP ; température enregistrée. Précise l'arbitrage 18. → FR-13
+6. Imprévus « Malade » et « Blessé » : protocole sur plusieurs jours, renvoi vers un professionnel sur signaux d'alarme, messages non diagnostiques. → FR-17, UJ-4, §8
+7. Mode Reprise après au moins 14 jours sans Course : facteur de Daniels sur les allures seulement, volume repris à 50 % au plus, plafond par sortie calculé sur les seules Courses de la reprise. → FR-24
+8. Hiérarchie des données : puissance, VO2max, VFC, dynamique de foulée, stades et scores de sommeil Apple ne fondent jamais une décision. → NFR-10
+9. Méthode choisie par une règle déterministe (Daniels pyramidale par défaut, polarisé au-delà d'un volume), avec une raison honnête ; 80/20 retiré de la liste v1. Remplace l'arbitrage 29. → FR-5, glossaire
+10. Seuil d'allure maintenu automatiquement par l'application ; son écriture dans intervals.icu reste à trancher. → FR-23, §12 Q10
+11. Chrono irréaliste : VDOT conservée, avertissement signalant l'optimisme de l'estimation. → FR-4
+12. « Tes données » garde le format 1 + 2 ; FC à allure comparable et découplage deviennent éligibles. → FR-14
+13. Sensations attendues dans le détail d'une Séance. → FR-21
+14. Affûtage obligatoire quand l'Objectif vise une Épreuve. → FR-5
+15. Vérifications empiriques avant de coder (FIT HealthFit, comportements d'intervals.icu, sommeil) et calibrage des seuils sur l'historique avant la mise en usage, avec un critère de fin. → §12, §11
+16. Relecture finale : la fenêtre des 30 jours exclut les Séances manquées ou annulées ; « augmente le risque » est défini ; les garde-fous à minimum ne sont vérifiés qu'à la génération ; un changement du Seuil d'allure est un Ajustement confirmé ; « Blessé » a une question à trois réponses. Précise l'arbitrage 30 du §13. → FR-5, FR-17, FR-22, FR-23
 
