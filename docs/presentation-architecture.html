@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Architecture running</title>
+<style>
+:root{
+  --bg:#f6f5f2; --surface:#ffffff; --ink:#1d1d1f; --muted:#5f6368; --line:#d9d6cf;
+  --accent:#1f6f5c; --accent-soft:#e3f0ec; --warn:#a4561a; --warn-soft:#f7ebe0;
+  --data:#2b5a9e; --data-soft:#e4ecf7;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#141516; --surface:#1d1f21; --ink:#ececec; --muted:#a3a7ad; --line:#34373b;
+    --accent:#5cc2a6; --accent-soft:#1d3530; --warn:#e3a06b; --warn-soft:#3a2a1d;
+    --data:#7fa9e6; --data-soft:#1f2a3a;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#141516; --surface:#1d1f21; --ink:#ececec; --muted:#a3a7ad; --line:#34373b;
+  --accent:#5cc2a6; --accent-soft:#1d3530; --warn:#e3a06b; --warn-soft:#3a2a1d;
+  --data:#7fa9e6; --data-soft:#1f2a3a;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:var(--bg);color:var(--ink);font:16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,sans-serif;overflow:hidden}
+.deck{position:relative;height:100%;display:flex;align-items:center;justify-content:center;padding:16px}
+.slide{display:none;width:min(1100px,100%);aspect-ratio:16/9;max-height:calc(100vh - 80px);background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:clamp(20px,4vw,56px);overflow:auto;flex-direction:column}
+.slide.active{display:flex}
+h1{font-size:clamp(28px,4.4vw,52px);line-height:1.1;margin:0 0 .4em;letter-spacing:-.02em}
+h2{font-size:clamp(22px,3vw,36px);line-height:1.15;margin:0 0 .6em;letter-spacing:-.01em}
+.kicker{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:.8em}
+p,li{font-size:clamp(15px,1.6vw,20px);color:var(--ink)}
+.muted{color:var(--muted)}
+ul{margin:.2em 0;padding-left:1.2em} li{margin:.35em 0}
+.grid{display:grid;gap:16px}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media (max-width:720px){.g2,.g3{grid-template-columns:1fr}}
+.card{border:1px solid var(--line);border-radius:10px;padding:14px 16px;background:var(--bg)}
+.card h3{margin:0 0 .3em;font-size:clamp(15px,1.6vw,19px)}
+.card p{margin:0;font-size:clamp(13px,1.35vw,16px);color:var(--muted)}
+.tag{display:inline-block;font-size:12px;font-weight:600;padding:2px 8px;border-radius:999px;background:var(--accent-soft);color:var(--accent);margin-right:6px}
+.tag.warn{background:var(--warn-soft);color:var(--warn)}
+.tag.data{background:var(--data-soft);color:var(--data)}
+.big{font-size:clamp(40px,7vw,84px);font-weight:700;letter-spacing:-.03em;color:var(--accent);line-height:1}
+.flow{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:12px 0}
+.node{border:1px solid var(--line);background:var(--bg);border-radius:8px;padding:8px 12px;font-size:clamp(13px,1.4vw,16px);font-weight:500}
+.node.dom{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.node.dat{background:var(--data-soft);border-color:var(--data);color:var(--data)}
+.arrow{color:var(--muted);font-size:18px}
+table{border-collapse:collapse;width:100%;font-size:clamp(13px,1.35vw,16px)}
+td,th{border-bottom:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
+th{color:var(--muted);font-weight:600}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.9em;background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:0 4px}
+.hex{display:grid;grid-template-columns:1fr 1.2fr 1fr;gap:12px;align-items:stretch;margin-top:8px}
+@media (max-width:720px){.hex{grid-template-columns:1fr}}
+.col{display:flex;flex-direction:column;gap:8px}
+.core{border:2px solid var(--accent);border-radius:12px;padding:16px;background:var(--accent-soft);display:flex;flex-direction:column;justify-content:center;text-align:center}
+.core strong{color:var(--accent);font-size:clamp(16px,1.8vw,22px)}
+.foot{margin-top:auto;padding-top:12px;font-size:13px;color:var(--muted)}
+.bar{position:fixed;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 16px;font-size:13px;color:var(--muted)}
+.bar button{background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:6px 12px;font:inherit;cursor:pointer}
+.progress{position:fixed;top:0;left:0;height:3px;background:var(--accent);transition:width .2s}
+.q{border-left:3px solid var(--warn);padding:6px 12px;background:var(--warn-soft);border-radius:0 8px 8px 0;margin:6px 0}
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<main class="deck" id="deck">
+
+<section class="slide">
+  <div class="kicker">Revue d'architecture · 25/11/2026</div>
+  <h1>running : un coach de course perso, construit pour qu'on puisse lui faire confiance</h1>
+  <p class="muted">Une PWA sur iPhone qui génère un Plan d'entraînement, le pousse sur l'Apple Watch, puis commente chaque sortie. Un seul utilisateur, un seul dev, pas d'échéance.</p>
+  <div class="foot">15 minutes · ← → pour naviguer · questions à la fin, mais interrompez-moi</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Le problème</div>
+  <h2>Aujourd'hui : 1 h 30 par Plan, une IA externe et Strava</h2>
+  <div class="grid g3" style="margin-top:8px">
+    <div class="card"><div class="big">10 min</div><p>de manipulation par Plan visée, au lieu d'environ 1 h 30 (SM-3)</p></div>
+    <div class="card"><div class="big">0</div><p>chiffre inventé dans un Feedback (SM-5) : une seule erreur et la confiance disparaît</p></div>
+    <div class="card"><div class="big">&lt;10 €</div><p>par mois d'appels au LLM, coût mesuré (NFR-4)</p></div>
+  </div>
+  <p style="margin-top:18px">La boucle visée : <strong>Objectif → Plan → montre → Course → Ressenti → Feedback → Plan suivant</strong>, sans aucune saisie manuelle dans intervals.icu.</p>
+</section>
+
+<section class="slide">
+  <div class="kicker">Contraintes</div>
+  <h2>Ce qui façonne l'architecture</h2>
+  <div class="grid g2">
+    <div class="card"><h3>Un seul dev, pas d'échéance</h3><p>Livrer moins mais stable. Rien d'instable n'est mis en usage (NFR-8).</p></div>
+    <div class="card"><h3>Des tiers non maîtrisés</h3><p>intervals.icu (API, quotas) et HealthFit (le seul transport vers la montre).</p></div>
+    <div class="card"><h3>Données de santé</h3><p>Rien d'exposé sur Internet. Seuls intervals.icu et Anthropic voient des données en clair (NFR-2).</p></div>
+    <div class="card"><h3>Apprendre la data stack</h3><p>DuckDB, dbt, un lakehouse : un objectif assumé, à condition de ne pas ajouter de complexité pour rien.</p></div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Paradigme</div>
+  <h2>Monolithe modulaire, cœur hexagonal</h2>
+  <div class="hex">
+    <div class="col">
+      <div class="node">api FastAPI</div>
+      <div class="node">worker Procrastinate</div>
+      <div class="node">tools/calibrate</div>
+      <p class="muted" style="font-size:14px;margin:4px 0 0">Entrées</p>
+    </div>
+    <div class="core">
+      <strong>Domaine Python pur</strong>
+      <p style="font-size:15px;margin:.5em 0 0">Toutes les règles du PRD : garde-fous, Conformité, machines à états, Seuil d'allure. Aucune I/O, testé en millisecondes.</p>
+    </div>
+    <div class="col">
+      <div class="node">intervals.icu</div>
+      <div class="node">Anthropic</div>
+      <div class="node">Postgres app</div>
+      <div class="node dat">lecture gold</div>
+      <div class="node">Clock</div>
+      <p class="muted" style="font-size:14px;margin:4px 0 0">Adaptateurs, derrière des ports</p>
+    </div>
+  </div>
+  <p class="foot">Une image Docker, deux processus. Les dépendances vont vers le domaine, et une règle d'import le vérifie en CI (AD-1).</p>
+</section>
+
+<section class="slide">
+  <div class="kicker">Données</div>
+  <h2>Deux natures de données, qui ne se mélangent jamais</h2>
+  <div class="flow">
+    <span class="node">Apple Watch</span><span class="arrow">→</span>
+    <span class="node">HealthFit</span><span class="arrow">→</span>
+    <span class="node">intervals.icu</span><span class="arrow">→</span>
+    <span class="node dat">bronze</span><span class="arrow">→</span>
+    <span class="node dat">silver</span><span class="arrow">→</span>
+    <span class="node dat">gold</span><span class="arrow">→</span>
+    <span class="node dom">domaine</span>
+  </div>
+  <div class="grid g2" style="margin-top:6px">
+    <div class="card"><span class="tag data">Faits</span><h3>Lakehouse DuckLake</h3><p>Fichiers Parquet, catalogue dans Postgres, DuckDB sans état piloté par dbt. Seul dbt écrit silver et gold.</p></div>
+    <div class="card"><span class="tag">État</span><h3>Postgres <code>app</code></h3><p>Plan, Séances, Ressentis, propositions. Modifié uniquement par des cas d'usage, dans une transaction.</p></div>
+  </div>
+  <p class="foot">Lecture croisée seulement, imposée par des rôles Postgres. Un <code>dbt run</code> ne peut pas écraser un Ressenti (AD-2).</p>
+</section>
+
+<section class="slide">
+  <div class="kicker">Décision 1</div>
+  <h2>« Le LLM raconte, le code compte »</h2>
+  <div class="grid g2">
+    <div class="card"><h3>Le LLM produit</h3><p>Un squelette : date, type, volume, <em>référence</em> d'intensité (« zone 2 », « allure T »), justification. Plus le texte du Feedback.</p></div>
+    <div class="card"><h3>Le code produit</h3><p>La Méthode, les Blocs, les allures en valeurs absolues, chaque verdict de garde-fou et chaque chiffre affiché.</p></div>
+  </div>
+  <ul style="margin-top:14px">
+    <li>Un <strong>extracteur de nombres</strong> unique rejette tout texte qui cite un nombre absent des faits fournis.</li>
+    <li>3 tentatives au plus. Après ça, un échec explicite, jamais un Plan douteux.</li>
+    <li>Squelette seulement : moins de tokens, moins de latence (Plan en moins de 2 min, Feedback en moins de 30 s).</li>
+  </ul>
+</section>
+
+<section class="slide">
+  <div class="kicker">Décision 2</div>
+  <h2>Un seul propriétaire par calcul</h2>
+  <table>
+    <tr><th></th><th>dbt (gold)</th><th>Domaine Python</th></tr>
+    <tr><td>Rôle</td><td>Faits et séries <strong>bruts</strong>, sans paramètre métier</td><td>Toutes les règles, fenêtres et seuils</td></tr>
+    <tr><td>Exemples</td><td>plus longue Course par jour, meilleur effort par distance, streams par lap</td><td>plafond de 110 % sur 30 jours, Conformité, surmenage, Bilan</td></tr>
+    <tr><td>Paramètres</td><td>n'en lit jamais</td><td><code>parameter_set</code> versionné par athlète</td></tr>
+  </table>
+  <p style="margin-top:14px">Une règle écrite en SQL <em>et</em> en Python finit toujours par diverger. Ici, chaque calcul a un seul endroit et un seul test qui le recalcule (AD-3).</p>
+</section>
+
+<section class="slide">
+  <div class="kicker">Décision 3</div>
+  <h2>Le Seuil d'allure appartient à l'app</h2>
+  <ul>
+    <li>Vitesse critique calculée sur les meilleurs efforts en GAP (allure ajustée à la pente) des 16 dernières semaines.</li>
+    <li>Versions immuables. Un changement est <strong>proposé</strong> et confirmé, jamais appliqué en silence.</li>
+    <li>Ni lu ni écrit dans intervals.icu : les Séances sont publiées en allures absolues. Une seule vérité.</li>
+    <li>Après un arrêt de 14 jours ou plus : <strong>Mode Reprise</strong>. Les allures sont réduites, et la fenêtre d'estimation repart de la date de reprise.</li>
+  </ul>
+  <div class="q" style="margin-top:12px"><strong>Trouvé en revue :</strong> sans fenêtre bornée, une réestimation pendant la reprise aurait réintégré les efforts d'avant l'arrêt, et annulé toute la prudence.</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Décision 4</div>
+  <h2>Les données Apple non fiables, bloquées par le code</h2>
+  <div class="grid g2">
+    <div class="card"><span class="tag warn">Barrière 1</span><h3>Pas extraites</h3><p>La puissance, la VO2max, la VFC et les stades de sommeil restent dans le JSON brut de bronze. silver et gold ne les extraient jamais.</p></div>
+    <div class="card"><span class="tag warn">Barrière 2</span><h3>Usage marqué</h3><p>Chaque modèle gold est marqué <code>decision</code> ou <code>descriptive</code>. Un test en CI casse si une règle lit un fait descriptif (CTL, température, découplage).</p></div>
+  </div>
+  <p style="margin-top:14px">Une convention écrite ne résiste pas à une story pressée qui utilise la VFC « parce qu'elle est là ». Un test qui casse, si (AD-26).</p>
+</section>
+
+<section class="slide">
+  <div class="kicker">Décision 5</div>
+  <h2>Des écritures sûres face à un tiers non maîtrisé</h2>
+  <div class="grid g2">
+    <div class="card"><h3>Outbox transactionnelle</h3><p>Modification et « à publier » écrits dans la même transaction. Le worker publie vers intervals.icu, et un échec affiche ⚠️ sans rien perdre.</p></div>
+    <div class="card"><h3>Verrou du Plan + version</h3><p><code>SELECT … FOR UPDATE</code> et <code>plan.version</code>. Une proposition périmée est rejetée (<code>PROPOSAL_STALE</code>).</p></div>
+    <div class="card"><h3>Machines à états normatives</h3><p>Plan, Séance, Feedback, Seuil d'allure : seules les transitions de la table existent.</p></div>
+    <div class="card"><h3>Deux files de tâches</h3><p><code>lake</code> (une à la fois : synchro, dbt) et <code>interactive</code> (Feedback, génération), toutes deux dans Postgres.</p></div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Stack et hébergement</div>
+  <h2>Des choix sans surprise, épinglés</h2>
+  <div class="grid g2">
+    <table>
+      <tr><td>Backend</td><td>Python 3.14, FastAPI, SQLAlchemy, Alembic</td></tr>
+      <tr><td>Tâches</td><td>Procrastinate (file dans Postgres)</td></tr>
+      <tr><td>Données</td><td>PostgreSQL 18, DuckDB 1.5.6, DuckLake 1.0, dbt-duckdb</td></tr>
+      <tr><td>LLM</td><td>SDK anthropic, Claude Opus 5.5, sorties structurées</td></tr>
+      <tr><td>Front</td><td>React 19, Vite 8, PWA, client OpenAPI généré</td></tr>
+    </table>
+    <div class="card"><h3>Prod à ~6 €/mois</h3><p>VPS ARM en Docker Compose, accessible seulement par Tailscale (HTTPS du tailnet, aucun port ouvert). Sauvegarde nocturne chiffrée par restic. Déploiement sur tag avec CI verte.</p></div>
+  </div>
+  <p class="foot">DuckDB 2.0 et PostgreSQL 19 sont volontairement écartés pour l'instant : trop récents (NFR-8).</p>
+</section>
+
+<section class="slide">
+  <div class="kicker">Ce qui reste ouvert</div>
+  <h2>Des spikes avant de coder, et vos questions</h2>
+  <div class="grid g2">
+    <ul>
+      <li><strong>OQ-1</strong> upsert intervals.icu avec une clé API</li>
+      <li><strong>OQ-2</strong> DuckLake + dbt-duckdb sur arm64</li>
+      <li><strong>OQ-4</strong> GAP, et cibles d'allure absolues jusqu'à la montre</li>
+      <li><strong>OQ-5</strong> contenu du FIT HealthFit</li>
+      <li><strong>OQ-6</strong> durée de sommeil dans le wellness</li>
+    </ul>
+    <div>
+      <div class="q">Le monolithe hexagonal est-il sur-dimensionné pour une app perso ?</div>
+      <div class="q">DuckLake pour quelques Mo de données : de l'apprentissage, ou un vrai gain ?</div>
+      <div class="q">Qu'est-ce que vous auriez tranché autrement ?</div>
+    </div>
+  </div>
+  <p class="foot">Le contrat complet : 29 règles (AD-1 à AD-29) dans le spine d'architecture.</p>
+</section>
+
+</main>
+<div class="bar">
+  <button id="prev" aria-label="Diapositive précédente">←</button>
+  <span id="count"></span>
+  <button id="theme" aria-label="Changer de thème">◐</button>
+  <button id="next" aria-label="Diapositive suivante">→</button>
+</div>
+<script>
+(function(){
+  var slides=[].slice.call(document.querySelectorAll('.slide'));
+  var i=0;
+  try{var h=parseInt(location.hash.slice(1),10);if(h>=1&&h<=slides.length)i=h-1;}catch(e){}
+  function show(n){
+    i=Math.max(0,Math.min(slides.length-1,n));
+    slides.forEach(function(s,k){s.classList.toggle('active',k===i);});
+    document.getElementById('count').textContent=(i+1)+' / '+slides.length;
+    document.getElementById('progress').style.width=((i+1)/slides.length*100)+'%';
+    try{history.replaceState(null,'','#'+(i+1));}catch(e){}
+  }
+  document.getElementById('prev').onclick=function(){show(i-1);};
+  document.getElementById('next').onclick=function(){show(i+1);};
+  document.addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown')show(i+1);
+    if(e.key==='ArrowLeft'||e.key==='PageUp')show(i-1);
+  });
+  var x0=null;
+  document.addEventListener('touchstart',function(e){x0=e.touches[0].clientX;},{passive:true});
+  document.addEventListener('touchend',function(e){if(x0===null)return;var dx=e.changedTouches[0].clientX-x0;if(Math.abs(dx)>50)show(i+(dx<0?1:-1));x0=null;});
+  var root=document.documentElement;
+  try{var t=localStorage.getItem('deck-theme');if(t)root.setAttribute('data-theme',t);}catch(e){}
+  document.getElementById('theme').onclick=function(){
+    var dark=root.getAttribute('data-theme')==='dark'||(!root.getAttribute('data-theme')&&matchMedia('(prefers-color-scheme: dark)').matches);
+    var nt=dark?'light':'dark';root.setAttribute('data-theme',nt);
+    try{localStorage.setItem('deck-theme',nt);}catch(e){}
+  };
+  show(i);
+})();
+</script>
+</body>
+</html>
