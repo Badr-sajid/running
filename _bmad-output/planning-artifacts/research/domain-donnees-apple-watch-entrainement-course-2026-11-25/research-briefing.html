@@ -1,0 +1,821 @@
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Apple Watch et entraînement</title><style>
+:root{--bg:#fbfbfa;--fg:#1d1f21;--mut:#5b6168;--card:#fff;--line:#e3e4e6;--acc:#2f6f5e;
+--hi:#1f7a4d;--hibg:#e5f4ec;--med:#8a6a00;--medbg:#fbf3d6;--unv:#a3341f;--unvbg:#fde6e1}
+@media (prefers-color-scheme:dark){:root{--bg:#141618;--fg:#e8e9ea;--mut:#a4a9ae;--card:#1c1f22;--line:#30343a;--acc:#6fc2a8;
+--hi:#7fd6a6;--hibg:#16352a;--med:#e8c95a;--medbg:#3a3214;--unv:#ff9b85;--unvbg:#45201a}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+header{padding:32px 16px 20px;border-bottom:1px solid var(--line);max-width:1100px;margin:0 auto}
+header h1{margin:0 0 8px;font-size:1.6rem;line-height:1.3}.meta{color:var(--mut);font-size:.9rem}
+.meta span{display:inline-block;margin-right:14px}
+.wrap{max-width:1100px;margin:0 auto;padding:0 16px;display:grid;grid-template-columns:240px 1fr;gap:32px}
+nav{position:sticky;top:0;align-self:start;max-height:100vh;overflow:auto;padding:20px 0;font-size:.88rem}
+nav ol{padding-left:18px;margin:0}nav a{color:var(--mut);text-decoration:none}nav a:hover{color:var(--acc)}
+main{min-width:0;padding:8px 0 64px}
+h2{margin-top:40px;padding-top:8px;border-top:1px solid var(--line);font-size:1.3rem}h3{font-size:1.05rem;margin-top:24px}
+h2#s0{border:0;margin-top:20px}
+h2#s0 + p, h2#s0 ~ ol:first-of-type{}
+.summary{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--acc);border-radius:8px;padding:4px 20px 12px;margin-top:20px}
+table{border-collapse:collapse;width:100%;font-size:.88rem;display:block;overflow-x:auto;margin:12px 0}
+th,td{border:1px solid var(--line);padding:6px 8px;vertical-align:top;text-align:left}th{background:var(--card)}
+a{color:var(--acc)}a.cite{font-size:.78em;text-decoration:none;vertical-align:super}
+.b{display:inline-block;padding:0 6px;border-radius:4px;font-size:.82em;font-weight:600;line-height:1.5}
+.b.hi{color:var(--hi);background:var(--hibg)}.b.med{color:var(--med);background:var(--medbg)}
+.b.unv{color:var(--unv);background:var(--unvbg);border:1px solid var(--unv)}
+details.appx summary{cursor:pointer;margin-top:40px}code{font-size:.9em}
+.legend{font-size:.85rem;color:var(--mut);margin:8px 0}
+@media (max-width:820px){.wrap{display:block}nav{position:static;max-height:none;border-bottom:1px solid var(--line)}}
+</style></head><body>
+<header><h1>Recherche domaine : données Apple Watch et science de l&#x27;&#x27;entraînement en course à pied</h1>
+<div class="meta"><span>Type : domain</span><span>Date : 2026-11-25</span><span>Profondeur : deep</span><span>Vérification : normal</span><span>Affirmations : 13 vérifiées · 11 non vérifiées</span></div>
+<p><strong>Décision servie :</strong> Quelles données Apple Watch utiliser et comment, quelles règles de charge/récupération/blessure et quelle méthode appliquer pour une analyse juste et des plans cohérents</p>
+<p class="legend">Badges : <span class="b hi">élevée</span> vérifiée ou source solide · <span class="b med">moyenne</span> source unique crédible · <span class="b unv">non vérifié</span> / non significatif, à traiter avec prudence.</p></header>
+<div class="wrap"><nav><strong>Sommaire</strong><ol><li><a href="#s0">Synthèse exécutive</a></li><li><a href="#s1">1. Les données Apple Watch / HealthKit : ce qu&#x27;elles valent pour la course</a></li><li><a href="#s2">2. Glossaire et modèles mentaux</a></li><li><a href="#s3">3. Méthodes d&#x27;entraînement : ce que disent les preuves et comment choisir</a></li><li><a href="#s4">4. Charge, fatigue et récupération : quels signaux, quels seuils</a></li><li><a href="#s5">5. Prévention des blessures et gestion des imprévus</a></li><li><a href="#s6">6. Analyse post-séance et estimation des seuils</a></li><li><a href="#s7">7. Ce que seul le croisement des sections 1 à 6 révèle</a></li><li><a href="#s8">8. Recommandations</a></li><li><a href="#s9">9. Questions ouvertes</a></li><li><a href="#s10">10. Contre-preuves</a></li><li><a href="#s11">12. Carte de fraîcheur</a></li><li><a href="#appx">11. Annexe des sources</a></li></ol></nav><main><section class="summary"><h2 id="s0">Synthèse exécutive</h2>
+<p><strong>Ce que disent les preuves :</strong> construis l'app sur <strong>peu de signaux simples et bien mesurés</strong>. Code en dur <strong>une règle de sécurité</strong> solide, ancre tout sur <strong>un seuil tenu à jour automatiquement</strong>, et traite le choix de méthode comme secondaire.</p>
+<p><strong>Les trois constats qui décident :</strong></p>
+<ol>
+<li><strong>Les données Apple les plus riches sont les moins fiables.</strong>
+   - <strong>Fiables</strong> : l'allure, la FC en effort stable, la FC de repos (−0,08 bpm face à une ceinture <a class="cite" href="#src-72">[72]</a>) et la durée de sommeil <a class="cite" href="#src-6">[6]</a><a class="cite" href="#src-21">[21]</a>.
+   - <strong>En tendance seulement</strong> : la VO2max (−6,3 ml/kg/min et 13 % d'erreur sur Series 10 <a class="cite" href="#src-10">[10]</a>) et la VFC (variabilité de la FC), stockée en SDNN et non en RMSSD (deux façons de la calculer, §2.2), sous-estimée de 8 ms au repos sur Series 9 / Ultra 2 <a class="cite" href="#src-72">[72]</a>, et pour laquelle je n'ai trouvé aucune validation nocturne <a class="cite" href="#src-73">[73]</a>.
+   - <strong>Sans validation publiée</strong> : la puissance et la dynamique de foulée <a class="cite" href="#src-14">[14]</a>. <strong>Validés mais imparfaits, donc indicatifs</strong> : les stades de sommeil (kappa 0,68) <a class="cite" href="#src-6">[6]</a><a class="cite" href="#src-21">[21]</a>.
+   - Les <strong>mesures subjectives de bien-être</strong> suivent la charge mieux que les capteurs <a class="cite" href="#src-76">[76]</a>. Ta question de ressenti à 3 niveaux en est une version simplifiée, non validée en tant que telle. → <strong>R6</strong></li>
+<li><strong>La règle de sécurité la mieux prouvée porte sur chaque sortie, pas sur la semaine.</strong> Une sortie plus de 10 % plus longue que la plus longue des 30 derniers jours augmente le risque de blessure de 1,5 à 2,3 fois, alors que la variation d'une semaine à l'autre n'y est pas associée <a class="cite" href="#src-65">[65]</a>. → <strong>R1, R2</strong> La « règle des 10 % par semaine » a échoué dans un essai randomisé <a class="cite" href="#src-84">[84]</a>. Une progression trop rapide figure aussi <strong>parmi les erreurs relevées dans des plans écrits par ChatGPT</strong> (génération GPT-3.5, 2023) <a class="cite" href="#src-58">[58]</a>.</li>
+<li><strong>Le choix de méthode compte peu.</strong> Polarisé et pyramidal donnent des résultats équivalents <a class="cite" href="#src-46">[46]</a><a class="cite" href="#src-47">[47]</a>, et aucun algorithme publié ne choisit une méthode d'après un profil. En revanche, <strong>selon des utilisateurs du forum (septembre 2025), intervals.icu ne met pas à jour automatiquement l'allure seuil en course</strong> <a class="cite" href="#src-108">[108]</a> ; c'est à vérifier dans l'app. Sans un maintien automatique de la vitesse critique (CS, l'allure limite tenable sans épuisement rapide, §2.1), calculable depuis tes meilleurs efforts d'entraînement <a class="cite" href="#src-105">[105]</a>, les allures, la charge et la conformité prévu / réalisé dérivent ensemble. → <strong>R4, R5</strong></li>
+</ol>
+<p><strong>La principale réserve :</strong> les seuils d'alerte (surmenage, FC de repos, VFC, zones de Form, ACWR — le ratio charge aiguë / chronique) <strong>n'ont pas de base numérique validée</strong> <a class="cite" href="#src-64">[64]</a><a class="cite" href="#src-42">[42]</a><a class="cite" href="#src-70">[70]</a>. La logique est défendable : écart à sa propre ligne de base, et alerte seulement quand plusieurs signaux concordent. Mais les chiffres sont des <strong>paramètres à calibrer sur tes données</strong>, pas des faits à afficher. Deux vérifications empiriques sont à faire <strong>avant de coder</strong> : le contenu réel du FIT exporté par HealthFit, et la valeur de VFC qu'il envoie (§9).</p>
+<p><strong>Statuts :</strong> les 10 affirmations sur lesquelles reposent les recommandations ont été vérifiées auprès de la source primaire ou d'une seconde source, et sont confirmées. <strong>Pour trois d'entre elles, cette confirmation n'est pas vraiment indépendante</strong> : la cohorte RUNSAFE (une seule cohorte, contrôlée sur son propre article), le guide maladie BJSM (mêmes auteurs) et le comportement d'intervals.icu (forum seulement). Le registre compte 13 affirmations vérifiées (les 10 contrôlées, plus 3 étayées par plusieurs sources dans les synthèses de sources) et 11 <span class="b unv">non vérifiées</span> (source unique). Aucune n'a été infirmée. Un audit des citations a corrigé une référence et atténué 19 formulations trop fortes.</p>
+<p><strong>Les actions</strong> sont dans le §8 (R1 à R10).</p>
+<h3>Avant de coder : vérifications à faire (une soirée)</h3>
+<ol>
+<li><strong>Contenu du FIT HealthFit</strong> : exporter 2 ou 3 courses et lister les champs (fréquence de la FC, puissance, dynamique de foulée, tours) (§1.2, §9).</li>
+<li><strong>VFC envoyée par HealthFit</strong> : comparer Apple Santé et le champ wellness d'intervals.icu sur 2 semaines (moyenne de la journée ou mesure nocturne ?) (§1.2, §9).</li>
+<li><strong>Séance planifiée de test</strong> : vérifier que les cibles d'allure par bloc arrivent sur la montre (§9).</li>
+<li><strong>intervals.icu, dans l'app</strong> : la formule de charge allure <a class="cite" href="#src-39">[39]</a>, le calcul de Form le jour même <a class="cite" href="#src-41">[41]</a>, les zones de Form <a class="cite" href="#src-64">[64]</a>, les bandes de conformité <a class="cite" href="#src-97">[97]</a> et l'absence de mise à jour automatique de l'allure seuil <a class="cite" href="#src-108">[108]</a> (§12).</li>
+<li><strong>Formule de l'indice de polarisation</strong> dans Treff 2019 avant de la coder (§2.2).</li>
+</ol>
+</section><h2 id="s1">1. Les données Apple Watch / HealthKit : ce qu'elles valent pour la course</h2>
+<p><strong>Question :</strong> quelles données la montre produit, comment elles sont calculées, à quel point on peut s'y fier, et lesquelles arrivent réellement dans intervals.icu via HealthFit.</p>
+<h3>1.1 Inventaire et fiabilité, métrique par métrique</h3>
+<table>
+<thead>
+<tr>
+<th>Métrique</th>
+<th>Comment Apple la produit</th>
+<th>Fiabilité établie</th>
+<th>Usage recommandé dans l'app</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Fréquence cardiaque (séance)</strong></td>
+<td>Capteur optique (PPG), mesurée « en continu » pendant la séance et 3 min après <a class="cite" href="#src-12">[12]</a><a class="cite" href="#src-13">[13]</a></td>
+<td>Bonne en allure stable (Apple Watch 4 sous le seuil ANSI/CTA de 10 % d'erreur au tapis) ; la validité baisse quand l'intensité monte ; retard face à une ceinture pendant les fractionnés, documenté seulement par des tests presse <a class="cite" href="#src-112">[112]</a>, aucune étude publiée et évaluée par des pairs. Apple prévient elle-même que des lectures « anormalement hautes ou basses » arrivent <a class="cite" href="#src-13">[13]</a>.</td>
+<td>Fiable pour footings, sortie longue, tempo. Sur les fractionnés courts (&lt; 2–3 min), juger l'exécution <strong>sur l'allure</strong>, pas sur la FC.</td>
+</tr>
+<tr>
+<td><strong>Allure / distance (GPS)</strong></td>
+<td>GPS + accéléromètre</td>
+<td>Aucune étude indépendante trouvée sur le GPS bi-fréquence de la Series 10 (lacune).</td>
+<td>Référence d'exécution pour les blocs, de préférence corrigée de la pente (GAP, voir §6).</td>
+</tr>
+<tr>
+<td><strong>Puissance de course</strong></td>
+<td>Modèle Apple (watts), course uniquement, watchOS 9+ <a class="cite" href="#src-1">[1]</a><a class="cite" href="#src-2">[2]</a></td>
+<td><strong>Aucune validation publiée et évaluée par des pairs</strong> face à Stryd ou une plateforme de force. Seuls des tests mono-athlète de blogs (2022) existent : valeurs propres à chaque marque, montée lente sur les efforts courts <a class="cite" href="#src-14">[14]</a>.</td>
+<td>Ne pas l'utiliser comme cible ni comme source de charge. Au mieux, un indicateur de tendance.</td>
+</tr>
+<tr>
+<td><strong>Temps de contact au sol, oscillation verticale, longueur de foulée</strong></td>
+<td>Types HealthKit dédiés depuis iOS 16 <a class="cite" href="#src-1">[1]</a><a class="cite" href="#src-2">[2]</a></td>
+<td>Pas de validation publiée et évaluée par des pairs trouvée.</td>
+<td>Affichage descriptif uniquement, jamais de verdict.</td>
+</tr>
+<tr>
+<td><strong>Cadence</strong></td>
+<td><strong>Pas de type HealthKit dédié</strong> : elle doit être dérivée (pas/temps) ou lue dans le FIT exporté <a class="cite" href="#src-1">[1]</a></td>
+<td>Non évaluée.</td>
+<td>Descriptif.</td>
+</tr>
+<tr>
+<td><strong>VO2max (« Forme cardio »)</strong></td>
+<td>Estimation <strong>sous-maximale</strong> à partir de la réponse FC/vitesse. Uniquement après une marche, course ou rando en extérieur, sur terrain plat (pente &lt; 5 %), avec un bon GPS et un effort d'environ +30 % de la réserve cardiaque <a class="cite" href="#src-8">[8]</a>.</td>
+<td>Validation Apple : +1,4 ± 4,7 ml/kg/min, ICC 0,86, mais sur une population âgée (55 ans en moyenne), pas des coureurs, et contre un test lui-même sous-maximal <a class="cite" href="#src-8">[8]</a>. Études indépendantes : sous-estimation d'environ 6,3 ml/kg/min et erreur moyenne de 13,2 % <strong>sur Series 10</strong> (n=40) <a class="cite" href="#src-10">[10]</a> ; fiabilité faible sur Series 7, avec une surestimation chez les moins entraînés et une sous-estimation chez les plus entraînés (n=19) <a class="cite" href="#src-9">[9]</a>.</td>
+<td><strong>Tendance uniquement</strong>, jamais une valeur absolue pour fixer des allures.</td>
+</tr>
+<tr>
+<td><strong>VFC (HRV)</strong></td>
+<td>Stockée en <strong>SDNN</strong> (pas RMSSD), à des moments irréguliers et opaques <a class="cite" href="#src-15">[15]</a><a class="cite" href="#src-22">[22]</a></td>
+<td>Bon accord avec une ceinture Polar H7 au repos sur des enregistrements courts (2018, n=20), avec des battements manqués <a class="cite" href="#src-17">[17]</a> ; accord N-N seulement modéré sur Series 6 (2025, n=78) <a class="cite" href="#src-16">[16]</a>. <strong>Aucune validation Apple du SDNN nocturne.</strong></td>
+<td>Voir §4 : utilisable seulement en tendance individuelle, avec prudence.</td>
+</tr>
+<tr>
+<td><strong>FC de repos</strong></td>
+<td>Calculée par Apple, journalière</td>
+<td>Pas de validation spécifique trouvée.</td>
+<td>Tendance sur plusieurs jours, contre la ligne de base personnelle.</td>
+</tr>
+<tr>
+<td><strong>Sommeil (durée, stades)</strong></td>
+<td><strong>Accéléromètre seul</strong>, époques de 30 s, 4 états : Éveil / Paradoxal / Core (N1+N2) / Profond (N3) <a class="cite" href="#src-6">[6]</a></td>
+<td>Selon le white paper Apple (watchOS 26) : sensibilité sommeil 96,8 %, spécificité 78,9 %, kappa à 4 stades de 0,68 (contre 0,63 avant). L'erreur la plus fréquente est de classer le sommeil profond en Core <a class="cite" href="#src-6">[6]</a>. Étude indépendante (Series 8, n=35) : durée proche de la polysomnographie, sensibilité par stade de 50,5 à 86,1 % <a class="cite" href="#src-21">[21]</a>. Les nuits de 1 à 3 h sont enregistrées en endormi/éveillé seulement <a class="cite" href="#src-6">[6]</a>.</td>
+<td><strong>Durée fiable ; stades indicatifs.</strong> Ne jamais baser un verdict sur le % de sommeil profond.</td>
+</tr>
+<tr>
+<td><strong>Score de sommeil</strong> (watchOS 26)</td>
+<td>Durée + régularité de l'heure du coucher + interruptions</td>
+<td>Les seuils ont été recalibrés en watchOS 26.2 (fin 2025), si bien que les scores d'avant et d'après ne sont <strong>pas comparables</strong> <a class="cite" href="#src-7">[7]</a>.</td>
+<td>À éviter comme entrée, ou à normaliser par version d'OS. Préférer la durée brute.</td>
+</tr>
+<tr>
+<td><strong>Effort (1–10) / Training Load</strong></td>
+<td>Le score d'effort estimé est stocké dans HealthKit (<code>estimatedWorkoutEffortScore</code>, iOS 18+) <a class="cite" href="#src-4">[4]</a>. Le Training Load compare les 7 derniers jours aux 28 précédents <a class="cite" href="#src-3">[3]</a>.</td>
+<td>Formule non publiée ; les entrées (durée, FC, âge) ne sont connues que par la presse <a class="cite" href="#src-5">[5]</a>.</td>
+<td>Ne pas en faire un pilier : l'app a sa propre charge (intervals.icu) et son propre ressenti.</td>
+</tr>
+<tr>
+<td><strong>Vitals (nuit)</strong></td>
+<td>FC, fréquence respiratoire, SpO2, température du poignet, durée de sommeil. La plage habituelle est apprise en 7 nuits ; une alerte se déclenche quand <strong>plusieurs</strong> métriques sortent de la plage <a class="cite" href="#src-11">[11]</a>.</td>
+<td>Pas de seuil numérique publié. <strong>La VFC n'est dans Vitals que sur Series 12 / Ultra 4</strong>, donc pas sur ta Series 10 <a class="cite" href="#src-11">[11]</a>.</td>
+<td>Un signal Vitals peut servir de <strong>drapeau de contexte</strong> (maladie possible), pas de mesure.</td>
+</tr>
+</tbody>
+</table>
+<h3>1.2 Ce qui passe réellement dans intervals.icu (HealthFit)</h3>
+<ul>
+<li><strong>Les séances</strong> : HealthFit « reflète Apple Santé », qui est sa seule source de vérité, et exporte un fichier FIT. Je n'ai trouvé <strong>aucune documentation primaire</strong> de son contenu (fréquence d'échantillonnage de la FC, puissance, dynamique de foulée, tours) <a class="cite" href="#src-15">[15]</a><a class="cite" href="#src-19">[19]</a>. C'est le <strong>trou principal</strong> de cette partie ; il se comble par un test empirique, pas par de la recherche (§9).</li>
+<li><strong>Le bien-être</strong> : HealthFit synchronise la VFC (SDNN, dans un champ intervals.icu dédié), le sommeil, le poids et la SpO2 avec un réglage « Synchronisation automatique ». En 2021, des utilisateurs signalaient que la VFC envoyée était une <strong>moyenne de la journée</strong> et non la valeur nocturne ; je n'ai pas trouvé de réponse du développeur <a class="cite" href="#src-15">[15]</a>. Alternative : IntervalsWellnessSync (2026) ne prend la VFC et la FC de repos <strong>que pendant le sommeil</strong> <a class="cite" href="#src-20">[20]</a> (information éditeur, confiance faible à moyenne).</li>
+<li><strong>Les séances planifiées</strong> : HealthFit importe les séances planifiées d'intervals.icu (disponible depuis octobre 2025), et depuis mars 2026 il faut l'abonnement <strong>« Fanatical Supporter »</strong> (9,99 $ sur l'App Store) <a class="cite" href="#src-18">[18]</a><a class="cite" href="#src-19">[19]</a>. Un utilisateur a signalé des séances absentes de la montre. Ni le mécanisme (WorkoutKit) ni les cibles prises en charge (allure, FC, puissance) ne sont documentés <a class="cite" href="#src-18">[18]</a>.</li>
+<li><strong>La « VFC de récupération »</strong> de HealthFit (12.16, octobre 2026) exige une Series 12 ou une Ultra 4 <a class="cite" href="#src-19">[19]</a> : <strong>elle n'est pas disponible sur une Series 10</strong>.</li>
+</ul>
+<h3>1.3 À retenir pour la décision</h3>
+<p>L'allure, la FC en effort stable, la durée de sommeil et la FC de repos sont les données sur lesquelles on peut construire. La VO2max et la VFC se lisent en <strong>tendance individuelle</strong>. La puissance, la dynamique de foulée, les stades de sommeil et les scores Apple (sommeil, effort) restent <strong>descriptifs</strong>. Les règles de VFC publiées (calibrées sur RMSSD) ne se transposent pas directement au SDNN d'Apple.</p>
+<h2 id="s2">2. Glossaire et modèles mentaux</h2>
+<p><strong>Question :</strong> quel vocabulaire faut-il maîtriser pour lire les données et écrire les règles de l'app ? Les entrées marquées <em><span class="b unv">(non vérifié)</span></em> reposent sur des connaissances générales que je n'ai pas pu sourcer pendant cette recherche : elles sont à confirmer avant d'être codées.</p>
+<h3>2.1 Le modèle central : les trois domaines d'intensité</h3>
+<p>La physiologie moderne découpe l'effort en <strong>trois domaines</strong> séparés par deux seuils <a class="cite" href="#src-25">[25]</a> :</p>
+<ul>
+<li><strong>Modéré</strong>, sous le 1er seuil (LT1 / VT1, « seuil aérobie ») : footing, sortie longue. Lactate stable et bas.</li>
+<li><strong>Lourd</strong>, entre les deux seuils : tempo, allure semi-marathon / marathon. Un état stable reste possible.</li>
+<li><strong>Sévère</strong>, au-dessus du 2e seuil, la <strong>vitesse critique (CS)</strong> : fractionné VO2max. Plus d'état stable, l'épuisement arrive en quelques minutes.</li>
+</ul>
+<p>Deux conséquences directes pour l'app. <strong>(1)</strong> Les <strong>pourcentages fixes de FC max ou de VO2max placent mal les gens dans ces domaines</strong> ; seule la CS (ou la puissance critique) délimite de façon fiable la frontière lourd/sévère <a class="cite" href="#src-25">[25]</a>. Il faut donc ancrer les zones sur un <strong>seuil mesuré</strong> (CS, allure seuil, FC au seuil), pas sur « 220 − âge ». <strong>(2)</strong> Les différentes définitions du « seuil » (MLSS, 4 mmol, LT2, CS) <strong>ne sont pas interchangeables</strong> : la MLSS est inférieure à la CS <a class="cite" href="#src-24">[24]</a><a class="cite" href="#src-25">[25]</a>. L'app doit choisir <strong>un</strong> ancrage et le nommer.</p>
+<h3>2.2 Glossaire</h3>
+<table>
+<thead>
+<tr>
+<th>Terme</th>
+<th>Définition opérationnelle</th>
+<th>Mesure / formule</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>VO2max</strong></td>
+<td>Débit maximal d'oxygène consommé (ml/kg/min).</td>
+<td>Labo : test progressif avec analyse des gaz. Montre : estimation sous-maximale (voir §1). La CS se situe vers 70–90 % de la VO2max.</td>
+<td><a class="cite" href="#src-23">[23]</a> ; valeurs typiques <em><span class="b unv">(non vérifié)</span></em></td>
+</tr>
+<tr>
+<td><strong>vVO2max / VMA</strong></td>
+<td>Vitesse minimale qui sollicite la VO2max ; elle combine VO2max et économie de course. Tenable environ 4–8 min (Tlim, très variable d'un individu à l'autre).</td>
+<td>Terrain : test VAMEVAL / Léger-Boucher, 5–6 min à fond <em><span class="b unv">(non vérifié)</span></em>. La VMA de terrain n'est pas strictement égale à la vVO2max de labo.</td>
+<td><a class="cite" href="#src-32">[32]</a></td>
+</tr>
+<tr>
+<td><strong>Économie de course</strong></td>
+<td>Coût en O2 à une vitesse sous-maximale donnée ; fort prédicteur de performance, entraînable.</td>
+<td>Labo uniquement.</td>
+<td><a class="cite" href="#src-33">[33]</a></td>
+</tr>
+<tr>
+<td><strong>LT1 / VT1</strong></td>
+<td>1re hausse durable du lactate, 1re cassure ventilatoire ; frontière modéré/lourd.</td>
+<td>Labo ; la montre ne peut que l'estimer.</td>
+<td><a class="cite" href="#src-25">[25]</a></td>
+</tr>
+<tr>
+<td><strong>LT2 / VT2 / « seuil anaérobie »</strong></td>
+<td>2e seuil ; ses définitions varient (4 mmol, Dmax, MLSS) et ne sont pas interchangeables.</td>
+<td>Labo.</td>
+<td><a class="cite" href="#src-25">[25]</a></td>
+</tr>
+<tr>
+<td><strong>MLSS</strong></td>
+<td>Plus haute intensité où le lactate reste stable sur 30 min.</td>
+<td>4–5 tests de 30 min, impraticable pour l'app.</td>
+<td><a class="cite" href="#src-24">[24]</a></td>
+</tr>
+<tr>
+<td><strong>Vitesse critique (CS) et D′</strong></td>
+<td>CS : vitesse la plus haute tenable sans puiser dans une réserve finie D′ (en mètres) ; frontière lourd/sévère. Meilleur indice de l'état stable métabolique maximal.</td>
+<td><strong>d = CS·t + D′</strong> (régression distance-temps sur au moins 3 efforts maximaux de 2 à 15 min). Calculable à partir des données d'entraînement (§6).</td>
+<td><a class="cite" href="#src-23">[23]</a><a class="cite" href="#src-24">[24]</a></td>
+</tr>
+<tr>
+<td><strong>FC max</strong></td>
+<td>FC maximale atteinte.</td>
+<td><strong>Tanaka : 208 − 0,7 × âge</strong> (erreur type d'environ 10 bpm) ; « 220 − âge » est moins bon. <strong>Une FC max observée doit primer sur toute formule.</strong></td>
+<td><a class="cite" href="#src-26">[26]</a></td>
+</tr>
+<tr>
+<td><strong>Réserve cardiaque (Karvonen)</strong></td>
+<td>Fraction = (FC − FC repos) / (FC max − FC repos). FC cible = FC repos + % × (FC max − FC repos).</td>
+<td>Formule HRR sourcée ; l'attribution à Karvonen n'est pas vérifiée.</td>
+<td><a class="cite" href="#src-27">[27]</a></td>
+</tr>
+<tr>
+<td><strong>FC au seuil (LTHR)</strong></td>
+<td>FC tenable environ 1 h.</td>
+<td>Protocole actuel de Friel : 20 min seul à fond, moyenne − 5 %. Ses anciens ouvrages décrivent un test de 30 min (moyenne des 20 dernières) : <strong>les deux protocoles diffèrent, ne pas les mélanger.</strong> L'erreur du test de 30 min est d'environ 8 bpm (§6).</td>
+<td><a class="cite" href="#src-35">[35]</a></td>
+</tr>
+<tr>
+<td><strong>Zones (modèle à 3 zones de Seiler)</strong></td>
+<td>Z1 ≤ LT1 (≈ 2 mmol), Z2 entre LT1 et LT2, Z3 &gt; LT2 (≈ 4 mmol). Les élites font environ 80 % de leur volume en Z1.</td>
+<td>Les modèles à 5 zones (Friel) ou 7 zones (Coggan) sont des subdivisions.</td>
+<td><a class="cite" href="#src-37">[37]</a></td>
+</tr>
+<tr>
+<td><strong>VDOT (Daniels)</strong></td>
+<td>« Pseudo-VO2max » dérivée d'un résultat de course, qui donne les allures E / M / T / I / R.</td>
+<td>Équations Daniels-Gilbert (1979), vitesse en m/min. <strong>Coefficients relevés uniquement sur un calculateur secondaire.</strong> Les % de chaque allure ne sont pas vérifiés.</td>
+<td><a class="cite" href="#src-38">[38]</a> (faible)</td>
+</tr>
+<tr>
+<td><strong>RPE (Borg CR10)</strong></td>
+<td>Effort perçu sur une échelle de 0 à 10 ; la version CR-10 modifiée sert au sRPE.</td>
+<td>Recueilli 15 à 30 min après la séance.</td>
+<td><a class="cite" href="#src-27">[27]</a></td>
+</tr>
+<tr>
+<td><strong>sRPE (Foster)</strong></td>
+<td>Charge = RPE × durée (min).</td>
+<td>Corrélation avec les TRIMP de r ≈ 0,46 à 0,96 au sein d'un même individu.</td>
+<td><a class="cite" href="#src-27">[27]</a></td>
+</tr>
+<tr>
+<td><strong>TRIMP de Banister</strong></td>
+<td>Charge FC exponentielle.</td>
+<td><strong>TRIMP = D × HRR × A × e^(B×HRR)</strong> ; hommes A = 0,64, B = 1,92 ; femmes A = 0,86, B = 1,67.</td>
+<td><a class="cite" href="#src-27">[27]</a></td>
+</tr>
+<tr>
+<td><strong>TRIMP d'Edwards</strong></td>
+<td>Σ minutes par zone × poids (1 à 5, par tranches de 10 % de la FC max à partir de 50 %).</td>
+<td></td>
+<td><a class="cite" href="#src-27">[27]</a></td>
+</tr>
+<tr>
+<td><strong>TSS / rTSS / hrTSS</strong></td>
+<td>Charge TrainingPeaks : 1 h au seuil = 100 ; variantes puissance, allure (rTSS, sur NGP) et FC (hrTSS, la moins précise selon l'éditeur).</td>
+<td></td>
+<td><a class="cite" href="#src-29">[29]</a></td>
+</tr>
+<tr>
+<td><strong>Charge intervals.icu (allure)</strong></td>
+<td><strong>Charge = heures en mouvement × IF² × 100</strong>, avec IF = vitesse GAP moyenne / vitesse seuil. Variante FC (HRSS) : un TRIMP normalisé, 100 = 1 h au seuil, qui exige FC repos et LTHR. La priorité puissance / allure / FC se règle par sport.</td>
+<td>Code publié par le développeur en 2022, à revérifier ; l'équation exacte du HRSS n'est pas publiée.</td>
+<td><a class="cite" href="#src-39">[39]</a><a class="cite" href="#src-40">[40]</a></td>
+</tr>
+<tr>
+<td><strong>CTL / ATL / TSB = Fitness / Fatigue / Form</strong></td>
+<td>Moyennes exponentielles de la charge sur 42 j (fitness) et 7 j (fatigue) ; Form = Fitness − Fatigue. <strong>Dans intervals.icu, Form se calcule le jour même</strong> (TrainingPeaks utilise la veille), et les constantes sont modifiables.</td>
+<td>Form en % = (Fitness − Fatigue) × 100 / Fitness.</td>
+<td><a class="cite" href="#src-29">[29]</a><a class="cite" href="#src-41">[41]</a></td>
+</tr>
+<tr>
+<td><strong>Ramp rate</strong></td>
+<td>Variation de la CTL sur environ 7 j. Pas de seuil numérique publié par l'éditeur.</td>
+<td></td>
+<td><a class="cite" href="#src-29">[29]</a></td>
+</tr>
+<tr>
+<td><strong>ACWR</strong></td>
+<td>Charge aiguë (7 j) / chronique (28 j). <strong>Très contesté</strong> (voir §4).</td>
+<td></td>
+<td><a class="cite" href="#src-42">[42]</a></td>
+</tr>
+<tr>
+<td><strong>Monotonie / contrainte (Foster)</strong></td>
+<td>Monotonie = moyenne / écart-type de la charge quotidienne sur une semaine ; contrainte (strain) = charge hebdo × monotonie. Les seuils de maladie étaient <strong>individuels</strong> ; le seuil courant « monotonie &gt; 2 » n'est pas retrouvé dans le résumé de l'article.</td>
+<td></td>
+<td><a class="cite" href="#src-30">[30]</a></td>
+</tr>
+<tr>
+<td><strong>Dérive cardiaque</strong></td>
+<td>À effort constant, la FC monte après 10–20 min (débit systolique en baisse), d'autant plus avec la déshydratation. <strong>Les zones FC surestiment donc l'intensité en fin de sortie longue.</strong></td>
+<td></td>
+<td><a class="cite" href="#src-34">[34]</a></td>
+</tr>
+<tr>
+<td><strong>Découplage (Pa:HR)</strong></td>
+<td>Écart du ratio allure/FC entre la 1re et la 2e moitié d'une séance stable.</td>
+<td>(ratio 1re moitié − ratio 2e moitié) / ratio 1re moitié.</td>
+<td><a class="cite" href="#src-29">[29]</a><a class="cite" href="#src-41">[41]</a></td>
+</tr>
+<tr>
+<td><strong>Facteur d'efficience (EF)</strong></td>
+<td>Allure normalisée (NGP) ÷ FC moyenne ; <strong>une hausse</strong> à séances comparables signifie un progrès.</td>
+<td></td>
+<td><a class="cite" href="#src-29">[29]</a></td>
+</tr>
+<tr>
+<td><strong>Indice de polarisation</strong></td>
+<td>PI = log10((Z1/Z2) × Z3 × 100), où Zi est la fraction du volume dans la zone i ; PI &gt; 2 = polarisé. intervals.icu regroupe S1 = Z1+Z2, S2 = Z3+Z4, S3 = Z5+. <em>Formule à vérifier dans Treff 2019 avant de coder : les deux synthèses divergent.</em></td>
+<td></td>
+<td><a class="cite" href="#src-36">[36]</a><a class="cite" href="#src-43">[43]</a></td>
+</tr>
+<tr>
+<td><strong>VFC : SDNN vs RMSSD</strong></td>
+<td><strong>RMSSD</strong> : indice principal du tonus vagal (parasympathique), stable sur 1 à 5 min ; c'est l'indice des protocoles de « readiness ». <strong>SDNN</strong> : variabilité totale, sympathique et parasympathique ; la norme clinique se mesure sur 24 h. Sur une fenêtre ultra-courte au repos (le cas Apple), il reflète surtout l'arythmie respiratoire vagale, et <strong>ses normes ne sont pas comparables</strong> aux normes 24 h.</td>
+<td>RMSSD = √(moyenne((NNᵢ₊₁ − NNᵢ)²)).</td>
+<td><a class="cite" href="#src-28">[28]</a></td>
+</tr>
+<tr>
+<td><strong>Surmenage : FOR / NFOR / OTS</strong></td>
+<td>Un continuum. Le surmenage fonctionnel (FOR) est une baisse de quelques jours suivie d'une surcompensation. Le surmenage non fonctionnel (NFOR) est une stagnation de plusieurs semaines à plusieurs mois. Le syndrome de surentraînement (OTS) dure plus de 2 mois et se diagnostique par exclusion. <strong>Aucun marqueur isolé ne suffit.</strong></td>
+<td></td>
+<td><a class="cite" href="#src-31">[31]</a></td>
+</tr>
+<tr>
+<td><strong>Affûtage (taper)</strong></td>
+<td>2 semaines (jusqu'à 3), volume réduit de 41 à 60 %, <strong>intensité et fréquence maintenues</strong>.</td>
+<td></td>
+<td><a class="cite" href="#src-44">[44]</a></td>
+</tr>
+<tr>
+<td><strong>Périodisation</strong></td>
+<td>Traditionnelle : plusieurs qualités travaillées en parallèle. Par blocs (Issurin) : qualités travaillées successivement, avec une base de preuves jugée faible par Kiely. La distribution d'intensité (polarisée, pyramidale) n'est <strong>pas</strong> un modèle de périodisation.</td>
+<td></td>
+<td><a class="cite" href="#src-45">[45]</a></td>
+</tr>
+<tr>
+<td><strong>Types de séances</strong></td>
+<td>Footing (Z1, conversationnel), sortie longue, tempo / seuil, fractionné VO2max (3–5 min à vVO2max), répétitions (courtes et rapides), lignes droites, fartlek, progressive.</td>
+<td><em><span class="b unv">(non vérifié)</span></em>, à reprendre dans <em>Daniels' Running Formula</em>.</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<h2 id="s3">3. Méthodes d'entraînement : ce que disent les preuves et comment choisir</h2>
+<p><strong>Question :</strong> quelles méthodes reposent sur des preuves, pour qui, et quelle règle de sélection automatique est défendable ?</p>
+<h3>3.1 Distribution de l'intensité : polarisé, pyramidal ou seuil</h3>
+<ul>
+<li><strong>Polarisé et pyramidal donnent des résultats équivalents.</strong> La méta-analyse sur données individuelles de Rosenblat et al. (2025 ; 13 études, 348 athlètes) ne trouve aucune différence sur la VO2max (SMD 0,06, p = 0,68) ni sur les contre-la-montre (SMD 0,05, p = 0,34) <a class="cite" href="#src-46">[46]</a>. Oliveira et al. (2024 ; 17 études) trouvent un léger avantage du polarisé sur la VO2peak, limité aux athlètes très entraînés et aux protocoles de moins de 12 semaines, et aucun avantage sur la performance <a class="cite" href="#src-47">[47]</a>. Rosenblat critique la méthode d'Oliveira (participants comptés deux fois, regroupement d'interventions hétérogènes) <a class="cite" href="#src-46">[46]</a>. <em><span class="b hi">Confiance : élevée</span> sur « peu de différence ».</em></li>
+<li><strong>La nuance « pyramidal pour les amateurs » est fragile.</strong> Le sous-groupe récréatif penche vers le pyramidal (SMD 0,32, IC −0,14 à 0,79, <strong>p = 0,18, <span class="b unv">non significatif</span></strong>). Il repose sur environ 5 petites études, dont 2 non randomisées, et l'effet du niveau ne se distingue pas de celui de la VO2max de départ <a class="cite" href="#src-46">[46]</a>. <em>À présenter comme une tendance, pas comme un fait.</em></li>
+<li><strong>Trop de seuil fait moins bien.</strong> Une distribution dominée par la zone 2 du modèle à 3 zones (entre les deux seuils) fait moins bien que le polarisé ou le pyramidal <a class="cite" href="#src-48">[48]</a>. Un essai randomisé chez des amateurs (10 km) a donné l'avantage au polarisé sur l'entraînement « entre les seuils » ; c'est un seul laboratoire <a class="cite" href="#src-49">[49]</a>.</li>
+<li><strong>Repère de volume.</strong> Au moins environ 70 % du volume à basse intensité et au plus 30 % au seuil ou en fractionné pour les coureurs de demi-fond et de fond <a class="cite" href="#src-50">[50]</a> <em>(<span class="b med">confiance moyenne</span>, résumé seul)</em>.</li>
+<li><strong>Ce qui est prescrit n'est pas ce qui est fait.</strong> Mesurée à la FC, la distribution réellement suivie par les participants dérivait vers le pyramidal, quelle que soit celle qui leur avait été prescrite. Il faut donc <strong>suivre la charge réalisée</strong>, et l'allure quand elle est disponible <a class="cite" href="#src-46">[46]</a>.</li>
+</ul>
+<h3>3.2 Les méthodes « de marque »</h3>
+<table>
+<thead>
+<tr>
+<th>Méthode</th>
+<th>Principe</th>
+<th>Niveau de preuve</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Daniels (VDOT)</strong></td>
+<td>Un résultat de course donne le VDOT, qui donne 5 allures (E/M/T/I/R). En général 2 séances de qualité + une sortie longue par semaine, avec des plafonds par séance (T ≤ 10 % du volume hebdo, I ≤ 8 %, R ≤ 5 %).</td>
+<td>Système de coaching ; aucun essai sur le « package » <a class="cite" href="#src-51">[51]</a> (source secondaire).</td>
+</tr>
+<tr>
+<td><strong>80/20 (Fitzgerald)</strong></td>
+<td>Environ 80 % bas / 20 % modéré à élevé, avec des zones ancrées sur le seuil. Plans par niveau 0 à 3 selon l'expérience.</td>
+<td>Inspirée des données d'élites (Seiler) ; pas d'essai direct <a class="cite" href="#src-52">[52]</a>.</td>
+</tr>
+<tr>
+<td><strong>Norvégienne (double seuil)</strong></td>
+<td>Gros volume facile + 3–4 séances au seuil guidées par la lactatémie (≈ 2–4,5 mmol).</td>
+<td>Description élite ; ses auteurs disent eux-mêmes que des essais contrôlés manquent. La version « singles » pour amateurs n'existe que sur des blogs <a class="cite" href="#src-53">[53]</a>.</td>
+</tr>
+<tr>
+<td><strong>MAF (180 − âge)</strong></td>
+<td>Plafond de FC pour tout le travail aérobie.</td>
+<td>Formule <strong>non validée</strong> ; le seul article publié est une « hypothèse » <a class="cite" href="#src-54">[54]</a>.</td>
+</tr>
+<tr>
+<td><strong>Course-marche (Galloway)</strong></td>
+<td>Pauses de marche régulières.</td>
+<td>Un essai randomisé (marathon, n = 42) : temps similaires, moins de douleurs musculaires après la course <a class="cite" href="#src-55">[55]</a>.</td>
+</tr>
+<tr>
+<td><strong>Pfitzinger, Hansons, Lydiard</strong></td>
+<td>Systèmes de coaching marathon.</td>
+<td>Sources primaires non consultées pendant cette recherche.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Aucun algorithme publié ne choisit une méthode à partir du profil du coureur.</strong> Le plus proche, ce sont les niveaux d'entrée du 80/20 et le sous-groupe de Rosenblat <a class="cite" href="#src-46">[46]</a><a class="cite" href="#src-52">[52]</a>.</p>
+<h3>3.3 Affûtage et structure de plan</h3>
+<ul>
+<li><strong>Affûtage :</strong> 2 semaines (jusqu'à 3 pour le marathon), volume réduit de 41 à 60 %, intensité et fréquence maintenues. Le résultat est confirmé par une méta-analyse de 2023 limitée aux sports d'endurance <a class="cite" href="#src-44">[44]</a><a class="cite" href="#src-56">[56]</a>. <em><span class="b hi">Confiance élevée</span>.</em></li>
+<li><strong>Structure :</strong> trois repères courants relèvent de la <strong>convention de coaching</strong>, pas de la preuve <a class="cite" href="#src-57">[57]</a> : une sortie longue d'environ 25–30 % du volume hebdomadaire et d'au plus 2 h 30 à 3 h ; des plans de 12 à 18 semaines pour le marathon ; une semaine allégée toutes les 3 à 4 semaines. Je n'ai pas trouvé d'étude sur la durée optimale d'un plan selon la distance ni sur le nombre de séances de qualité.</li>
+</ul>
+<h3>3.4 Les plans générés par IA : erreurs connues</h3>
+<ul>
+<li><strong>Quand ChatGPT (génération GPT-3.5, 2023) écrit des plans</strong>, la note médiane des experts passe de 2 à 3 puis 4 sur 5 à mesure que les informations fournies s'enrichissent, et aucun plan n'est jugé optimal. <strong>Les experts relèvent notamment une progression trop rapide</strong> (risque de blessure). S'y ajoutent un dépistage santé et un suivi jugés seulement neutres, l'absence de questions de clarification et des conseils populaires mais non étayés <a class="cite" href="#src-58">[58]</a>. <em>Le résultat porte sur un modèle ancien ; sa transposition aux modèles de 2026 est incertaine.</em></li>
+<li><strong>Une étude de cas sur un semi-marathon (2025, n = 1, prépublication)</strong> relève un taux d'adhérence de 70 à 80 %. Elle pointe trois failles : des garde-fous appliqués <strong>seulement dans la conversation, jamais imposés</strong> ; <strong>aucune mémoire persistante de l'athlète</strong> ; une motivation laissée à l'initiative de l'utilisateur. Elle recommande d'associer à chaque consigne <strong>une raison courte et les sensations attendues</strong> <a class="cite" href="#src-59">[59]</a>.</li>
+<li><strong>Sur le format du feedback</strong>, les données sont minces. Ajouter du feedback à l'auto-suivi augmente l'activité physique (d = 0,29), mais aucun format ne ressort comme meilleur <a class="cite" href="#src-60">[60]</a>. Dans un essai de 4 semaines (N = 54, prépublication CHI 2026), un coach GPT-4o n'augmente pas plus l'activité qu'une app sans LLM, mais améliore l'état d'esprit et l'engagement ; ses auteurs proposent une taxonomie des risques (surmenage, image du corps, conseils hors de portée) <a class="cite" href="#src-61">[61]</a>.</li>
+</ul>
+<h2 id="s4">4. Charge, fatigue et récupération : quels signaux, quels seuils</h2>
+<p><strong>Question :</strong> quels modèles et quels seuils sont assez solides pour déclencher une alerte de surmenage et proposer un ajustement du plan ?</p>
+<h3>4.1 Le modèle Fitness / Fatigue / Form (Banister, CTL/ATL/TSB)</h3>
+<ul>
+<li><strong>Ce qu'il est.</strong> Fitness et Fatigue sont deux moyennes exponentielles de la charge, sur 42 et 7 jours ; Form en est la différence. intervals.icu la calcule <strong>le jour même</strong>, et les deux constantes sont modifiables <a class="cite" href="#src-41">[41]</a>.</li>
+<li><strong>Ce qu'il vaut.</strong> Malgré plus de 45 ans d'usage, sa validité est mal étudiée. Ses paramètres sont instables et mal conditionnés <a class="cite" href="#src-62">[62]</a>, et en simulation, un bruit de mesure de plus de 4 % rend ses prédictions insatisfaisantes <a class="cite" href="#src-63">[63]</a>. <em><span class="b med">Confiance moyenne</span>.</em></li>
+<li><strong>Les zones de Form ne reposent sur aucune donnée.</strong> Le développeur d'intervals.icu explique que les zones viennent de Joe Friel, qui les a définies pour un TSB absolu. Le développeur les a lui-même appliquées à la Form exprimée en %, et les décrit comme <strong>« une règle empirique plutôt que de la science »</strong> <a class="cite" href="#src-64">[64]</a>. Par défaut, la frontière entre la zone verte et la zone rouge est à −30 <a class="cite" href="#src-41">[41]</a>.</li>
+<li><strong>Conclusion pour l'app :</strong> utiliser Fitness / Fatigue / Form <strong>pour décrire</strong> la tendance de charge et pour planifier la progression, <strong>pas comme détecteur de surmenage</strong> à lui seul.</li>
+</ul>
+<h3>4.2 L'ACWR : à ne pas utiliser comme prédicteur de blessure</h3>
+<ul>
+<li><strong>Les critiques.</strong> Le ratio crée un couplage mathématique entre ses deux termes, puisque la charge aiguë fait partie de la charge chronique <a class="cite" href="#src-42">[42]</a>. La courbe en U de la « zone idéale 0,8–1,3 » n'est apparue qu'après l'ajout de données AFL non publiées <a class="cite" href="#src-42">[42]</a>. En simulation, l'ACWR reste « associé » aux blessures même quand celles-ci en sont indépendantes par construction <a class="cite" href="#src-42">[42]</a>. L'Australian Institute of Sport recommande de ne pas l'utiliser comme indicateur de risque <a class="cite" href="#src-42">[42]</a>.</li>
+<li><strong>Les données de course le confirment.</strong> Dans la cohorte Garmin-RUNSAFE, l'ACWR n'était pas associé aux blessures dans le sens attendu <a class="cite" href="#src-65">[65]</a>.</li>
+<li><strong>Il existe un camp opposé</strong>, minoritaire : un éditorial de 2021 rappelle que la littérature reste disputée <a class="cite" href="#src-66">[66]</a>. <em>Le consensus actuel est défavorable.</em></li>
+</ul>
+<h3>4.3 VFC : ce que valent les protocoles, et pourquoi ils se transposent mal à Apple</h3>
+<ul>
+<li><strong>L'entraînement guidé par la VFC apporte au mieux un petit avantage.</strong> Trois méta-analyses vont dans ce sens. Granero-Gallegos (2020) trouve un petit effet positif sur la VO2max (ES 0,40), plus marqué chez les amateurs et les femmes <a class="cite" href="#src-67">[67]</a>. Düking (2021) trouve des effets petits et <span class="b unv">non significatif</span>s sur la performance, mais <strong>moins de non-répondeurs</strong> <a class="cite" href="#src-68">[68]</a>. Manresa-Rocamora (2021) trouve des effets petits et <span class="b unv">non significatif</span>s : « si c'est supérieur, c'est de peu » <a class="cite" href="#src-69">[69]</a>. <em>Les résultats sont discordants sur la significativité et convergent sur la petitesse de l'effet.</em> Je n'ai trouvé aucune méta-analyse publiée de 2024 à 2026.</li>
+<li><strong>La méthode de référence</strong> suit la moyenne glissante sur 7 jours du ln(RMSSD), <strong>mesuré au réveil</strong>, et la compare à la variation individuelle <a class="cite" href="#src-71">[71]</a>. Le « plus petit changement important » vaut 0,5 × CV (coefficient de variation individuel) (Le Meur) ou 1 × CV (Plews). Buchheit précise toutefois : <em>« rien ne prouve actuellement qu'un changement supérieur à une quelconque fraction du CV soit réellement significatif en pratique »</em> <a class="cite" href="#src-70">[70]</a>. D'un jour à l'autre, le ln(RMSSD) varie de 10 à 20 % et la FC de repos d'environ 10 %. Il faut donc moyenner <strong>au moins 3 à 4 jours</strong> <a class="cite" href="#src-70">[70]</a>.</li>
+<li><strong>Le problème Apple, en trois points :</strong>
+  1. <strong>SDNN au lieu de RMSSD.</strong> Sur des mesures courtes au repos, les deux donnent « globalement le même type de résultats » <a class="cite" href="#src-22">[22]</a>, mais les règles publiées sont calibrées sur le RMSSD <a class="cite" href="#src-70">[70]</a>.
+  2. <strong>La mesure est biaisée.</strong> Les Series 9 et Ultra 2 <strong>sous-estiment le SDNN de 8,3 ms</strong> en moyenne face à une ceinture Polar H10, hors de la marge d'équivalence de ±10 ms. <strong>La FC de repos, elle, concorde à −0,08 bpm</strong> <a class="cite" href="#src-72">[72]</a>. Je n'ai trouvé <strong>aucune validation nocturne</strong> du SDNN Apple <a class="cite" href="#src-72">[72]</a><a class="cite" href="#src-73">[73]</a>.
+  3. <strong>L'échantillonnage est irrégulier et opaque</strong> <a class="cite" href="#src-22">[22]</a>. Une mesure environ toutes les 2 h pendant le sommeil, selon un blog d'éditeur <span class="b unv">non vérifié</span> <a class="cite" href="#src-113">[113]</a>.</li>
+</ul>
+<p>Un praticien juge la mesure nocturne Apple peu adaptée au suivi de l'entraînement et recommande une mesure le matin <a class="cite" href="#src-74">[74]</a> (source praticien, intérêt commercial).
+- <strong>Conclusion pour l'app.</strong> La <strong>FC de repos est mieux mesurée que la VFC</strong> sur Apple Watch. La VFC ne doit compter que comme <strong>un signal parmi d'autres</strong>, et seulement en écart à sa propre ligne de base sur au moins 7 jours, jamais seule ni en valeur absolue.</p>
+<h3>4.4 FC de repos, sommeil, ressenti : les signaux complémentaires</h3>
+<ul>
+<li><strong>FC de repos.</strong> Je n'ai trouvé <strong>aucun seuil en bpm qui soit sourcé</strong> : le « +5 bpm » courant n'a pas de source primaire. Buchheit raisonne en CV individuel, avec un plus petit changement d'environ −2 % pour une adaptation positive, et avertit qu'<em>« une FC élevée ne doit pas être utilisée comme marqueur clair de fatigue »</em>. Une FC en hausse <strong>accompagnée</strong> d'une VFC en baisse suggère une fatigue accumulée <a class="cite" href="#src-70">[70]</a>.</li>
+<li><strong>Sommeil.</strong> Chez des adolescents, dormir moins de 8 h multipliait les risques de blessure par 1,7 (IC 1,0–3,0 ; étude rétrospective et faible) <a class="cite" href="#src-75">[75]</a>. Il n'existe pas de seuil validé chez l'adulte coureur.</li>
+<li><strong>Le ressenti bat les capteurs.</strong> Une revue systématique de 56 études conclut que les mesures subjectives de bien-être suivent la charge aiguë et chronique <strong>avec plus de sensibilité et de régularité</strong> que les mesures objectives, et que les deux types de mesures concordent rarement <a class="cite" href="#src-76">[76]</a>. <em><span class="b hi">Confiance élevée</span>.</em> Ta question de ressenti (😌 / 😐 / 🥵) s'appuie sur ce principe, mais c'est une version simplifiée à 3 niveaux, que la revue n'a pas testée.</li>
+<li><strong>Surmenage.</strong> Selon le consensus ECSS/ACSM, <strong>aucun marqueur ne remplit tous les critères</strong>, et le diagnostic passe par l'exclusion d'autres causes (maladie, infection) <a class="cite" href="#src-31">[31]</a>. Une app ne diagnostique pas : elle <strong>signale</strong> une tendance qui converge.</li>
+<li><strong>Monotonie / contrainte (Foster).</strong> Les seuils associés à la maladie étaient <strong>individuels</strong> ; je n'ai pas retrouvé le « &gt; 2 » souvent cité <a class="cite" href="#src-30">[30]</a>.</li>
+</ul>
+<h3>4.5 Une logique de concordance défendable</h3>
+<p>Rien dans la littérature ne fixe une règle numérique validée. La structure la plus défendable combine ce que les sources soutiennent, et c'est celle qu'Apple applique elle-même dans Vitals, qui alerte quand <strong>plusieurs</strong> métriques sortent de leur plage personnelle sur 7 nuits <a class="cite" href="#src-11">[11]</a> :</p>
+<ol>
+<li><strong>Une ligne de base personnelle</strong> de 4 semaines ou plus pour la FC de repos, la VFC et la durée de sommeil <a class="cite" href="#src-114">[114]</a>, avec moyenne glissante sur 7 jours <a class="cite" href="#src-71">[71]</a><a class="cite" href="#src-11">[11]</a>.</li>
+<li><strong>Un signal</strong> = une moyenne sur 7 jours sortie de la plage de variation individuelle (seuil à 0,5–1 × CV, à calibrer et non à imposer) <a class="cite" href="#src-70">[70]</a>.</li>
+<li><strong>Une alerte</strong> = au moins 2 signaux objectifs qui concordent, <strong>plus</strong> un ressenti dégradé sur plusieurs séances. Ce nombre est un <strong>choix de conception</strong> : les sources soutiennent la combinaison de plusieurs marqueurs <a class="cite" href="#src-31">[31]</a><a class="cite" href="#src-70">[70]</a><a class="cite" href="#src-76">[76]</a>, et Apple applique le même principe dans Vitals (« plusieurs métriques ») <a class="cite" href="#src-11">[11]</a>. Un signal isolé est seulement affiché.</li>
+<li><strong>Les seuils de cette règle sont des paramètres de conception, pas des faits</strong> : ils sont à calibrer sur tes propres données.</li>
+</ol>
+<h2 id="s5">5. Prévention des blessures et gestion des imprévus</h2>
+<p><strong>Question :</strong> quelles règles le générateur de plan et le module « Empêchement » doivent-ils imposer ?</p>
+<h3>5.1 Le risque de base</h3>
+<ul>
+<li><strong>Fréquence.</strong> Un coureur débutant se blesse environ 17,8 fois par 1 000 h de course, un coureur loisir environ 7,7 fois <a class="cite" href="#src-77">[77]</a>. Environ 40 % des coureurs se blessent. Les blessures les plus fréquentes sont la tendinopathie d'Achille, le syndrome tibial médial, le syndrome fémoro-patellaire et la fasciite plantaire <a class="cite" href="#src-78">[78]</a>.</li>
+<li><strong>Le facteur de risque le plus constant est une blessure antérieure</strong> ; deux revues indépendantes concordent sur ce point <a class="cite" href="#src-79">[79]</a><a class="cite" href="#src-80">[80]</a>. Les facteurs biomécaniques ne sont pas confirmés chez les non-élites <a class="cite" href="#src-81">[81]</a>.</li>
+<li><strong>Le renforcement musculaire</strong> réduit les blessures tous sports confondus : elles tombent à moins d'un tiers, et les blessures de surcharge baissent de près de moitié <a class="cite" href="#src-82">[82]</a>. Les essais propres à la course sont <strong>mitigés</strong> : un programme hanches et tronc a protégé des débutants, un programme pied et cheville non <a class="cite" href="#src-83">[83]</a>.</li>
+</ul>
+<h3>5.2 La règle de progression : par sortie, pas par semaine</h3>
+<ul>
+<li><strong>La meilleure donnée actuelle est la cohorte Garmin-RUNSAFE</strong> (5 205 coureurs, 18 mois, 588 071 séances). Elle compare chaque sortie à <strong>la plus longue des 30 jours précédents</strong> et trouve un risque de blessure de surcharge accru dès +10 % : rapport de risque (<em>hazard rate ratio</em>) 1,64 pour +10 à 30 %, 1,52 pour +30 à 100 %, 2,28 au-delà de +100 % <a class="cite" href="#src-65">[65]</a>. Même entre +1 et +10 %, la tendance est défavorable, mais non significative (1,19). Les auteurs conseillent donc de rester <strong>sous 10 %</strong>, et même « bien en dessous » <a class="cite" href="#src-65">[65]</a>.</li>
+<li><strong>L'évolution d'une semaine à l'autre n'était pas associée aux blessures</strong> dans cette cohorte <a class="cite" href="#src-65">[65]</a>. Cela rejoint l'essai GRONORUN : un programme construit sur la « règle des 10 % par semaine » n'a pas réduit les blessures chez des débutants (environ 20,8 % contre 20,3 %) <a class="cite" href="#src-84">[84]</a>. Le signal « plus de 30 % par semaine » chez les débutants n'est pas significatif (p = 0,07) <a class="cite" href="#src-85">[85]</a>.</li>
+<li><strong>Limites à connaître.</strong> C'est <strong>une seule cohorte</strong>, observationnelle, avec des blessures auto-déclarées et une charge mesurée par la distance seule. Elle ne stratifie ni par niveau ni par intensité, et les auteurs précisent que la règle par sortie <strong>ne doit pas être utilisée seule</strong>, car une progression étalée sur plusieurs séances peut aussi être excessive <a class="cite" href="#src-65">[65]</a>. Aucune réplication n'a été trouvée.</li>
+<li><strong>Le cas de la reprise.</strong> Si aucune sortie n'a eu lieu dans les 30 jours, le ratio <strong>n'est pas calculable</strong> (catégorie « NP » de l'étude) <a class="cite" href="#src-65">[65]</a>. L'app a donc besoin d'une règle à part pour la reprise.</li>
+</ul>
+<h3>5.3 Maladie</h3>
+<ul>
+<li><strong>Le principe.</strong> Le guide BJSM <a class="cite" href="#src-86">[86]</a> prévoit un retour progressif par paliers. Ce guide est <strong>écrit pour le COVID</strong> ; son extension aux autres infections est une transposition, pas une recommandation du guide :</li>
+<li><strong>Fièvre ou symptômes sous le cou / systémiques</strong> (essoufflement, douleur thoracique, palpitations) : au moins 5 jours de repos, puis des paliers d'au moins 48 h chacun, sans entraînement normal avant environ le 10e jour.</li>
+<li><strong>Symptômes au-dessus du cou seulement</strong> : on saute le palier de repos initial et l'entraînement normal ne reprend pas avant environ le 5e jour.</li>
+<li><strong>Signal d'alarme</strong> (douleur thoracique, palpitations, essoufflement à l'effort) : arrêt et avis médical.</li>
+<li><strong>Ce que vaut la règle traditionnelle.</strong> La règle du cou (« neck check » : symptômes au-dessus ou en dessous du cou) n'a <strong>pas de base scientifique solide</strong> <a class="cite" href="#src-87">[87]</a>, mais aucun consensus ne soutient la reprise avant la fin de la fièvre <a class="cite" href="#src-88">[88]</a>. La règle « fièvre ou symptômes systémiques : pas d'entraînement » est soutenue par deux sources concordantes <a class="cite" href="#src-86">[86]</a><a class="cite" href="#src-88">[88]</a>.</li>
+</ul>
+<h3>5.4 Blessure</h3>
+<ul>
+<li><strong>Tendinopathie d'Achille.</strong> Dans un essai randomisé, continuer à courir avec une douleur <strong>≤ 5/10</strong> pendant l'effort n'a pas nui à la guérison <a class="cite" href="#src-89">[89]</a>. Le critère « la douleur doit être revenue à la normale le lendemain matin » n'a pas été vérifié.</li>
+<li><strong>Fracture de fatigue du tibia.</strong> On ne reprend qu'une fois la sensibilité osseuse disparue et la marche indolore. La reprise se fait en course-marche, <strong>la distance avant l'intensité</strong>. Niveau de preuve faible (IV, sur une échelle de I à V) <a class="cite" href="#src-90">[90]</a>.</li>
+<li><strong>Règle pour l'app :</strong> une douleur qui modifie la foulée, une douleur à la marche ou une douleur osseuse localisée signifient <strong>arrêt de la course et orientation vers un professionnel</strong>, pas une adaptation automatique.</li>
+</ul>
+<h3>5.5 Pauses et désentraînement</h3>
+<ul>
+<li><strong>Chez des sportifs très entraînés</strong>, la VO2max baisse de 7 % en 21 jours d'arrêt et se stabilise à −16 % vers 56 jours (n = 7) <a class="cite" href="#src-91">[91]</a>. La VO2max gagnée récemment se perd entièrement en cas d'arrêt prolongé <a class="cite" href="#src-92">[92]</a>. <strong>Réduire l'entraînement en maintenant l'intensité</strong> préserve la VO2max <a class="cite" href="#src-93">[93]</a>.</li>
+<li><strong>Chez des marathoniens amateurs</strong> (environ 44 000 coureurs Strava, observationnel), un trou de 7 à 13 jours pendant la préparation est associé à un marathon environ 4 % plus lent, 2 semaines à environ 6 %, 3 semaines à environ 7,5 % <a class="cite" href="#src-94">[94]</a>. <em>La source secondaire est un article de presse sur l'étude.</em></li>
+<li><strong>Convention Daniels</strong> pour ajuster les <strong>allures</strong> : VDOT × 0,973 après 14 jours d'arrêt, × 0,931 après 28 jours, × 0,80 au-delà de 72 jours, avec des facteurs plus doux en cas d'entraînement croisé <a class="cite" href="#src-95">[95]</a>. Cette convention <strong>ne dit rien sur le volume</strong>. Les deux ordres de grandeur, Daniels et Strava, sont cohérents.</li>
+</ul>
+<h3>5.6 Signaux médicaux (REDs)</h3>
+<p>Le consensus du CIO (2023) décrit le REDs : un déficit énergétique relatif, chez l'homme comme chez la femme, qui fragilise les os et favorise les fractures de fatigue. Son outil CAT2 classe le risque par feu tricolore <a class="cite" href="#src-96">[96]</a>. <strong>L'app ne diagnostique pas.</strong> Une aménorrhée, des fractures de fatigue à répétition ou une baisse de performance inexpliquée avec fatigue doivent déclencher un <strong>drapeau non diagnostique et une recommandation de consulter</strong>.</p>
+<h2 id="s6">6. Analyse post-séance et estimation des seuils</h2>
+<p><strong>Question :</strong> quels indicateurs post-séance sont valides, comment noter le respect « prévu vs réalisé », et comment estimer les seuils automatiquement ?</p>
+<h3>6.1 Conformité prévu / réalisé</h3>
+<ul>
+<li><strong>intervals.icu note la séance entière</strong>, pas chaque bloc. La conformité vaut charge réalisée × 100 / charge prévue, ou la durée à défaut de charge. Code couleur : vert de 80 à 120 % ; orange de 50 à 80 % ou de 120 à 150 % ; rouge en dessous de 50 % ou au-dessus de 150 %. Une activité non appariée dans une semaine planifiée compte 0 % <a class="cite" href="#src-97">[97]</a>.</li>
+<li><strong>Appariement</strong> : intervals.icu associe une activité à une séance prévue, une pour une. Il n'apparie pas automatiquement une activité dont la charge est inférieure à 50 % de la charge prévue <a class="cite" href="#src-97">[97]</a><a class="cite" href="#src-98">[98]</a>.</li>
+<li><strong>TrainingPeaks</strong> utilise le TSS, puis la durée, puis la distance ; ses propres pages se contredisent sur la définition du rouge <a class="cite" href="#src-99">[99]</a><a class="cite" href="#src-115">[115]</a>.</li>
+<li><strong>Aucun des deux outils ne documente un score par bloc.</strong> La comparaison bloc par bloc prévue dans ton brief est donc <strong>une métrique à concevoir</strong>. Pour la définir, les autres sections fournissent trois repères : juger les blocs courts sur l'allure, non sur la FC (§1.1) ; utiliser la GAP sur terrain vallonné (§6.3) ; tenir compte du fait que la charge réalisée dérive de la charge prescrite (§3.1).</li>
+</ul>
+<h3>6.2 Quels indicateurs croire</h3>
+<table>
+<thead>
+<tr>
+<th>Indicateur</th>
+<th>Ce que disent les preuves</th>
+<th>Usage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>FC à allure sous-maximale standardisée</strong></td>
+<td>C'est le marqueur le plus fiable : environ 3 % de variation d'un jour à l'autre, plus petit changement important d'environ −1 %. Il se mesure sur les 30 à 60 dernières secondes après au moins 3 à 4 min d'effort stable <a class="cite" href="#src-70">[70]</a>.</td>
+<td><strong>Indicateur de tendance de forme n° 1.</strong> Comparer à pente et chaleur comparables.</td>
+</tr>
+<tr>
+<td><strong>Récupération cardiaque (HRR60, HRRc)</strong></td>
+<td>Variation d'environ 25 % d'un jour à l'autre, et une récupération plus rapide n'est <strong>pas toujours</strong> un bon signe <a class="cite" href="#src-70">[70]</a>. Elle varie aussi avec l'âge, la température et l'intensité de l'effort qui précède (facteurs de confusion) <a class="cite" href="#src-100">[100]</a>. intervals.icu ne la calcule que si la FC a atteint au moins la FC au seuil <a class="cite" href="#src-101">[101]</a>.</td>
+<td><strong>Jamais de verdict sur une seule séance.</strong></td>
+</tr>
+<tr>
+<td><strong>Découplage allure:FC</strong></td>
+<td>Sur 82 303 marathoniens Strava, l'ajouter à un modèle de CS fait passer l'erreur de prédiction du marathon de 6,45 à 5,16 % <a class="cite" href="#src-102">[102]</a>. Le seuil « &lt; 5 % = bonne base aérobie » de Friel (défini en <a class="cite" href="#src-103">[103]</a>) <strong>n'a pas de validation publiée</strong> : je n'ai trouvé aucune étude.</td>
+<td>Pertinent sur sorties longues stables, en tendance. Seuil de 5 % à présenter comme un repère de coach.</td>
+</tr>
+<tr>
+<td><strong>Facteur d'efficience (EF)</strong></td>
+<td>Allure normalisée / FC ; sa hausse à séances comparables indique un progrès <a class="cite" href="#src-29">[29]</a>.</td>
+<td>Tendance.</td>
+</tr>
+<tr>
+<td><strong>Écart RPE / FC</strong></td>
+<td>L'effort perçu et la FC peuvent <strong>se dissocier</strong> <a class="cite" href="#src-70">[70]</a>.</td>
+<td>Un écart n'est pas automatiquement de la fatigue ; à croiser avec le contexte.</td>
+</tr>
+<tr>
+<td><strong>Ressenti post-séance</strong></td>
+<td>Les mesures subjectives suivent la charge mieux que les mesures objectives <a class="cite" href="#src-76">[76]</a>.</td>
+<td>Signal principal, à afficher avant les chiffres comme prévu dans ton brief.</td>
+</tr>
+</tbody>
+</table>
+<h3>6.3 Corriger le contexte : pente et chaleur</h3>
+<ul>
+<li><strong>Pente.</strong> La GAP de Minetti (2002) donne le coût énergétique de la course selon la pente, Cr(i) = 155,4i⁵ − 30,4i⁴ − 43,3i³ + 46,3i² + 19,5i + 3,6 ; le facteur GAP vaut Cr(i)/3,6 <a class="cite" href="#src-104">[104]</a>. C'est cette GAP qu'utilise l'étude de Smyth <a class="cite" href="#src-105">[105]</a>. Strava utilise un modèle empirique basé sur la FC, plus généreux en descente, dont les coefficients ne sont pas publiés <a class="cite" href="#src-104">[104]</a>.</li>
+<li><strong>Chaleur.</strong> Les temps de marathon se dégradent quand l'indice WBGT passe de 5 à 25 °C : de 1,7 % à 4,5 % pour les meilleurs hommes (écart au record de l'épreuve), davantage chez les coureurs plus lents <a class="cite" href="#src-106">[106]</a>. La dégradation par degré de WBGT n'a pas été vérifiée. <strong>La chaleur rend la FC et l'allure non comparables d'une séance à l'autre</strong> ; l'app doit au moins enregistrer la température.</li>
+</ul>
+<h3>6.4 Estimer les seuils automatiquement</h3>
+<ul>
+<li><strong>Vitesse critique à partir des données d'entraînement</strong> (Smyth &amp; Muniz-Pumares 2020, 31 190 coureurs Strava, texte intégral lu) <a class="cite" href="#src-105">[105]</a> :</li>
+<li><strong>Données</strong> : les meilleurs temps corrigés de la pente (GAP de Minetti) sur 400 m, 800 m, 1 000 m, 1 500 m, 3 000 m et 5 000 m, sur les <strong>16 semaines</strong> précédentes, sans vérifier que les efforts étaient maximaux.</li>
+<li><strong>Modèle</strong> : distance-temps linéaire. <strong>La meilleure combinaison est 400 + 800 + 5 000 m</strong>, avec une erreur de prédiction du marathon de 7,7 % ; les combinaisons de distances courtes uniquement font le moins bien. Corriger les efforts non maximaux relève la CS d'environ 5 %.</li>
+<li><strong>Allure marathon</strong> : environ 93 % de la CS pour un marathon en 2 h 30, environ 79 % au-delà de 5 h. Rester à <strong>≤ 94 % de la CS dans la 1re moitié</strong>, faute de quoi on ralentit nettement ensuite.</li>
+<li><strong>En théorie</strong>, le modèle demande 3 à 4 efforts maximaux de 2 à 15 min <a class="cite" href="#src-23">[23]</a>.</li>
+<li><strong>intervals.icu</strong> calcule une CS et un D′ sur sa courbe d'allures, à partir des meilleurs efforts de 1 à 5 km (points d'au moins 2 min, le dernier d'au moins 15 min) <a class="cite" href="#src-107">[107]</a>. En revanche, d'après des utilisateurs expérimentés (septembre 2025), <strong>il ne met pas à jour automatiquement l'allure seuil en course à pied</strong> <a class="cite" href="#src-108">[108]</a>. <strong>L'app doit donc s'en charger</strong> et la reporter dans intervals.icu, sinon la charge calculée là-bas (qui dépend de l'allure seuil, §2) dérive.</li>
+<li><strong>FC au seuil.</strong> Le test de 30 min ne diffère pas significativement du critère labo, mais l'erreur type est d'environ 8 bpm, ce qui n'est pas négligeable aux bornes des zones <a class="cite" href="#src-109">[109]</a>. TrainingPeaks ne relève son seuil FC automatiquement <strong>qu'à la hausse</strong> <a class="cite" href="#src-110">[110]</a>.</li>
+<li><strong>Prédiction de temps.</strong> La formule de Riegel prédit un marathon <strong>trop rapide d'au moins 10 min pour la moitié des coureurs amateurs</strong> (N = 2 303). Ajouter le kilométrage hebdomadaire améliore nettement la prédiction <a class="cite" href="#src-111">[111]</a>.</li>
+<li><strong>Fréquence de réestimation.</strong> Je n'ai <strong>trouvé aucune étude</strong> qui la fixe.</li>
+</ul>
+<h2 id="s7">7. Ce que seul le croisement des sections 1 à 6 révèle</h2>
+<ol>
+<li><strong>Les données les plus « riches » d'Apple sont les moins fiables, et les plus simples sont les mieux étayées.</strong> La puissance, la dynamique de foulée, les stades de sommeil, la VFC et les scores Apple n'ont pas de validation solide (§1). Le ressenti <a class="cite" href="#src-76">[76]</a>, l'allure, la FC de repos <a class="cite" href="#src-72">[72]</a> et la FC à allure stable <a class="cite" href="#src-70">[70]</a> sont à la fois bien mesurés et bien étayés. <strong>L'app doit donc construire son raisonnement sur peu de signaux simples</strong>, et traiter le reste comme du décor.</li>
+<li><strong>La règle de sécurité la mieux prouvée est simple à calculer avec ces données.</strong> Il suffit des distances des séances pour appliquer « aucune sortie à plus de 110 % de la plus longue des 30 derniers jours » <a class="cite" href="#src-65">[65]</a>. Elle est mieux étayée que le choix de méthode lui-même (§3), et une progression trop rapide figure parmi les erreurs relevées dans des plans ChatGPT <a class="cite" href="#src-58">[58]</a>. <strong>C'est la contrainte la plus rentable à coder en dur.</strong></li>
+<li><strong>Le choix de méthode compte peu ; la cohérence des allures compte beaucoup.</strong> Polarisé et pyramidal se valent <a class="cite" href="#src-46">[46]</a><a class="cite" href="#src-47">[47]</a>, et aucun algorithme de sélection n'existe. En revanche, tout plan repose sur un seuil exact, et, selon des utilisateurs du forum, intervals.icu <strong>ne met pas à jour automatiquement l'allure seuil</strong> en course <a class="cite" href="#src-108">[108]</a>. Un seuil périmé fausse à la fois les allures prescrites, la charge et la conformité (§2, §6). <strong>Le maintien automatique de la CS ou de l'allure seuil est plus important que la méthode affichée.</strong></li>
+<li><strong>Les seuils d'alerte n'ont pas de base numérique, mais une structure se défend.</strong> Ni la Form intervals.icu <a class="cite" href="#src-64">[64]</a>, ni l'ACWR <a class="cite" href="#src-42">[42]</a>, ni une FC de repos à « +5 bpm » ne reposent sur des données. Ce qui est soutenu, c'est le raisonnement en <strong>écart à sa propre ligne de base</strong> <a class="cite" href="#src-70">[70]</a> et la <strong>concordance de plusieurs signaux</strong> <a class="cite" href="#src-31">[31]</a>, logique qu'Apple applique déjà dans Vitals <a class="cite" href="#src-11">[11]</a>. La matrice respect × ressenti de ton brief est donc conceptuellement juste, mais <strong>ses seuils sont des paramètres à calibrer, pas des faits à citer</strong>.</li>
+<li><strong>Les garde-fous doivent vivre dans le code, pas dans le prompt.</strong> L'étude de cas ChatGPT montre que des garde-fous seulement conversationnels ne sont pas respectés et que l'absence de profil persistant dégrade le coaching <a class="cite" href="#src-59">[59]</a>. Ton brief prévoit déjà les deux remèdes : un profil vivant et la confirmation avant toute modification.</li>
+</ol>
+<h2 id="s8">8. Recommandations</h2>
+<p>Chaque recommandation indique <strong>où elle s'applique</strong> (PRD ou architecture) et <strong>sur quoi elle repose</strong>.</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Recommandation</th>
+<th>Destination</th>
+<th>Base de confiance</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R1</td>
+<td><strong>Contrainte dure du générateur</strong> : aucune sortie ne dépasse 1,10 × la plus longue des 30 derniers jours, et une cible nettement inférieure à 10 % pour les sorties longues (la valeur exacte, par exemple +5 %, est un paramètre de conception non sourcé). Toute exception exige ton accord explicite et un avertissement. Ne pas utiliser la règle des 10 % par semaine comme sécurité ; tout au plus comme garde-fou secondaire.</td>
+<td>PRD (contraintes du générateur) ; architecture (validateur de plan déterministe, hors LLM)</td>
+<td><span class="b hi">Élevée</span> sur le fait qu'un pic par sortie est un risque ; <strong>moyenne</strong> sur la valeur exacte de 10 % (une seule cohorte) <a class="cite" href="#src-65">[65]</a><a class="cite" href="#src-84">[84]</a></td>
+</tr>
+<tr>
+<td>R2</td>
+<td><strong>Règle de reprise</strong> : quand la fenêtre des 30 jours est vide ou trop courte après une pause, repartir d'un volume réduit, appliquer le facteur VDOT de Daniels aux allures, et revalider la CS sur les premières séances.</td>
+<td>PRD (module Empêchement)</td>
+<td><span class="b med">Moyenne</span> : convention Daniels <a class="cite" href="#src-95">[95]</a> et données Strava observationnelles <a class="cite" href="#src-94">[94]</a></td>
+</tr>
+<tr>
+<td>R3</td>
+<td><strong>Règles maladie</strong> : fièvre ou symptômes sous le cou entraînent l'annulation, au moins 5 jours de repos, puis une reprise par paliers d'au moins 48 h, sans entraînement normal avant environ le 10e jour. Symptômes au-dessus du cou seulement : séance allégée ou annulée, reprise normale vers le 5e jour. Signal d'alarme : arrêt et orientation médicale. Blessure : douleur ≤ 5/10 comme garde-fou, mais toute douleur osseuse ou à la marche signifie arrêt et orientation vers un professionnel.</td>
+<td>PRD (Empêchement : choix malade/blessé)</td>
+<td><span class="b med">Moyenne</span> (guide d'experts, pas d'essai) ; l'extension du guide COVID aux autres maladies est une transposition <a class="cite" href="#src-86">[86]</a><a class="cite" href="#src-88">[88]</a><a class="cite" href="#src-89">[89]</a><a class="cite" href="#src-90">[90]</a></td>
+</tr>
+<tr>
+<td>R4</td>
+<td><strong>Ancrer toutes les zones et allures sur la vitesse critique</strong>, estimée à partir de tes meilleurs efforts corrigés de la pente sur 16 semaines (combinaison 400/800/5 000 m), avec une FC max observée plutôt qu'une formule. <strong>Reporter la CS ou l'allure seuil dans intervals.icu</strong>, qui ne la met pas à jour automatiquement en course.</td>
+<td>Architecture (service de seuils) ; PRD (profil vivant)</td>
+<td><span class="b hi">Élevée</span> pour la méthode CS <a class="cite" href="#src-23">[23]</a><a class="cite" href="#src-105">[105]</a> ; moyenne pour le comportement d'intervals.icu (forum) <a class="cite" href="#src-108">[108]</a></td>
+</tr>
+<tr>
+<td>R5</td>
+<td><strong>Méthode par défaut : pyramidale, inspirée de Daniels</strong> (2 séances de qualité, une sortie longue, le reste facile), avec la variante polarisée pour un objectif de performance sur volume plus élevé. <strong>La ligne d'explication doit être honnête</strong> : « les études montrent peu d'écart entre méthodes ; celle-ci colle à ton volume et à ton objectif ». Ne jamais afficher MAF ou « norvégienne » comme validées.</td>
+<td>PRD (génération et explication)</td>
+<td><span class="b hi">Élevée</span> sur « peu de différence » <a class="cite" href="#src-46">[46]</a><a class="cite" href="#src-47">[47]</a> ; <strong>faible</strong> sur la préférence pour le pyramidal chez l'amateur (<span class="b unv">non significatif</span>) <a class="cite" href="#src-46">[46]</a></td>
+</tr>
+<tr>
+<td>R6</td>
+<td><strong>Hiérarchie des données en entrée</strong> : (1) ressenti et allure ; (2) FC en effort stable, FC de repos, durée de sommeil ; (3) VFC SDNN et VO2max, <strong>en tendance seulement</strong> ; (4) puissance, dynamique de foulée, stades de sommeil et scores Apple, <strong>en affichage seulement</strong>. Sur les fractionnés courts, juger l'exécution sur l'allure.</td>
+<td>PRD (« Tes données », 3–5 indicateurs) ; architecture (modèle de données)</td>
+<td><span class="b med">Moyenne</span> à élevée selon la métrique (§1) <a class="cite" href="#src-6">[6]</a><a class="cite" href="#src-8">[8]</a><a class="cite" href="#src-10">[10]</a><a class="cite" href="#src-14">[14]</a><a class="cite" href="#src-72">[72]</a></td>
+</tr>
+<tr>
+<td>R7</td>
+<td><strong>Détecteur de surmenage</strong> : ligne de base de 4 semaines ou plus et moyenne sur 7 jours. Une alerte exige au moins 2 signaux objectifs concordants plus un ressenti dégradé répété, puis une <strong>proposition</strong> (jamais une modification silencieuse). Les seuils sont paramétrables et documentés comme tels. Ne pas utiliser l'ACWR, ni la Form d'intervals.icu seule.</td>
+<td>PRD (seuil de signaux concordants) ; architecture (règles, pas LLM)</td>
+<td><span class="b med">Moyenne</span> pour la structure <a class="cite" href="#src-31">[31]</a><a class="cite" href="#src-70">[70]</a><a class="cite" href="#src-76">[76]</a> ; <strong>les seuils numériques sont non étayés</strong></td>
+</tr>
+<tr>
+<td>R8</td>
+<td><strong>Feedback post-séance</strong> : la conformité de la séance entière vient d'intervals.icu ; la note par bloc est <strong>une métrique propre à définir</strong>, basée sur l'allure. Indicateurs : FC à allure comparable (tendance), découplage sur les séances longues, EF. HRRc et un écart ponctuel entre ressenti et FC ne justifient <strong>jamais</strong> un verdict à eux seuls. Associer chaque consigne à sa raison et aux sensations attendues.</td>
+<td>PRD (spécification du feedback)</td>
+<td><span class="b med">Moyenne</span> <a class="cite" href="#src-70">[70]</a><a class="cite" href="#src-97">[97]</a><a class="cite" href="#src-102">[102]</a><a class="cite" href="#src-59">[59]</a></td>
+</tr>
+<tr>
+<td>R9</td>
+<td><strong>Affûtage</strong> : 2 semaines (jusqu'à 3 pour le marathon), volume réduit de 41 à 60 %, intensité et fréquence maintenues.</td>
+<td>PRD (structure de plan)</td>
+<td><span class="b hi">Élevée</span> <a class="cite" href="#src-44">[44]</a><a class="cite" href="#src-56">[56]</a></td>
+</tr>
+<tr>
+<td>R10</td>
+<td><strong>Les garde-fous en code</strong> : R1, R3, R7 et R9 s'appliquent comme validations déterministes sur la sortie du LLM, et non comme instructions dans le prompt.</td>
+<td>Architecture</td>
+<td><span class="b med">Moyenne</span> (étude de cas + erreurs documentées des LLM) <a class="cite" href="#src-58">[58]</a><a class="cite" href="#src-59">[59]</a></td>
+</tr>
+</tbody>
+</table>
+<h2 id="s9">9. Questions ouvertes</h2>
+<table>
+<thead>
+<tr>
+<th>Question</th>
+<th>Pourquoi c'est important</th>
+<th>Comment y répondre</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Que contient <strong>exactement</strong> le FIT exporté par HealthFit pour une course Apple Watch (fréquence d'échantillonnage de la FC, puissance, GCT, tours) ?</td>
+<td>Cela conditionne les calculs bloc par bloc et les charges.</td>
+<td><strong>Test empirique</strong> : exporter 2 ou 3 courses et lire le FIT, ou l'onglet <em>Data</em> d'intervals.icu. Aucune doc n'existe.</td>
+</tr>
+<tr>
+<td>Quelle <strong>valeur de VFC</strong> HealthFit envoie-t-il : moyenne de la journée ou mesure nocturne ?</td>
+<td>Cela décide si la VFC est exploitable même en tendance.</td>
+<td>Comparer Apple Santé et le champ wellness d'intervals.icu sur 2 semaines, ou demander au développeur de HealthFit.</td>
+</tr>
+<tr>
+<td>Les séances planifiées HealthFit gèrent-elles des <strong>cibles d'allure par bloc</strong> sur la montre ?</td>
+<td>Cela conditionne le format des séances écrites dans intervals.icu.</td>
+<td>Test d'une séance structurée simple.</td>
+</tr>
+<tr>
+<td>Quels <strong>seuils</strong> pour le détecteur de surmenage (fraction du CV, nombre de jours) ?</td>
+<td>Aucun seuil validé n'existe.</td>
+<td>Calibrer sur ton historique (rétro-analyse des périodes de maladie ou de fatigue), puis ajuster.</td>
+</tr>
+<tr>
+<td>La règle des 10 % par sortie tient-elle <strong>pour l'intensité</strong> (pas seulement la distance) et selon le niveau ?</td>
+<td>La cohorte ne l'a pas étudié.</td>
+<td>Surveiller les réplications (BJSM, groupe RUNSAFE) ; un Refresh dans 12 mois.</td>
+</tr>
+<tr>
+<td>Les plans générés par les <strong>LLM de 2026</strong> commettent-ils encore les erreurs de 2023 ?</td>
+<td>Les études portent sur GPT-3.5.</td>
+<td>Suivre les publications (Düking et al.) ; tester tes propres plans contre R1, R9 et R10.</td>
+</tr>
+<tr>
+<td>Durée de plan, nombre de séances de qualité et semaines allégées : <strong>quelles preuves</strong> ?</td>
+<td>Ce ne sont aujourd'hui que des conventions.</td>
+<td>Peu de chances qu'une étude tranche ; garder des conventions explicites et paramétrables.</td>
+</tr>
+<tr>
+<td>Fréquence de <strong>réestimation de la CS</strong> ?</td>
+<td>Aucune étude trouvée.</td>
+<td>Choix de conception : recalcul à chaque nouvelle meilleure performance, et revue toutes les 4 à 6 semaines.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="s10">10. Contre-preuves</h2>
+<p>La passe de contradiction systématique (red team) n'a pas été lancée : elle était désactivée et la validation est au niveau <code>normal</code>. Les contradictions trouvées en cours de route sont rapportées dans le texte, avec les deux positions sourcées : VFC guidée (§4.3), ACWR (§4.2), Oliveira vs Rosenblat (§3.1), protocoles LTHR de Friel (§2.2).</p>
+<details class="appx" id="appx"><summary><h2 style="display:inline">11. Annexe des sources (115)</h2></summary><table class="sources"><thead><tr><th>n</th><th>Affirmation</th><th>Éditeur</th><th>Publiée</th><th>Consultée</th><th>Confiance</th></tr></thead><tbody><tr id="src-1"><td>[1]</td><td>Types HealthKit course (runningPower, GCT…), pas de type cadence</td><td><a href="https://developer.apple.com/documentation/healthkit/hkquantitytypeidentifier/runningpower" target="_blank" rel="noopener">Apple Developer</a></td><td>2022-06</td><td>2026-11-25</td><td>moyenne</td></tr><tr id="src-2"><td>[2]</td><td>Métriques de course Apple Watch (définitions, disponibilité)</td><td><a href="https://support.apple.com/guide/watch/apd1f24d4d35/watchos" target="_blank" rel="noopener">Apple Support</a></td><td>2025</td><td>2026-11-25</td><td>moyenne</td></tr><tr id="src-3"><td>[3]</td><td>Training Load : 7 j vs 28 j</td><td><a href="https://support.apple.com/guide/watch/apde4c07a6cf" target="_blank" rel="noopener">Apple Support</a></td><td>2026</td><td>2026-11-25</td><td>élevée</td></tr><tr id="src-4"><td>[4]</td><td>estimatedWorkoutEffortScore (iOS 18)</td><td><a href="https://developer.apple.com/documentation/healthkit/hkquantitytypeidentifier/estimatedworkouteffortscore" target="_blank" rel="noopener">Apple Developer</a></td><td>2024</td><td>2026-11-25</td><td>élevée</td></tr><tr id="src-5"><td>[5]</td><td>Entrées du score d&#x27;effort (secondaire)</td><td><a href="https://dcrainmaker.com/2024/07/apples-training-load-vitals-watchos11.html" target="_blank" rel="noopener">DC Rainmaker</a></td><td>2024-07</td><td>2026-11-25</td><td>faible</td></tr><tr id="src-6"><td>[6]</td><td>White paper stades de sommeil (kappa 0,63→0,68)</td><td><a href="https://www.apple.com/kr/health/pdf/Estimating_Sleep_Stages_from_Apple_Watch_Oct_2025.pdf" target="_blank" rel="noopener">Apple</a></td><td>2025-10</td><td>2026-11-25</td><td>élevée</td></tr><tr id="src-7"><td>[7]</td><td>Recalibrage du score de sommeil watchOS 26.2</td><td><a href="https://www.macrumors.com/2025/11/04/watchos-26-2-updates-sleep-score-ranges/" target="_blank" rel="noopener">MacRumors</a></td><td>2025-11</td><td>2026-11-25</td><td>moyenne</td></tr><tr id="src-8"><td>[8]</td><td>White paper VO2max (méthode, validation N=221)</td><td><a href="https://www.apple.com/healthcare/docs/site/Using_Apple_Watch_to_Estimate_Cardio_Fitness_with_VO2_max.pdf" target="_blank" rel="noopener">Apple</a></td><td>2021-05</td><td>2026-11-25</td><td>élevée</td></tr><tr id="src-9"><td>[9]</td><td>VO2max Series 7 : fiabilité faible (n=19)</td><td><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC11325102" target="_blank" rel="noopener">JMIR Biomed Eng (Caserman et al.)</a></td><td>2024-08</td><td>2026-11-25</td><td>moyenne</td></tr><tr id="src-10"><td>[10]</td><td>VO2max Series 10 : biais −6,25 ml/kg/min, MAPE 13,2 % (n=40)</td><td><a href="https://doi.org/10.1016/j.mcpdig.2026.100357" target="_blank" rel="noopener">Mayo Clin Proc Digital Health (Lambe et al.)</a></td><td>2026-04</td><td>2026-11-25</td><td>élevée</td></tr><tr id="src-11"><td>[11]</td><td>Vitals : plage 7 nuits, alerte multi-métriques, VFC Series 12 seulement</td><td><a href="https://support.apple.com/120142" target="_blank" rel="noopener">Apple Support</a></td><td>2026-09</td><td>2026-11-25</td><td>élevée</td></tr><tr id="src-12"><td>[12]</td><td>Validité FC optique en course selon l&#x27;intensité</td><td><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6732081" target="_blank" rel="noopener">PMC (étude relue)</a></td><td>2019</td><td>2026-11-25</td><td>moyenne</td></tr><tr id="src-13"><td>[13]</td><td>FC Apple Watch : mesure continue, lectures aberrantes possibles</td><td><a href="https://support.apple.com/en-AU/120277" target="_blank" rel="noopener">Apple Support</a></td><td>2026-09</td><td>2026-11-25</td><td>moyenne</td></tr><tr id="src-14"><td>[14]</td><td>Comparaisons puissance de course Apple/Stryd (blog)</td><td><a href="https://the5krunner.com/2022/08/06/running-power-comparisons-more-comparisons-with-apple-garmin-stryd-coros-polar/" target="_blank" rel="noopener">the5krunner</a></td><td>2022-08</td><td>2026-11-25</td><td>faible</td></tr><tr id="src-15"><td>[15]</td><td>HealthFit → intervals.icu : VFC en SDNN, sync bien-être</td><td><a href="https://forum.intervals.icu/t/healthfit-sync-for-activities-and-health-metrics/2718?page=4" target="_blank" rel="noopener">Forum intervals.icu</a></td><td>2021-03</td><td>2026-11-25</td><td>moyenne</td></tr><tr id="src-16"><td>[16]</td><td>VFC Series 6 vs ECG (n=78), accord modéré</td><td><a href="https://www.mdpi.com/1424-8220/25/8/2380" target="_blank" rel="noopener">MDPI Sensors</a></td><td>2025-04</td><td>2026-11-25</td><td>moyenne</td></tr><tr id="src-17"><td>[17]</td><td>RR Apple Watch vs Polar H7 au repos (n=20)</td><td><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6111985" target="_blank" rel="noopener">Sensors (PMC)</a></td><td>2018</td><td>2026-11-25</td><td>moyenne</td></tr><tr id="src-18"><td>[18]</td><td>HealthFit importe les séances planifiées ; abonnement requis</td><td><a href="https://forum.intervals.icu/t/import-planned-workouts-from-intervals-icu-into-apple-health/112136" target="_blank" rel="noopener">Forum intervals.icu (dév. HealthFit)</a></td><td>2026-03</td><td>2026-11-25</td><td>élevée</td></tr><tr id="src-19"><td>[19]</td><td>HealthFit App Store : tarifs, VFC de récupération Series 12+</td><td><a href="https://apps.apple.com/us/app/healthfit/id1202650514" target="_blank" rel="noopener">Apple App Store</a></td><td>2026-10</td><td>2026-11-25</td><td>moyenne</td></tr><tr id="src-20"><td>[20]</td><td>IntervalsWellnessSync : VFC/FC repos du sommeil</td><td><a href="https://forum.intervals.icu/t/intervalswellnesssync-simple-apple-watch-health-data-sync-to-intervals-icu/125843" target="_blank" rel="noopener">Forum intervals.icu</a></td><td>2026-03</td><td>2026-11-25</td><td>faible</td></tr><tr id="src-21"><td>[21]</td><td>Sommeil Series 8 vs polysomnographie (n=35)</td><td><a href="https://pubmed.ncbi.nlm.nih.gov/39460013/" target="_blank" rel="noopener">Sensors / PubMed</a></td><td>2024</td><td>2026-11-25</td><td>moyenne</td></tr><tr id="src-22"><td>[22]</td><td>VFC Apple = SDNN à moments opaques ; pas d’accès RR</td><td><a href="https://medium.com/@marco_alt/how-to-make-sense-of-your-apple-watch-heart-rate-variability-hrv-data-89bf4a510438" target="_blank" rel="noopener">Marco Altini (praticien, HRV4Training)</a></td><td>2023</td><td>2026-11-25</td><td>moyenne</td></tr><tr id="src-23"><td>[23]</td><td>Vitesse critique et D′ : modèle d = CS·t + D′, 70–90 % VO2max</td><td><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC5371646" target="_blank" rel="noopener">Sports Medicine (Jones &amp; Vanhatalo)</a></td><td>2017-03</td><td>2026-11-25</td><td>élevée</td></tr><tr id="src-24"><td>[24]</td><td>La CS (pas la MLSS) indexe l&#x27;état stable métabolique maximal</td><td><a href="https://doi.org/10.14814/phy2.14098" target="_blank" rel="noopener">Physiological Reports (Jones et al.)</a></td><td>2019-05</td><td>2026-11-25</td><td>moyenne</td></tr><tr id="src-25"><td>[25]</td><td>Domaines d&#x27;intensité ; méthodes de seuil non interchangeables ; % fixes peu valides</td><td><a href="https://pubmed.ncbi.nlm.nih.gov/32729096/" target="_blank" rel="noopener">Sports Medicine (Jamnick et al.)</a></td><td>2020</td><td>2026-11-25</td><td>moyenne</td></tr><tr id="src-26"><td>[26]</td><td>FC max = 208 − 0,7 × âge (Tanaka)</td><td><a href="https://pubmed.ncbi.nlm.nih.gov/11153730/" target="_blank" rel="noopener">J Am Coll Cardiol (Tanaka et al.)</a></td><td>2001-01</td><td>2026-11-25</td><td>élevée</td></tr><tr id="src-27"><td>[27]</td><td>Formules TRIMP Banister/Edwards, sRPE, réserve cardiaque</td><td><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC7240108/" target="_blank" rel="noopener">Frontiers in Physiology (Shaw et al.)</a></td><td>2020-05</td><td>2026-11-25</td><td>élevée</td></tr><tr id="src-28"><td>[28]</td><td>SDNN vs RMSSD : signification, durées d&#x27;enregistrement, normes</td><td><a href="https://www.frontiersin.org/articles/10.3389/fpubh.2017.00258/full" target="_blank" rel="noopener">Frontiers in Public Health (Shaffer &amp; Ginsberg)</a></td><td>2017</td><td>2026-11-25</td><td>élevée</td></tr><tr id="src-29"><td>[29]</td><td>Glossaire TSS/rTSS/hrTSS, CTL/ATL/TSB, EF, découplage</td><td><a href="https://www.trainingpeaks.com/learn/articles/glossary-of-trainingpeaks-metrics/" target="_blank" rel="noopener">TrainingPeaks</a></td><td>2026-06</td><td>2026-11-25</td><td>élevée</td></tr><tr id="src-30"><td>[30]</td><td>Monotonie et contrainte (Foster 1998)</td><td><a href="https://doi.org/10.1097/00005768-199807000-00023" target="_blank" rel="noopener">MSSE (Foster)</a></td><td>1998-07</td><td>2026-11-25</td><td>moyenne</td></tr><tr id="src-31"><td>[31]</td><td>Consensus ECSS/ACSM surmenage/surentraînement</td><td><a href="https://pubmed.ncbi.nlm.nih.gov/23247672/" target="_blank" rel="noopener">MSSE / EJSS (Meeusen et al.)</a></td><td>2013</td><td>2026-11-25</td><td>élevée</td></tr><tr id="src-32"><td>[32]</td><td>vVO2max et Tlim (Billat)</td><td><a href="https://pubmed.ncbi.nlm.nih.gov/8857705/" target="_blank" rel="noopener">Sports Medicine (Billat &amp; Koralsztein)</a></td><td>1996</td><td>2026-11-25</td><td>moyenne</td></tr><tr id="src-33"><td>[33]</td><td>Économie de course : revue</td><td><a href="https://link.springer.com/article/10.1186/s40798-015-0007-y" target="_blank" rel="noopener">Sports Medicine Open (Barnes &amp; Kilding)</a></td><td>2015</td><td>2026-11-25</td><td>moyenne</td></tr><tr id="src-34"><td>[34]</td><td>Dérive cardiovasculaire</td><td><a href="https://scilit.com/publications/b2c41c04695672f811b81cfb09bf4f36" target="_blank" rel="noopener">Exerc Sport Sci Rev (Coyle &amp; González-Alonso)</a></td><td>2001</td><td>2026-11-25</td><td>moyenne</td></tr><tr id="src-35"><td>[35]</td><td>Protocole LTHR de Friel (20 min − 5 %)</td><td><a href="https://joefrieltraining.com/a-quick-guide-to-setting-zones/" target="_blank" rel="noopener">Joe Friel (site d&#x27;auteur)</a></td><td>2025-09</td><td>2026-11-25</td><td>moyenne</td></tr><tr id="src-36"><td>[36]</td><td>Indice de polarisation (Treff)</td><td><a href="https://www.frontiersin.org/articles/10.3389/fphys.2019.00707/full" target="_blank" rel="noopener">Frontiers in Physiology (Treff et al.)</a></td><td>2019-06</td><td>2026-11-25</td><td>élevée</td></tr><tr id="src-37"><td>[37]</td><td>Modèle à 3 zones de Seiler</td><td><a href="https://www.frontiersin.org/articles/10.3389/fphys.2015.00295/full" target="_blank" rel="noopener">Frontiers in Physiology (revue)</a></td><td>2015</td><td>2026-11-25</td><td>moyenne</td></tr><tr id="src-38"><td>[38]</td><td>Équations VDOT (secondaire, calculateur)</td><td><a href="https://getfitcraft.com/tools/vdot-calculator" target="_blank" rel="noopener">getfitcraft (secondaire)</a></td><td>2025</td><td>2026-11-25</td><td>faible</td></tr><tr id="src-39"><td>[39]</td><td>Charge allure intervals.icu = h × IF² × 100 (code développeur)</td><td><a href="https://forum.intervals.icu/t/running-load-vs-trainingpeaks-rtss/5774" target="_blank" rel="noopener">Forum intervals.icu (développeur)</a></td><td>2022-01</td><td>2026-11-25</td><td>moyenne</td></tr><tr id="src-40"><td>[40]</td><td>HRSS = TRIMP normalisé (développeur)</td><td><a href="https://forum.intervals.icu/t/hrss-normalized-trimp-training-load/569" target="_blank" rel="noopener">Forum intervals.icu (développeur)</a></td><td>2020-03</td><td>2026-11-25</td><td>moyenne</td></tr><tr id="src-41"><td>[41]</td><td>Form = Fitness − Fatigue le jour même ; 42/7 j ; zone rouge −30</td><td><a href="https://forum.intervals.icu/t/fitness-page-a-guide-to-getting-started/17702" target="_blank" rel="noopener">Forum intervals.icu (guide + développeur)</a></td><td>2023-02</td><td>2026-11-25</td><td>élevée</td></tr><tr id="src-42"><td>[42]</td><td>Critique de l&#x27;ACWR (Impellizzeri et al.)</td><td><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC7534938" target="_blank" rel="noopener">Journal of Athletic Training</a></td><td>2020</td><td>2026-11-25</td><td>élevée</td></tr><tr id="src-43"><td>[43]</td><td>Indice de polarisation dans intervals.icu</td><td><a href="https://forum.intervals.icu/t/polarization-index-added/49877" target="_blank" rel="noopener">Forum intervals.icu (développeur)</a></td><td>2023-09</td><td>2026-11-25</td><td>élevée</td></tr><tr id="src-44"><td>[44]</td><td>Affûtage : 2 sem, volume −41–60 % (méta-analyse)</td><td><a href="https://pubmed.ncbi.nlm.nih.gov/17762369/" target="_blank" rel="noopener">MSSE (Bosquet et al.)</a></td><td>2007</td><td>2026-11-25</td><td>élevée</td></tr><tr id="src-45"><td>[45]</td><td>Périodisation par blocs (Issurin) et critique</td><td><a href="https://pubmed.ncbi.nlm.nih.gov/20199119/" target="_blank" rel="noopener">Sports Medicine (Issurin)</a></td><td>2010</td><td>2026-11-25</td><td>moyenne</td></tr><tr id="src-46"><td>[46]</td><td>Méta-analyse IPD polarisé vs pyramidal (13 études), sous-groupes</td><td><a href="https://doi.org/10.1007/s40279-024-02149-3" target="_blank" rel="noopener">Sports Medicine (Rosenblat et al.)</a></td><td>2025-01</td><td>2026-11-25</td><td>élevée</td></tr><tr id="src-47"><td>[47]</td><td>Méta-analyse TID (17 études) : POL &gt; autres sur VO2peak seulement</td><td><a href="https://doi.org/10.1007/s40279-024-02034-z" target="_blank" rel="noopener">Sports Medicine (Oliveira et al.)</a></td><td>2024</td><td>2026-11-25</td><td>élevée</td></tr><tr id="src-48"><td>[48]</td><td>Pyramidal/polarisé &gt; seuil-dominant chez coureurs de fond</td><td><a href="https://pubmed.ncbi.nlm.nih.gov/29182410/" target="_blank" rel="noopener">IJSPP (Kenneally et al.)</a></td><td>2018</td><td>2026-11-25</td><td>moyenne</td></tr><tr id="src-49"><td>[49]</td><td>ECR coureurs amateurs 10 km : POL &gt; entre-seuils</td><td><a href="https://pubmed.ncbi.nlm.nih.gov/23752040/" target="_blank" rel="noopener">IJSPP (Muñoz et al.)</a></td><td>2014</td><td>2026-11-25</td><td>moyenne</td></tr><tr id="src-50"><td>[50]</td><td>≥ 70 % bas + ≤ 30 % seuil/HIIT pour demi-fond et fond</td><td><a href="https://pubmed.ncbi.nlm.nih.gov/34749417/" target="_blank" rel="noopener">Int J Sports Med (Campos et al.)</a></td><td>2022</td><td>2026-11-25</td><td>moyenne</td></tr><tr id="src-51"><td>[51]</td><td>Méthode Daniels (VDOT, plafonds par séance) – secondaire</td><td><a href="https://www.coachray.nz/2021/10/11/jack-daniels-phd-formulaic-approach-to-periodisation/" target="_blank" rel="noopener">Coach Ray (blog, d&#x27;après Daniels&#x27; Running Formula)</a></td><td>2021-10</td><td>2026-11-25</td><td>moyenne</td></tr><tr id="src-52"><td>[52]</td><td>Plans 80/20 : niveaux 0–3, zones ancrées sur seuil</td><td><a href="https://www.trainingpeaks.com/partners/80-20-endurance/" target="_blank" rel="noopener">TrainingPeaks / 80/20 Endurance</a></td><td>2025</td><td>2026-11-25</td><td>moyenne</td></tr><tr id="src-53"><td>[53]</td><td>Modèle norvégien : description, absence d&#x27;essais</td><td><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC10000870/" target="_blank" rel="noopener">IJERPH (Casado et al.)</a></td><td>2023</td><td>2026-11-25</td><td>moyenne</td></tr><tr id="src-54"><td>[54]</td><td>MAF : article d&#x27;hypothèse, formule non validée</td><td><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC7142223" target="_blank" rel="noopener">Frontiers in Physiology (Maffetone &amp; Laursen)</a></td><td>2020</td><td>2026-11-25</td><td>élevée</td></tr><tr id="src-55"><td>[55]</td><td>ECR course-marche marathon (n=42)</td><td><a href="https://pubmed.ncbi.nlm.nih.gov/25467199/" target="_blank" rel="noopener">J Sci Med Sport (Hottenrott et al.)</a></td><td>2016</td><td>2026-11-25</td><td>moyenne</td></tr><tr id="src-56"><td>[56]</td><td>Affûtage endurance : ≤ 21 j, volume −41–60 %</td><td><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC10171681/" target="_blank" rel="noopener">PLoS One (Wang et al.)</a></td><td>2023</td><td>2026-11-25</td><td>moyenne</td></tr><tr id="src-57"><td>[57]</td><td>Sortie longue ≈ 25–30 % du volume, plafond ~3 h (Daniels/Hansons) – convention</td><td><a href="https://lukehumphreyrunning.com/hansons-marathon-method-the-16-miler/" target="_blank" rel="noopener">Luke Humphrey Running (Hansons)</a></td><td>2020</td><td>2026-11-25</td><td>faible</td></tr><tr id="src-58"><td>[58]</td><td>Évaluation experte de plans ChatGPT (10 coachs, 22 critères)</td><td><a href="https://jssm.org/jssm-23-56.xml-Fulltext" target="_blank" rel="noopener">J Sports Sci Med (Düking et al.)</a></td><td>2024</td><td>2026-11-25</td><td>élevée</td></tr><tr id="src-59"><td>[59]</td><td>Étude de cas semi-marathon coaché par ChatGPT (prépublication)</td><td><a href="https://arxiv.org/html/2509.26593v1" target="_blank" rel="noopener">arXiv</a></td><td>2025-09</td><td>2026-11-25</td><td>faible</td></tr><tr id="src-60"><td>[60]</td><td>Feedback dans l&#x27;auto-suivi : d = 0,29 (corrigé)</td><td><a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10765525/" target="_blank" rel="noopener">IJBNPA (Krukowski et al.)</a></td><td>2024-01</td><td>2026-11-25</td><td>moyenne</td></tr><tr id="src-61"><td>[61]</td><td>Bloom : coach GPT-4o vs app sans LLM (N=54, prépublication CHI 2026)</td><td><a href="https://arxiv.org/html/2510.05449v2" target="_blank" rel="noopener">arXiv</a></td><td>2026-03</td><td>2026-11-25</td><td>faible</td></tr><tr id="src-62"><td>[62]</td><td>Limites du modèle de Banister (mauvais conditionnement, instabilité)</td><td><a href="https://doi.org/10.1080/02640410500244697" target="_blank" rel="noopener">J Sports Sci (Hellard et al.)</a></td><td>2006</td><td>2026-11-25</td><td>moyenne</td></tr><tr id="src-63"><td>[63]</td><td>Validité des modèles fitness-fatigue mal étudiée ; bruit &gt; 4 % rédhibitoire (thèse)</td><td><a href="https://rgu-repository.worktribe.com/output/682069" target="_blank" rel="noopener">Robert Gordon University (Stephens Hemingway, thèse)</a></td><td>2021</td><td>2026-11-25</td><td>moyenne</td></tr><tr id="src-64"><td>[64]</td><td>Zones de Form = Friel, « règle empirique » (développeur intervals.icu)</td><td><a href="https://forum.intervals.icu/t/zones-of-form-in-fitness-chart/3623" target="_blank" rel="noopener">Forum intervals.icu (développeur)</a></td><td>2021-04</td><td>2026-11-25</td><td>moyenne</td></tr><tr id="src-65"><td>[65]</td><td>Garmin-RUNSAFE : pic sur une sortie vs 30 j ; pas d&#x27;association semaine/ACWR</td><td><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12421110" target="_blank" rel="noopener">BJSM (Frandsen et al.)</a></td><td>2025</td><td>2026-11-25</td><td>élevée</td></tr><tr id="src-66"><td>[66]</td><td>Éditorial : littérature ACWR contestée</td><td><a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8138569/" target="_blank" rel="noopener">Frontiers (éditorial)</a></td><td>2021</td><td>2026-11-25</td><td>moyenne</td></tr><tr id="src-67"><td>[67]</td><td>Méta-analyse VFC guidée : ES 0,40 VO2max</td><td><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC7663087" target="_blank" rel="noopener">IJERPH (Granero-Gallegos et al.)</a></td><td>2020</td><td>2026-11-25</td><td>moyenne</td></tr><tr id="src-68"><td>[68]</td><td>Méta-analyse VFC guidée : non significatif, moins de non-répondeurs</td><td><a href="https://pubmed.ncbi.nlm.nih.gov/34489178/" target="_blank" rel="noopener">PubMed (Düking et al.)</a></td><td>2021</td><td>2026-11-25</td><td>moyenne</td></tr><tr id="src-69"><td>[69]</td><td>Méta-analyse VFC guidée : petit, non significatif</td><td><a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8507742/" target="_blank" rel="noopener">IJERPH (Manresa-Rocamora et al.)</a></td><td>2021</td><td>2026-11-25</td><td>moyenne</td></tr><tr id="src-70"><td>[70]</td><td>Suivi par FC/VFC : CV individuel, plus petit changement, aucun seuil prouvé</td><td><a href="https://www.frontiersin.org/journals/physiology/articles/10.3389/fphys.2014.00073/full" target="_blank" rel="noopener">Frontiers in Physiology (Buchheit)</a></td><td>2014</td><td>2026-11-25</td><td>élevée</td></tr><tr id="src-71"><td>[71]</td><td>Moyenne VFC sur 7 j &gt; valeurs isolées (cas élites)</td><td><a href="https://pubmed.ncbi.nlm.nih.gov/22367011/" target="_blank" rel="noopener">EJAP (Plews et al.)</a></td><td>2012</td><td>2026-11-25</td><td>moyenne</td></tr><tr id="src-72"><td>[72]</td><td>Apple Watch S9/Ultra 2 : SDNN −8,3 ms vs Polar H10 ; FC repos −0,08 bpm</td><td><a href="https://www.mdpi.com/1424-8220/24/19/6220" target="_blank" rel="noopener">MDPI Sensors (O&#x27;Grady et al.)</a></td><td>2024</td><td>2026-11-25</td><td>élevée</td></tr><tr id="src-73"><td>[73]</td><td>Validation VFC nocturne vs ECG (Oura, Whoop, Garmin ; Apple non testée)</td><td><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12367097" target="_blank" rel="noopener">Physiological Reports (Dial et al.)</a></td><td>2025-08</td><td>2026-11-25</td><td>élevée</td></tr><tr id="src-74"><td>[74]</td><td>Critique VFC Apple, préférer une mesure matinale (praticien)</td><td><a href="https://marcoaltini.substack.com/p/trusting-the-right-tool-for-the-job" target="_blank" rel="noopener">Marco Altini (Substack)</a></td><td>2024-11</td><td>2026-11-25</td><td>moyenne</td></tr><tr id="src-75"><td>[75]</td><td>&lt; 8 h de sommeil : risque de blessure ×1,7 (adolescents)</td><td><a href="https://doi.org/10.1097/bpo.0000000000000151" target="_blank" rel="noopener">J Pediatr Orthop (Milewski et al.)</a></td><td>2014-03</td><td>2026-11-25</td><td>moyenne</td></tr><tr id="src-76"><td>[76]</td><td>Mesures subjectives &gt; objectives pour suivre la charge (revue de 56 études)</td><td><a href="https://bjsm.bmj.com/content/50/5/281.short" target="_blank" rel="noopener">BJSM (Saw, Main &amp; Gastin)</a></td><td>2016</td><td>2026-11-25</td><td>élevée</td></tr><tr id="src-77"><td>[77]</td><td>Incidence : 17,8 (débutants) vs 7,7 (loisir) blessures/1000 h</td><td><a href="https://pubmed.ncbi.nlm.nih.gov/25951917/" target="_blank" rel="noopener">Sports Medicine (Videbæk et al.)</a></td><td>2015</td><td>2026-11-25</td><td>élevée</td></tr><tr id="src-78"><td>[78]</td><td>Incidence ~40 % ; blessures les plus fréquentes</td><td><a href="https://pubmed.ncbi.nlm.nih.gov/33862272" target="_blank" rel="noopener">J Sport Health Sci (Kakouris et al.)</a></td><td>2021</td><td>2026-11-25</td><td>élevée</td></tr><tr id="src-79"><td>[79]</td><td>Blessure antérieure = principal facteur de risque</td><td><a href="https://pubmed.ncbi.nlm.nih.gov/24809248/" target="_blank" rel="noopener">BJSM (Saragiotto et al.)</a></td><td>2014</td><td>2026-11-25</td><td>moyenne</td></tr><tr id="src-80"><td>[80]</td><td>Facteurs de risque/protection en course de fond (blessure antérieure)</td><td><a href="https://www.doi.org/10.1007/s40279-016-0636-4" target="_blank" rel="noopener">Sports Medicine (Hulme et al.)</a></td><td>2017</td><td>2026-11-25</td><td>moyenne</td></tr><tr id="src-81"><td>[81]</td><td>Biomécanique non liée aux blessures chez non-élites</td><td><a href="https://pubmed.ncbi.nlm.nih.gov/35254562/" target="_blank" rel="noopener">Sports Medicine Open (méta-analyse)</a></td><td>2022</td><td>2026-11-25</td><td>moyenne</td></tr><tr id="src-82"><td>[82]</td><td>Renforcement musculaire : blessures &lt; 1/3 (tous sports)</td><td><a href="https://pubmed.ncbi.nlm.nih.gov/24100287/" target="_blank" rel="noopener">BJSM (Lauersen et al.)</a></td><td>2014</td><td>2026-11-25</td><td>élevée</td></tr><tr id="src-83"><td>[83]</td><td>ECR renforcement hanches/tronc chez débutants (efficace) vs pied/cheville</td><td><a href="https://pubmed.ncbi.nlm.nih.gov/38724071/" target="_blank" rel="noopener">PubMed (ECR 2024)</a></td><td>2024</td><td>2026-11-25</td><td>moyenne</td></tr><tr id="src-84"><td>[84]</td><td>GRONORUN : règle des 10 % hebdo n&#x27;a pas réduit les blessures</td><td><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC9528699" target="_blank" rel="noopener">AJSM (Buist et al.) via J Athl Train</a></td><td>2008</td><td>2026-11-25</td><td>élevée</td></tr><tr id="src-85"><td>[85]</td><td>Débutants : &gt; 30 %/sem vs &lt; 10 % (p = 0,07)</td><td><a href="https://vbn.aau.dk/da/publications/excessive-progression-in-weekly-running-distance-and-risk-of-runn" target="_blank" rel="noopener">JOSPT (Nielsen et al.)</a></td><td>2014</td><td>2026-11-25</td><td>moyenne</td></tr><tr id="src-86"><td>[86]</td><td>Retour progressif après maladie (paliers ≥ 48 h, J5/J10)</td><td><a href="https://blogs.bmj.com/bjsm/?p=10084" target="_blank" rel="noopener">BJSM blog (Elliott et al.)</a></td><td>2022-04</td><td>2026-11-25</td><td>moyenne</td></tr><tr id="src-87"><td>[87]</td><td>« Neck check » sans base scientifique solide (revue liée au CIO)</td><td><a href="https://www.up.ac.za/Sport-Exercise-Medicine-and-Lifestyle-Institute/news/medical-guidance-athletes-returning-sport-after-acute-respiratory-illness" target="_blank" rel="noopener">Univ. Pretoria SEMLI (résumé)</a></td><td>2023</td><td>2026-11-25</td><td>moyenne</td></tr><tr id="src-88"><td>[88]</td><td>Pas de reprise avant fin de la fièvre ; risque de myocardite</td><td><a href="https://link.springer.com/content/pdf/10.1007/s40279-023-01969-z.pdf" target="_blank" rel="noopener">Sports Medicine (revue)</a></td><td>2023</td><td>2026-11-25</td><td>moyenne</td></tr><tr id="src-89"><td>[89]</td><td>Modèle de surveillance de la douleur ≤ 5/10 (Achille, ECR)</td><td><a href="https://doi.org/10.1177/0363546506298279" target="_blank" rel="noopener">AJSM (Silbernagel et al.)</a></td><td>2007</td><td>2026-11-25</td><td>moyenne</td></tr><tr id="src-90"><td>[90]</td><td>Reprise après fracture de fatigue tibiale (revue exploratoire)</td><td><a href="https://link.springer.com/article/10.1007/s40279-024-02051-y" target="_blank" rel="noopener">Sports Medicine</a></td><td>2024</td><td>2026-11-25</td><td>moyenne</td></tr><tr id="src-91"><td>[91]</td><td>Désentraînement : VO2max −7 % à J21, −16 % à J56</td><td><a href="https://europepmc.org/article/MED/6511559" target="_blank" rel="noopener">J Appl Physiol (Coyle et al.)</a></td><td>1984</td><td>2026-11-25</td><td>élevée</td></tr><tr id="src-92"><td>[92]</td><td>Désentraînement &gt; 4 sem : VO2max récemment acquise perdue</td><td><a href="https://europepmc.org/article/MED/10999420" target="_blank" rel="noopener">Sports Medicine (Mujika &amp; Padilla)</a></td><td>2000</td><td>2026-11-25</td><td>élevée</td></tr><tr id="src-93"><td>[93]</td><td>Réduire volume/fréquence en gardant l&#x27;intensité préserve la VO2max</td><td><a href="https://pubmed.ncbi.nlm.nih.gov/2692122/" target="_blank" rel="noopener">Sports Medicine (Neufer)</a></td><td>1989</td><td>2026-11-25</td><td>moyenne</td></tr><tr id="src-94"><td>[94]</td><td>Trous d&#x27;entraînement et marathon (Strava, ~44 000 coureurs)</td><td><a href="https://www.outsideonline.com/health/training-performance/missed-marathon-training-study-2023" target="_blank" rel="noopener">Outside (sur Feely, Smyth et al. 2022)</a></td><td>2023-01</td><td>2026-11-25</td><td>moyenne</td></tr><tr id="src-95"><td>[95]</td><td>Table d&#x27;ajustement du VDOT après arrêt (convention Daniels)</td><td><a href="https://news.vdoto2.com/?p=1285" target="_blank" rel="noopener">VDOT O2 (site officiel Daniels)</a></td><td>2022-03</td><td>2026-11-25</td><td>élevée</td></tr><tr id="src-96"><td>[96]</td><td>Consensus CIO REDs 2023 et outil CAT2</td><td><a href="https://pubmed.ncbi.nlm.nih.gov/37752011/" target="_blank" rel="noopener">BJSM (Mountjoy et al.)</a></td><td>2023-09</td><td>2026-11-25</td><td>élevée</td></tr><tr id="src-97"><td>[97]</td><td>Conformité intervals.icu : charge/prévu, vert 80–120 %</td><td><a href="https://forum.intervals.icu/t/compliance-activity-field/47805" target="_blank" rel="noopener">Forum intervals.icu (développeur)</a></td><td>2023-08</td><td>2026-11-25</td><td>élevée</td></tr><tr id="src-98"><td>[98]</td><td>Appariement : pas d&#x27;auto-appariement si charge &lt; 50 % du prévu</td><td><a href="https://forum.intervals.icu/t/workout-planning-and-matching-activities/1809" target="_blank" rel="noopener">Forum intervals.icu</a></td><td>2021</td><td>2026-11-25</td><td>moyenne</td></tr><tr id="src-99"><td>[99]</td><td>Conformité TrainingPeaks (TSS &gt; durée &gt; distance)</td><td><a href="https://www.trainingpeaks.com/learn/trainingpeaks-athlete-user-guide/" target="_blank" rel="noopener">TrainingPeaks</a></td><td>2025</td><td>2026-11-25</td><td>moyenne</td></tr><tr id="src-100"><td>[100]</td><td>HRR comme marqueur d&#x27;entraînement : revue, facteurs confondants</td><td><a href="https://research.vu.nl/ws/files/3163042/292221.pdf" target="_blank" rel="noopener">IJSPP (Daanen et al.)</a></td><td>2012</td><td>2026-11-25</td><td>moyenne</td></tr><tr id="src-101"><td>[101]</td><td>HRRc intervals.icu calculée si FC ≥ FC seuil</td><td><a href="https://forum.intervals.icu/t/heart-rate-recovery-hrrc/387" target="_blank" rel="noopener">Forum intervals.icu (développeur)</a></td><td>2021-12</td><td>2026-11-25</td><td>moyenne</td></tr><tr id="src-102"><td>[102]</td><td>Découplage chez 82 303 marathoniens ; améliore la prédiction</td><td><a href="https://link.springer.com/article/10.1007/s40279-022-01680-5" target="_blank" rel="noopener">Sports Medicine (Smyth et al.)</a></td><td>2022</td><td>2026-11-25</td><td>moyenne</td></tr><tr id="src-103"><td>[103]</td><td>Découplage et EF (Friel) : définitions</td><td><a href="https://trainingpeaks.com/blog/efficiency-factor-and-decoupling" target="_blank" rel="noopener">TrainingPeaks blog</a></td><td>2024</td><td>2026-11-25</td><td>moyenne</td></tr><tr id="src-104"><td>[104]</td><td>GAP : polynôme de Minetti, modèle Strava 2017 (rétro-ingénierie)</td><td><a href="https://aaron-schroeder.github.io/reverse-engineering/grade-adjusted-pace.html" target="_blank" rel="noopener">Aaron Schroeder (analyse secondaire)</a></td><td>2023-11</td><td>2026-11-25</td><td>moyenne</td></tr><tr id="src-105"><td>[105]</td><td>CS depuis données Strava d&#x27;entraînement (400/800/5000 m, 16 sem.)</td><td><a href="https://uhra.herts.ac.uk/handle/2299/22878" target="_blank" rel="noopener">MSSE (Smyth &amp; Muniz-Pumares)</a></td><td>2020</td><td>2026-11-25</td><td>élevée</td></tr><tr id="src-106"><td>[106]</td><td>Météo et performance marathon (WBGT 5–25 °C)</td><td><a href="https://experts.umn.edu/en/publications/impact-of-weather-on-marathon-running-performance/" target="_blank" rel="noopener">MSSE (Ely et al.)</a></td><td>2007</td><td>2026-11-25</td><td>moyenne</td></tr><tr id="src-107"><td>[107]</td><td>CS/D′ sur la courbe d&#x27;allures intervals.icu (efforts 1–5 km)</td><td><a href="https://forum.intervals.icu/t/towards-grade-adjusted-best-paces-and-cs-d-computation/12197" target="_blank" rel="noopener">Forum intervals.icu (développeur)</a></td><td>2022-05</td><td>2026-11-25</td><td>moyenne</td></tr><tr id="src-108"><td>[108]</td><td>Pas de mise à jour auto de l&#x27;allure seuil en course (intervals.icu)</td><td><a href="https://forum.intervals.icu/t/automatic-threshold-pace-calculation/112254" target="_blank" rel="noopener">Forum intervals.icu (utilisateurs)</a></td><td>2025-09</td><td>2026-11-25</td><td>moyenne</td></tr><tr id="src-109"><td>[109]</td><td>Test 30 min FC seuil vs labo : erreur type ~8 bpm</td><td><a href="https://pubmed.ncbi.nlm.nih.gov/16095403/" target="_blank" rel="noopener">PubMed (2005)</a></td><td>2005</td><td>2026-11-25</td><td>moyenne</td></tr><tr id="src-110"><td>[110]</td><td>TrainingPeaks : seuil FC auto uniquement à la hausse</td><td><a href="https://www.trainingpeaks.com/learn/articles/thresholds-411/" target="_blank" rel="noopener">TrainingPeaks</a></td><td>2024</td><td>2026-11-25</td><td>moyenne</td></tr><tr id="src-111"><td>[111]</td><td>Riegel sous-estime le temps marathon des amateurs ; + kilométrage</td><td><a href="https://link.springer.com/article/10.1186/s13102-016-0052-y" target="_blank" rel="noopener">BMC Sports Sci Med Rehabil (Vickers &amp; Vertosick)</a></td><td>2016</td><td>2026-11-25</td><td>moyenne</td></tr><tr id="src-112"><td>[112]</td><td>Retard de la FC optique vs ceinture sur fractionnés (presse)</td><td><a href="https://coachweb.com/gear/fitness-trackers/are-apple-and-garmin-heart-rate-monitors-accurate-this-study-says-yes" target="_blank" rel="noopener">Coach (presse)</a></td><td>2023</td><td>2026-11-25</td><td>faible</td></tr><tr id="src-113"><td>[113]</td><td>Échantillonnage VFC Apple ~toutes les 2 h la nuit (blog éditeur)</td><td><a href="https://tryterra.co/research/how-hrv-actually-works" target="_blank" rel="noopener">Terra (blog éditeur)</a></td><td>2025</td><td>2026-11-25</td><td>faible</td></tr><tr id="src-114"><td>[114]</td><td>Ligne de base de 4 semaines avant entraînement guidé par la VFC</td><td><a href="https://pubmed.ncbi.nlm.nih.gov/29809080/" target="_blank" rel="noopener">IJSPP (Javaloyes et al.)</a></td><td>2019</td><td>2026-11-25</td><td>moyenne</td></tr><tr id="src-115"><td>[115]</td><td>Définition divergente du rouge dans la conformité TrainingPeaks</td><td><a href="https://help.trainingpeaks.com/hc/en-us/articles/204861204" target="_blank" rel="noopener">TrainingPeaks Help Center</a></td><td>2025</td><td>2026-11-25</td><td>moyenne</td></tr></tbody></table></details><h2 id="s11">12. Carte de fraîcheur</h2>
+<p>Calculée avec <code>recon_kit.py staleness</code>, avec ces fenêtres : fonctionnalité d'appareil et comportement d'outil 18 mois, guide de pratique 24 mois, étude empirique ou de validation 36 mois, évaluation d'IA 6 mois. <strong>Les articles de référence</strong> (Bosquet 2007, Buist 2008, Saw 2016, Buchheit 2014, Smyth 2020) dépassent leur fenêtre, mais la science de référence n'a pas de date de péremption. J'ai vérifié qu'aucun travail plus récent ne les contredit : Bosquet est confirmé par une méta-analyse de 2023, et Buist est renforcé par Frandsen 2025.</p>
+<table>
+<thead>
+<tr>
+<th>Affirmation</th>
+<th>Classe</th>
+<th>Publiée</th>
+<th>À revérifier</th>
+<th>État</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a class="cite" href="#src-39">[39]</a> Charge allure intervals.icu = h × IF² × 100</td>
+<td>comportement d'outil</td>
+<td>2022-01</td>
+<td>2023-07</td>
+<td><strong>périmée : à vérifier dans l'app</strong></td>
+</tr>
+<tr>
+<td><a class="cite" href="#src-64">[64]</a> Zones de Form = règle empirique</td>
+<td>comportement d'outil</td>
+<td>2021-04</td>
+<td>2022-10</td>
+<td><strong>périmée</strong></td>
+</tr>
+<tr>
+<td><a class="cite" href="#src-41">[41]</a> Form calculée le jour même, 42/7 j</td>
+<td>comportement d'outil</td>
+<td>2023-02</td>
+<td>2024-08</td>
+<td><strong>périmée</strong></td>
+</tr>
+<tr>
+<td><a class="cite" href="#src-97">[97]</a> Conformité vert 80–120 %</td>
+<td>comportement d'outil</td>
+<td>2023-08</td>
+<td>2025-02</td>
+<td><strong>périmée</strong></td>
+</tr>
+<tr>
+<td><a class="cite" href="#src-15">[15]</a> VFC Apple = SDNN</td>
+<td>fonctionnalité</td>
+<td>2021-03</td>
+<td>2022-09</td>
+<td>périmée, mais reconfirmée par le vérificateur (docs Apple)</td>
+</tr>
+<tr>
+<td><a class="cite" href="#src-58">[58]</a> Erreurs des plans ChatGPT</td>
+<td>évaluation d'IA</td>
+<td>2024-03</td>
+<td>2024-09</td>
+<td><strong>périmée</strong> (modèle de 2023)</td>
+</tr>
+<tr>
+<td><a class="cite" href="#src-86">[86]</a> Retour après maladie (BJSM)</td>
+<td>guide</td>
+<td>2022-04</td>
+<td>2024-04</td>
+<td>périmée : chercher une mise à jour du consensus</td>
+</tr>
+<tr>
+<td><a class="cite" href="#src-95">[95]</a> Table VDOT après arrêt</td>
+<td>guide</td>
+<td>2022-03</td>
+<td>2024-03</td>
+<td>convention stable</td>
+</tr>
+<tr>
+<td><a class="cite" href="#src-108">[108]</a> Pas de mise à jour auto du seuil course</td>
+<td>comportement d'outil</td>
+<td>2025-09</td>
+<td><strong>2027-03</strong></td>
+<td>à jour</td>
+</tr>
+<tr>
+<td><a class="cite" href="#src-6">[6]</a> Stades de sommeil kappa 0,68</td>
+<td>fonctionnalité</td>
+<td>2025-10</td>
+<td>2027-04</td>
+<td>à jour</td>
+</tr>
+<tr>
+<td><a class="cite" href="#src-18">[18]</a> Abonnement HealthFit requis</td>
+<td>comportement d'outil</td>
+<td>2026-03</td>
+<td>2027-09</td>
+<td>à jour</td>
+</tr>
+<tr>
+<td><a class="cite" href="#src-11">[11]</a> Vitals, VFC Series 12 seulement</td>
+<td>fonctionnalité</td>
+<td>2026-09</td>
+<td>2028-03</td>
+<td>à jour</td>
+</tr>
+<tr>
+<td><a class="cite" href="#src-65">[65]</a> Règle de pic par sortie</td>
+<td>empirique</td>
+<td>2025-09</td>
+<td>2028-09</td>
+<td>à jour</td>
+</tr>
+<tr>
+<td><a class="cite" href="#src-10">[10]</a> VO2max Series 10</td>
+<td>validation</td>
+<td>2026-04</td>
+<td>2029-04</td>
+<td>à jour</td>
+</tr>
+</tbody>
+</table>
+<p><strong>La première revérification utile, c'est maintenant.</strong> Les quatre comportements d'intervals.icu tirés de vieux posts du forum (<a class="cite" href="#src-39">[39]</a><a class="cite" href="#src-41">[41]</a><a class="cite" href="#src-64">[64]</a><a class="cite" href="#src-97">[97]</a>) se vérifient en quelques minutes dans l'app, avant de coder. La prochaine échéance datée est <strong>mars 2027</strong> (seuil de course intervals.icu <a class="cite" href="#src-108">[108]</a>). Un <strong>Refresh</strong> (mise à jour) ou un <strong>Deepen</strong> (approfondissement) de Deep Recon s'en charge.</p></main></div></body></html>
